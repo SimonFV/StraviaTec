@@ -1,7 +1,8 @@
 USE master;
+GO
 
-GO CREATE DATABASE StraviaTecDB;
+CREATE DATABASE StraviaTecDB;
+GO
 
 USE StraviaTecDB;
-
-GO 
+GO
