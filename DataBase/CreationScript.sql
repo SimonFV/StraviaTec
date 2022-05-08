@@ -33,7 +33,7 @@ CREATE TABLE GROUPS
 
 CREATE TABLE ACTIVITY
 (
-	Id			INT				NOT NULL,
+	Id			INT				NOT NULL	IDENTITY(1,1),
 	UserId		VARCHAR(15)		NOT NULL,
 	Distance	INT,
 	Duration	TIME			NOT NULL,
@@ -59,42 +59,46 @@ CREATE TABLE ACTIVITY_TYPE
 	"Name" 		VARCHAR(15)		NOT NULL,
 	PRIMARY KEY("Name")
 );
+
 CREATE Table CHALLENGE
 (
-    Id  INT NOT NULL,
-    "Name" VARCHAR(15) NOT NULL,
-    Class VARCHAR(15) , 
-    Privacy VARCHAR(15),
-    StartDate DATE NOT NULL,
-    EndDate DATE NOT NULL,
+    Id  		INT 			NOT NULL	IDENTITY(1,1),
+    "Name" 		VARCHAR(15) 	NOT NULL,
+    Class 		VARCHAR(15) , 
+    Privacy 	VARCHAR(15),
+    StartDate 	DATE 			NOT NULL,
+    EndDate 	DATE 			NOT NULL,
     PRIMARY KEY(Id)
 );
 
 CREATE TABLE CHALLENGE_PARTICIPANTS
 (
-    "User" VARCHAR(15) NOT NULL,
-    ChallengeId INT NOT NULL,
-    ActivityId INT NOT NULL,
+    "User" 		VARCHAR(15) 	NOT NULL,
+    ChallengeId INT 			NOT NULL,
+    ActivityId 	INT 			NOT NULL,
     PRIMARY KEY("User", ChallengeId,ActivityId)
 );
+
 CREATE TABLE CHALLENGE_VISIBILITY
 (
-    "Admin"  VARCHAR(15) NOT NULL,
-    "Group" VARCHAR(15),
-    ChallengeId INT NOT NULL,
+    "Admin"  	VARCHAR(15) 	NOT NULL,
+    "Group" 	VARCHAR(15),
+    ChallengeId INT 			NOT NULL,
     PRIMARY KEY("Admin","Group", ChallengeID)
 );
+
 CREATE TABLE CHALLENGE_SPONSORS
 (
-    ChallengeId INT NOT NULL,
-    TradeName VARCHAR(15) NOT NULL,
+    ChallengeId INT 			NOT NULL,
+    TradeName 	VARCHAR(15) 	NOT NULL,
     PRIMARY KEY(ChallengeId,TradeName)
 );
+
 CREATE TABLE SPONSOR
 (
-    TradeName VARCHAR(15) NOT NULL,
-    Representative VARCHAR(15) NOT NULL,
-    ReprPhone INT NOT NULL,
-    Logo VARCHAR(255),
+    TradeName 		VARCHAR(15) 	NOT NULL,
+    Representative 	VARCHAR(15) 	NOT NULL,
+    ReprPhone 		INT 			NOT NULL,
+    Logo 			VARCHAR(255),
     PRIMARY KEY(TradeName)
 );
