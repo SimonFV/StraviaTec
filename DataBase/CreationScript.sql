@@ -28,7 +28,7 @@ CREATE TABLE GROUPS
 (
 	AdminUser	VARCHAR(15)		NOT NULL,
 	"Name"		VARCHAR(15)		NOT NULL,
-	PRIMARY KEY("AdminUser", "Name")
+	PRIMARY KEY(AdminUser, "Name")
 );
 
 CREATE TABLE ACTIVITY
@@ -43,7 +43,6 @@ CREATE TABLE ACTIVITY
 	"Type"		VARCHAR(15)		NOT NULL,
 	PRIMARY KEY(Id)
 );
-
 
 CREATE TABLE ACTIVITY_TYPE
 (
@@ -92,4 +91,72 @@ CREATE TABLE SPONSOR
     ReprPhone 		INT 			NOT NULL,
     Logo 			VARCHAR(255),
     PRIMARY KEY(TradeName)
+);
+
+CREATE TABLE CATEGORY
+(
+    "Name"			VARCHAR(15) 	NOT NULL,
+    "Description" 	VARCHAR(70) 	NOT NULL,
+    PRIMARY KEY("Name")
+);
+
+CREATE TABLE RACE (
+	Id				INT				NOT NULL		IDENTITY(1,1),
+	"Admin"			VARCHAR(15) 	NOT NULL,
+	"Name"			VARCHAR(15) 	NOT NULL,
+	"Route"			VARCHAR(15) 	NOT NULL,
+	"Cost"			INT 			NOT NULL,
+	Privacy			BIT 			NOT NULL,
+	"Day"			DATE 			NOT NULL,
+	"Month"			DATE 			NOT NULL,
+	"Year"			DATE 			NOT NULL,
+	"Hour"			TIME 			NOT NULL,
+	"Minute"		TIME 			NOT NULL,
+	Seconds			TIME 			NOT NULL,
+	Category		VARCHAR(15) 	NOT NULL,
+	"Type"			VARCHAR(15) 	NOT NULL,
+	PRIMARY KEY(Id),
+	FOREIGN KEY ("Type") REFERENCES ACTIVITY_TYPE("Name"),
+	FOREIGN KEY (Category) REFERENCES CATEGORY("Name")
+);
+
+CREATE TABLE RACE_VISIBILITY
+(
+    "Group"			VARCHAR(15) 	NOT NULL,
+	"Admin"			VARCHAR(15) 	NOT NULL,
+    RaceId	 		INT 			NOT NULL,
+    PRIMARY KEY("Group", RaceId, "Admin"),
+	FOREIGN KEY (RaceId) REFERENCES RACE(Id),
+	FOREIGN KEY ("Admin", "Group") REFERENCES GROUPS(AdminUser, "Name")
+);
+
+CREATE TABLE RACE_SPONSORS
+(
+    RaceId			INT			 	NOT NULL,
+    TradeName	 	VARCHAR(15) 	NOT NULL,
+    PRIMARY KEY(RaceId, TradeName),
+	FOREIGN KEY (RaceId) REFERENCES RACE(Id),
+	FOREIGN KEY (TradeName) REFERENCES SPONSOR(TradeName)
+);
+
+CREATE TABLE BANK_ACCOUNT
+(
+    RaceId			INT			 	NOT NULL,
+    BankAccount 	VARCHAR(15) 	NOT NULL,
+    PRIMARY KEY(BankAccount, RaceId),
+	FOREIGN KEY (RaceId) REFERENCES RACE(Id)
+);
+
+CREATE Table RACE_PARTICIPANTS
+(
+    "User"  		VARCHAR(15)		NOT NULL,
+    RaceId 			INT 			NOT NULL,
+    PaymentId 		INT				NOT NULL, 
+    PaymentAmount 	INT				NOT NULL,
+    "Status" 		VARCHAR(15)		NOT NULL,
+    ActivityId 		INT 			NOT NULL,
+    PRIMARY KEY(RaceId, "User"),
+	FOREIGN KEY (RaceId) REFERENCES RACE(Id),
+	FOREIGN KEY ("User") REFERENCES "USER"("User"),
+	FOREIGN KEY (ActivityId) REFERENCES ACTIVITY(Id)
 );
