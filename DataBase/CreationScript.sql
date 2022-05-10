@@ -301,3 +301,39 @@ BEGIN
 	END
 END;
 GO
+
+
+CREATE PROCEDURE SP_RegisterChallenge
+	@User NVARCHAR(15),
+	@Name NVARCHAR(15),
+	@Class NVARCHAR(15),
+	@Privacy BIT,
+	@StartDate DATE,
+	@EndDate DATE
+AS
+
+BEGIN 
+	SET NOCOUNT ON;
+	IF EXISTS(SELECT "UserAdmin" FROM CHALLENGE WHERE "UserAdmin" = @User)
+    BEGIN
+        SELECT -1  --Challenge already exists
+    END
+	ELSE
+	BEGIN
+		INSERT INTO CHALLENGE
+				(UserAdmin,
+				"Name",
+				Class,
+				Privacy,
+				StartDate,
+				EndDate)
+		VALUES(@User,
+				@Name,
+				@Class,
+				@Privacy,
+				@StartDate,
+				@EndDate)
+		SELECT 0 --Challenge registered
+	END
+END;
+GO

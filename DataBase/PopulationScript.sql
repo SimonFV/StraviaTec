@@ -15,4 +15,16 @@ EXEC Register @User = 'sfv',
 --User login
 EXEC LoginUser @User = 'sfv',
 				@Password = 'Simon-12345';
+
+--Challenge registration
+EXEC SP_RegisterChallenge 
+	@User= 'sfv',
+	@Name='Challenge 1',
+	@Class='Master',
+	@Privacy=1,
+	@StartDate='2022-06-15',
+	@EndDate= '2022-006-20';
 */
+						
+
+
