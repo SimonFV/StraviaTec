@@ -1,6 +1,7 @@
 USE StraviaTecDB;
 GO
 
+/*
 --User registration
 EXEC Register @User = 'sfv',
 			@FirstName = 'Simon',
@@ -10,3 +11,8 @@ EXEC Register @User = 'sfv',
 			@Password = 'Simon-12345',
 			@Picture = 'profilePic',
 			@Nationality = 'CostaRican';
+
+--User login
+EXEC LoginUser @User = 'sfv',
+				@Password = 'Simon-12345';
+*/

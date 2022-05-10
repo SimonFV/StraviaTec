@@ -277,5 +277,27 @@ BEGIN
 				@Nationality)
         SELECT 0 --User registered
     END
-END
+END;
+GO
+
+CREATE PROCEDURE LoginUser
+	@User NVARCHAR(15),
+	@Password NVARCHAR(30)
+AS
+BEGIN
+    SET NOCOUNT ON;
+     
+    IF NOT EXISTS(SELECT "User" FROM "USER" WHERE "User" = @User)
+    BEGIN
+        SELECT -1  --User not found
+    END
+    ELSE IF NOT EXISTS(SELECT "User" FROM "USER" WHERE "User" = @User AND "Password" = HASHBYTES('SHA2_512', @Password))
+    BEGIN
+        SELECT -2 --Incorrect password
+    END
+	ELSE
+	BEGIN
+		SELECT 0 --User logged in
+	END
+END;
 GO
