@@ -6,46 +6,46 @@ GO
 
 CREATE TABLE "USER"
 (
-	"User"		VARCHAR(15)		NOT NULL,
-	FirstName	VARCHAR(15)		NOT NULL,
-	LastName1	VARCHAR(15)		NOT NULL,
-	LastName2	VARCHAR(15)		NOT NULL,
-	BirthDate	DATE			NOT NULL,
-	"Password"	VARCHAR(20)		NOT NULL,
-	Picture		VARCHAR(255),
-	Nationality	VARCHAR(15),
+	"User"		NVARCHAR(15)	NOT NULL,
+	FirstName	NVARCHAR(15)	NOT NULL,
+	LastName1	NVARCHAR(15)	NOT NULL,
+	LastName2	NVARCHAR(15)	NOT NULL,
+	BirthDate	DATE			NOT	NULL,
+	"Password"	BINARY(64)		NOT NULL,
+	Picture		NVARCHAR(255),
+	Nationality	NVARCHAR(15),
 	PRIMARY KEY("User")
 );
 
 CREATE TABLE FRIENDS
 (
-	"User"		VARCHAR(15)		NOT NULL,
-	FriendUser	VARCHAR(15)		NOT NULL,
+	"User"		NVARCHAR(15)	NOT NULL,
+	FriendUser	NVARCHAR(15)	NOT NULL,
 	PRIMARY KEY("User", FriendUser)
 );
 
 CREATE TABLE GROUPS
 (
 	Id			INT				NOT NULL	IDENTITY(1,1),
-	AdminUser	VARCHAR(15)		NOT NULL,
-	"Name"		VARCHAR(15)		NOT NULL,
+	AdminUser	NVARCHAR(15)	NOT NULL,
+	"Name"		NVARCHAR(15)	NOT NULL,
 	PRIMARY KEY(Id)
 );
 
 CREATE TABLE GROUP_USERS
 (
 	GroupId		INT				NOT NULL,
-	"User"		VARCHAR(15)		NOT NULL,
+	"User"		NVARCHAR(15)	NOT NULL,
 	PRIMARY KEY(GroupId)
 );
 
 CREATE TABLE ACTIVITY
 (
 	Id			INT				NOT NULL	IDENTITY(1,1),
-	UserId		VARCHAR(15)		NOT NULL,
+	UserId		NVARCHAR(15)		NOT NULL,
 	Distance	INT,
 	Duration	TIME			NOT NULL,
-	"Route"		VARCHAR(255),
+	"Route"		NVARCHAR(255),
 	Altitude	INT,
 	"Start"		DATETIME		NOT NULL,
 	"Type"		VARCHAR(15)		NOT NULL,
@@ -61,10 +61,10 @@ CREATE TABLE ACTIVITY_TYPE
 CREATE Table CHALLENGE
 (
     Id  		INT 			NOT NULL	IDENTITY(1,1),
-	UserAdmin	VARCHAR(15)		NOT NULL,
-    "Name" 		VARCHAR(15) 	NOT NULL,
+	UserAdmin	NVARCHAR(15)		NOT NULL,
+    "Name" 		NVARCHAR(15) 	NOT NULL,
     Class 		VARCHAR(15) , 
-    Privacy 	VARCHAR(15),
+    Privacy 	BIT,
     StartDate 	DATE 			NOT NULL,
     EndDate 	DATE 			NOT NULL,
     PRIMARY KEY(Id)
@@ -72,7 +72,7 @@ CREATE Table CHALLENGE
 
 CREATE TABLE CHALLENGE_PARTICIPANTS
 (
-    "User" 		VARCHAR(15) 	NOT NULL,
+    "User" 		NVARCHAR(15) 	NOT NULL,
     ChallengeId INT 			NOT NULL,
     ActivityId 	INT 			NOT NULL,
     PRIMARY KEY("User", ChallengeId,ActivityId)
@@ -88,16 +88,16 @@ CREATE TABLE CHALLENGE_VISIBILITY
 CREATE TABLE CHALLENGE_SPONSORS
 (
     ChallengeId INT 			NOT NULL,
-    TradeName 	VARCHAR(15) 	NOT NULL,
+    TradeName 	NVARCHAR(15) 	NOT NULL,
     PRIMARY KEY(ChallengeId,TradeName)
 );
 
 CREATE TABLE SPONSOR
 (
-    TradeName 		VARCHAR(15) 	NOT NULL,
-    Representative 	VARCHAR(15) 	NOT NULL,
+    TradeName 		NVARCHAR(15) 	NOT NULL,
+    Representative 	NVARCHAR(15) 	NOT NULL,
     ReprPhone 		INT 			NOT NULL,
-    Logo 			VARCHAR(255),
+    Logo 			NVARCHAR(255),
     PRIMARY KEY(TradeName)
 );
 
@@ -110,9 +110,9 @@ CREATE TABLE CATEGORY
 
 CREATE TABLE RACE (
 	Id				INT				NOT NULL		IDENTITY(1,1),
-	"Admin"			VARCHAR(15) 	NOT NULL,
-	"Name"			VARCHAR(15) 	NOT NULL,
-	"Route"			VARCHAR(15) 	NOT NULL,
+	"Admin"			NVARCHAR(15) 	NOT NULL,
+	"Name"			NVARCHAR(15) 	NOT NULL,
+	"Route"			NVARCHAR(15) 	NOT NULL,
 	"Cost"			INT 			NOT NULL,
 	Privacy			BIT 			NOT NULL,
 	"Day"			DATE 			NOT NULL,
@@ -123,53 +123,49 @@ CREATE TABLE RACE (
 	Seconds			TIME 			NOT NULL,
 	Category		VARCHAR(15) 	NOT NULL,
 	"Type"			VARCHAR(15) 	NOT NULL,
-	PRIMARY KEY(Id),
-	FOREIGN KEY ("Type") REFERENCES ACTIVITY_TYPE("Name"),
-	FOREIGN KEY (Category) REFERENCES CATEGORY("Name")
+	PRIMARY KEY(Id)
 );
 
 CREATE TABLE RACE_VISIBILITY
 (
-    "Group"			VARCHAR(15) 	NOT NULL,
-	"Admin"			VARCHAR(15) 	NOT NULL,
+    "Group"			NVARCHAR(15) 	NOT NULL,
+	"Admin"			NVARCHAR(15) 	NOT NULL,
     RaceId	 		INT 			NOT NULL,
-    PRIMARY KEY("Group", RaceId, "Admin"),
-	FOREIGN KEY (RaceId) REFERENCES RACE(Id),
-	FOREIGN KEY ("Admin", "Group") REFERENCES GROUPS(AdminUser, "Name")
+    PRIMARY KEY("Group", RaceId, "Admin")
 );
 
 CREATE TABLE RACE_SPONSORS
 (
     RaceId			INT			 	NOT NULL,
-    TradeName	 	VARCHAR(15) 	NOT NULL,
-    PRIMARY KEY(RaceId, TradeName),
-	FOREIGN KEY (RaceId) REFERENCES RACE(Id),
-	FOREIGN KEY (TradeName) REFERENCES SPONSOR(TradeName)
+    TradeName	 	NVARCHAR(15) 	NOT NULL,
+    PRIMARY KEY(RaceId, TradeName)
 );
 
 CREATE TABLE BANK_ACCOUNT
 (
     RaceId			INT			 	NOT NULL,
-    BankAccount 	VARCHAR(15) 	NOT NULL,
-    PRIMARY KEY(BankAccount, RaceId),
-	FOREIGN KEY (RaceId) REFERENCES RACE(Id)
+    BankAccount 	NVARCHAR(15) 	NOT NULL,
+    PRIMARY KEY(BankAccount, RaceId)
 );
 
 CREATE Table RACE_PARTICIPANTS
 (
-    "User"  		VARCHAR(15)		NOT NULL,
+    "User"  		NVARCHAR(15)		NOT NULL,
     RaceId 			INT 			NOT NULL,
     PaymentId 		INT				NOT NULL, 
     PaymentAmount 	INT				NOT NULL,
     "Status" 		VARCHAR(15)		NOT NULL,
     ActivityId 		INT 			NOT NULL,
-    PRIMARY KEY(RaceId, "User"),
-	FOREIGN KEY (RaceId) REFERENCES RACE(Id),
-	FOREIGN KEY ("User") REFERENCES "USER"("User"),
-	FOREIGN KEY (ActivityId) REFERENCES ACTIVITY(Id)
+    PRIMARY KEY(RaceId, "User")
 );
 
 GO
+
+
+----------------------------------------------
+--				FOREIGN KEYS				--
+----------------------------------------------
+
 
 ALTER TABLE FRIENDS
 ADD CONSTRAINT FK_FRIENDS_USER FOREIGN KEY ("User")
@@ -198,9 +194,6 @@ REFERENCES "USER"("User");
 ALTER TABLE ACTIVITY
 ADD CONSTRAINT FK_ACTIVITY_TYPE FOREIGN KEY ("Type")
 REFERENCES ACTIVITY_TYPE("Name");
-
-
-
 
 ALTER TABLE CHALLENGE_VISIBILITY
 ADD CONSTRAINT FK_CHALLENGE_VIS_GROUPID FOREIGN KEY(GroupId)
@@ -234,4 +227,55 @@ ALTER TABLE CHALLENGE_SPONSORS
 ADD CONSTRAINT FK_CHALLENGE_SPON_TRADE FOREIGN KEY(TradeName)
 REFERENCES SPONSOR(TradeName)
 
+GO
+
+
+
+----------------------------------------------
+--			 STORED PROCEDURES				--
+----------------------------------------------
+
+
+/*
+	Users registration. Checks if the User already exists and saves the Password with hash.
+*/
+CREATE PROCEDURE Register
+	@User NVARCHAR(15),
+	@FirstName NVARCHAR(15),
+	@LastName1 NVARCHAR(15),
+	@LastName2 NVARCHAR(15),
+	@BirthDate DATE,
+	@Password NVARCHAR(30),
+	@Picture NVARCHAR(255),
+	@Nationality VARCHAR(15)
+AS
+BEGIN
+    SET NOCOUNT ON;
+     
+    IF EXISTS(SELECT "User" FROM "USER" WHERE "User" = @User)
+    BEGIN
+        SELECT -1  --User already exists
+    END
+    ELSE
+    BEGIN
+        INSERT INTO "USER"
+                ("User",
+				FirstName,
+				LastName1,
+				LastName2,
+				BirthDate,
+				"Password",
+				Picture,
+				Nationality)
+        VALUES (@User,
+				@FirstName,
+				@LastName1,
+				@LastName2,
+				@BirthDate,
+				HASHBYTES('SHA2_512', @Password),
+				@Picture,
+				@Nationality)
+        SELECT 0 --User registered
+    END
+END
 GO
