@@ -42,26 +42,26 @@ CREATE TABLE GROUP_USERS
 CREATE TABLE ACTIVITY
 (
 	Id			INT				NOT NULL	IDENTITY(1,1),
-	UserId		NVARCHAR(15)		NOT NULL,
+	UserId		NVARCHAR(15)	NOT NULL,
 	Distance	INT,
 	Duration	TIME			NOT NULL,
 	"Route"		NVARCHAR(255),
 	Altitude	INT,
 	"Start"		DATETIME		NOT NULL,
-	"Type"		NVARCHAR(15)		NOT NULL,
+	"Type"		NVARCHAR(15)	NOT NULL,
 	PRIMARY KEY(Id)
 );
 
 CREATE TABLE ACTIVITY_TYPE
 (
-	"Name" 		NVARCHAR(15)		NOT NULL,
+	"Name" 		NVARCHAR(15)	NOT NULL,
 	PRIMARY KEY("Name")
 );
 
 CREATE Table CHALLENGE
 (
     Id  		INT 			NOT NULL	IDENTITY(1,1),
-	UserAdmin	NVARCHAR(15)		NOT NULL,
+	UserAdmin	NVARCHAR(15)	NOT NULL,
     "Name" 		NVARCHAR(15) 	NOT NULL,
     Class 		VARCHAR(15) , 
     Privacy 	BIT,
@@ -75,7 +75,7 @@ CREATE TABLE CHALLENGE_PARTICIPANTS
     "User" 		NVARCHAR(15) 	NOT NULL,
     ChallengeId INT 			NOT NULL,
     ActivityId 	INT 			NOT NULL,
-    PRIMARY KEY("User", ChallengeId,ActivityId)
+    PRIMARY KEY("User", ChallengeId, ActivityId)
 );
 
 CREATE TABLE CHALLENGE_VISIBILITY
@@ -109,18 +109,13 @@ CREATE TABLE CATEGORY
 );
 
 CREATE TABLE RACE (
-	Id				INT				NOT NULL		IDENTITY(1,1),
+	Id				INT				NOT NULL	IDENTITY(1,1),
 	UserAdmin		NVARCHAR(15) 	NOT NULL,
 	"Name"			NVARCHAR(15) 	NOT NULL,
 	"Route"			NVARCHAR(15) 	NOT NULL,
-	"Cost"			INT 			NOT NULL,
+	"Cost"			DECIMAL(9,3) 	NOT NULL,
 	Privacy			BIT 			NOT NULL,
-	"Day"			DATE 			NOT NULL,
-	"Month"			DATE 			NOT NULL,
-	"Year"			DATE 			NOT NULL,
-	"Hour"			TIME 			NOT NULL,
-	"Minute"		TIME 			NOT NULL,
-	Seconds			TIME 			NOT NULL,
+	StarDate		DATETIME		NOT NULL,
 	Category		NVARCHAR(15) 	NOT NULL,
 	"Type"			NVARCHAR(15) 	NOT NULL,
 	PRIMARY KEY(Id)
@@ -128,7 +123,7 @@ CREATE TABLE RACE (
 
 CREATE TABLE RACE_VISIBILITY
 (
-    GroupId			INT 	NOT NULL,
+    GroupId			INT 			NOT NULL,
     RaceId	 		INT 			NOT NULL,
     PRIMARY KEY(GroupId, RaceId)
 );
@@ -149,11 +144,10 @@ CREATE TABLE BANK_ACCOUNTS
 
 CREATE Table RACE_PARTICIPANTS
 (
-    "User"  		NVARCHAR(15)		NOT NULL,
+    "User"  		NVARCHAR(15)	NOT NULL,
     RaceId 			INT 			NOT NULL,
-    PaymentId 		INT				NOT NULL, 
-    PaymentAmount 	INT				NOT NULL,
-    "Status" 		NVARCHAR(15)		NOT NULL,
+    Payment 		NVARCHAR(255)	NOT NULL,
+    "Status" 		NVARCHAR(15)	NOT NULL,
     ActivityId 		INT 			NOT NULL,
     PRIMARY KEY(RaceId, "User")
 );
@@ -324,6 +318,7 @@ BEGIN
 END;
 GO
 
+
 CREATE PROCEDURE LoginUser
 	@User NVARCHAR(15),
 	@Password NVARCHAR(30)
@@ -347,7 +342,7 @@ END;
 GO
 
 
-CREATE PROCEDURE SP_RegisterChallenge
+CREATE PROCEDURE RegisterChallenge
 	@User NVARCHAR(15),
 	@Name NVARCHAR(15),
 	@Class NVARCHAR(15),
@@ -355,7 +350,6 @@ CREATE PROCEDURE SP_RegisterChallenge
 	@StartDate DATE,
 	@EndDate DATE
 AS
-
 BEGIN 
 	SET NOCOUNT ON;
 	IF EXISTS(SELECT "UserAdmin" FROM CHALLENGE WHERE "UserAdmin" = @User)
