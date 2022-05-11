@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+using ApiServer.DTOs.Requests;
 using ApiServer.DTOs.Responses;
 
 namespace ApiServer.DAL
@@ -15,9 +17,8 @@ namespace ApiServer.DAL
                 using (SqlConnection con = new SqlConnection(GetConnection()))
                 {
                     string query = @"SELECT * FROM " + "\"User\"" + ";";
-                    using (SqlCommand cmd = new SqlCommand(query))
+                    using (SqlCommand cmd = new SqlCommand(query, con))
                     {
-                        cmd.Connection = con;
                         con.Open();
                         using (SqlDataReader sdr = cmd.ExecuteReader())
                         {
@@ -46,6 +47,42 @@ namespace ApiServer.DAL
                 return null;
             }
             return users;
+        }
+
+
+        public static string RegisterUserDB(UserRegisterDto user)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string procedure = @"Register";
+                    using (SqlCommand cmd = new SqlCommand(procedure, con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@User", user.User);
+                        cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
+                        cmd.Parameters.AddWithValue("@LastName1", user.LastName1);
+                        cmd.Parameters.AddWithValue("@LastName2", user.LastName2);
+                        cmd.Parameters.AddWithValue("@BirthDate", user.BirthDate.ToString("yyyy-MM-dd HH:mm:ss"));
+                        cmd.Parameters.AddWithValue("@Password", user.Password);
+                        cmd.Parameters.AddWithValue("@Picture", user.Picture);
+                        cmd.Parameters.AddWithValue("@Nationality", user.Nationality);
+
+                        con.Open();
+                        int sdr = (int)cmd.ExecuteScalar();
+                        con.Close();
+                        if (sdr == -1)
+                            return "Taken";
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return "Error";
+            }
+            return "Done";
         }
 
         private static string GetConnection()
