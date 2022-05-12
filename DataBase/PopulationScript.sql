@@ -31,7 +31,7 @@ EXEC RegisterChallenge
 	@Name='Reto ',
 	@Class='Master',
 	@Privacy=1,
-	@GroupName='Group 1',
+	@Groups='Group 1,Group 2,Group 3',
 	@StartDate='2022-06-15',
 	@EndDate= '2022-06-20',
 	@Activity_Type = 'Running';

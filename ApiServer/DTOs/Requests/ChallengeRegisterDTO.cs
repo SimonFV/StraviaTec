@@ -13,7 +13,7 @@ namespace ApiServer.DTOs.Requests
         public string Class { get; set; }
         [Required]
         public Boolean Privacy { get; set; }
-        public string GroupName { get; set; }
+        public string Groups { get; set; }
         [Required]
         public DateTime StartDate { get; set; }
         [Required]

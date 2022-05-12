@@ -356,6 +356,28 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE ChallengeGroups
+	@Groups varchar(1000),
+	@ChallengeName NVARCHAR(15)
+AS
+	DECLARE @Position INT
+	DECLARE @Group varchar (1000)
+	SET @Groups=@Groups+','
+	WHILE PATINDEX('%,%', @Groups)<>0
+		BEGIN
+			SELECT @Position=PATINDEX('%,%', @Groups)
+			SELECT @Group = left(@Groups, @Position - 1)
+
+			INSERT INTO CHALLENGE_VISIBILITY(GroupId,ChallengeId)
+			VALUES (
+				(SELECT Id FROM GROUPS WHERE "Name" = @Group),
+				(SELECT Id FROM CHALLENGE WHERE "Name" = @ChallengeName))
+			SELECT @Groups=STUFF(@Groups, 1, @Position, '')
+		END
+GO
+
+
+
 
 CREATE PROCEDURE RegisterChallenge
 	@Id INT,
@@ -363,7 +385,7 @@ CREATE PROCEDURE RegisterChallenge
 	@Name NVARCHAR(15),
 	@Class NVARCHAR(15),
 	@Privacy BIT,
-	@GroupName NVARCHAR(15),
+	@Groups VARCHAR(1000),
 	@StartDate DATE,
 	@EndDate DATE,
 	@Activity_Type NVARCHAR(15)
@@ -403,14 +425,8 @@ BEGIN
 
 	IF (@Privacy=1)
 		BEGIN
-			INSERT INTO CHALLENGE_VISIBILITY
-					(GroupId, ChallengeId)
-			VALUES(
-					(SELECT Id FROM GROUPS WHERE "Name" = @GroupName), 
-					(SELECT Id FROM CHALLENGE WHERE "Name" = @Name)
-					)
+			EXEC ChallengeGroups @Groups=@Groups,
+								 @Challengename=@Name;
 		END
-
-
 END;
 GO
