@@ -23,25 +23,29 @@ namespace ApiServer.Controllers
 
             return Ok(challenges);
         }
-        /*
-                [HttpPost]
-                [Route("users")]
-                public IActionResult RegisterUser(UserRegisterDto user)
+
+        [HttpPost]
+        [Route("challenges")]
+        public IActionResult RegisterChallenge(ChallengeRegisterDto challenge)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = ChallengeDAL.RegisterChallengeDB(challenge);
+                if (result is "Error")
                 {
-                    if (ModelState.IsValid)
-                    {
-                        var result = UserDAL.RegisterUserDB(user);
-                        if (result is "Error")
-                        {
-                            return new JsonResult("Something went wrong in the registration.") { StatusCode = 500 };
-                        }
-                        else if (result is "Taken")
-                        {
-                            return new JsonResult("User already exists.") { StatusCode = 409 };
-                        }
-                        return new JsonResult("Registration completed") { StatusCode = 201 };
-                    }
-                    return new JsonResult("Invalid model for an User.") { StatusCode = 400 };
-                }*/
+                    return new JsonResult("Something went wrong in the registration.") { StatusCode = 500 };
+                }
+                else if (result is "Already Exists")
+                {
+                    return new JsonResult("Challenge already exists.") { StatusCode = 409 };
+                }
+                else if (result is "Activity Type not found")
+                {
+                    return new JsonResult("Activity Type not found") { StatusCode = 408 };
+                }
+                return new JsonResult("Registration completed") { StatusCode = 201 };
+            }
+            return new JsonResult("Invalid model for an User.") { StatusCode = 400 };
+        }
     }
 }

@@ -26,15 +26,17 @@ INSERT INTO ACTIVITY_TYPE("Name") VALUES('Walking');
 */
 --Challenge registration
 EXEC RegisterChallenge 
+	@Id=0,
 	@User= 'sfv',
-	@Name='Challenge 2',
+	@Name='Reto ',
 	@Class='Master',
 	@Privacy=1,
+	@GroupName='Group 1',
 	@StartDate='2022-06-15',
 	@EndDate= '2022-06-20',
 	@Activity_Type = 'Running';
 
-						
+--INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group 1');						
 
 
 	

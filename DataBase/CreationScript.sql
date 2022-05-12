@@ -358,10 +358,12 @@ GO
 
 
 CREATE PROCEDURE RegisterChallenge
+	@Id INT,
 	@User NVARCHAR(15),
 	@Name NVARCHAR(15),
 	@Class NVARCHAR(15),
 	@Privacy BIT,
+	@GroupName NVARCHAR(15),
 	@StartDate DATE,
 	@EndDate DATE,
 	@Activity_Type NVARCHAR(15)
@@ -376,6 +378,7 @@ BEGIN
 		BEGIN
 			SELECT -2 --Not Type Found
 		END
+
 	ELSE
 	BEGIN
 		INSERT INTO CHALLENGE
@@ -397,5 +400,17 @@ BEGIN
 				)
 		SELECT 0 --Challenge registered
 	END
+
+	IF (@Privacy=1)
+		BEGIN
+			INSERT INTO CHALLENGE_VISIBILITY
+					(GroupId, ChallengeId)
+			VALUES(
+					(SELECT Id FROM GROUPS WHERE "Name" = @GroupName), 
+					(SELECT Id FROM CHALLENGE WHERE "Name" = @Name)
+					)
+		END
+
+
 END;
 GO
