@@ -85,6 +85,41 @@ namespace ApiServer.DAL
             return "Done";
         }
 
+        public static string LoginUserDB(UserLoginDto user)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string procedure = @"LoginUser";
+                    using (SqlCommand cmd = new SqlCommand(procedure, con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@User", user.User);
+                        cmd.Parameters.AddWithValue("@Password", user.Password);
+
+                        con.Open();
+                        int sdr = (int)cmd.ExecuteScalar();
+                        con.Close();
+                        if (sdr == -1)
+                        {
+                            return "NotFound";
+                        }
+                        else if (sdr == -2)
+                        {
+                            return "WrongPass";
+                        }
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return "Error";
+            }
+            return "Done";
+        }
+
         private static string GetConnection()
         {
             return "Server=.;Database=StraviaTecDB;User Id=tec;Password=Stravia.12345;";

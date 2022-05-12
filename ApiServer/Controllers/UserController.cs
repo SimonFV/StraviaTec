@@ -25,7 +25,7 @@ namespace ApiServer.Controllers
         }
 
         [HttpPost]
-        [Route("users")]
+        [Route("register")]
         public IActionResult RegisterUser(UserRegisterDto user)
         {
             if (ModelState.IsValid)
@@ -42,6 +42,30 @@ namespace ApiServer.Controllers
                 return new JsonResult("Registration completed") { StatusCode = 201 };
             }
             return new JsonResult("Invalid model for an User.") { StatusCode = 400 };
+        }
+
+        [HttpPost]
+        [Route("login")]
+        public IActionResult LoginUser(UserLoginDto user)
+        {
+            if (ModelState.IsValid)
+            {
+                string result = UserDAL.LoginUserDB(user);
+                if (result is "Error")
+                {
+                    return new JsonResult("Something went wrong in the login.") { StatusCode = 500 };
+                }
+                else if (result is "NotFound")
+                {
+                    return new JsonResult("User not found.") { StatusCode = 403 };
+                }
+                else if (result is "WrongPass")
+                {
+                    return new JsonResult("Incorrect password.") { StatusCode = 403 };
+                }
+                return new JsonResult("Login successful.") { StatusCode = 200 };
+            }
+            return new JsonResult("Invalid model for Login.") { StatusCode = 400 };
         }
     }
 }
