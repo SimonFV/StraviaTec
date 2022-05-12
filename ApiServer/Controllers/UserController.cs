@@ -3,7 +3,7 @@ using System;
 using ApiServer.DAL;
 using ApiServer.DTOs.Requests;
 
-namespace api.Controllers
+namespace ApiServer.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -30,7 +30,7 @@ namespace api.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = UserDAL.RegisterUserDB(user);
+                string result = UserDAL.RegisterUserDB(user);
                 if (result is "Error")
                 {
                     return new JsonResult("Something went wrong in the registration.") { StatusCode = 500 };
