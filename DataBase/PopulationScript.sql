@@ -16,15 +16,28 @@ EXEC Register @User = 'sfv',
 EXEC LoginUser @User = 'sfv',
 				@Password = 'Simon-12345';
 
+--Default Activity Types
+INSERT INTO ACTIVITY_TYPE("Name") VALUES('Running');
+INSERT INTO ACTIVITY_TYPE("Name") VALUES('Swimming');
+INSERT INTO ACTIVITY_TYPE("Name") VALUES('Cycling');
+INSERT INTO ACTIVITY_TYPE("Name") VALUES('Hiking');
+INSERT INTO ACTIVITY_TYPE("Name") VALUES('Kayaking');
+INSERT INTO ACTIVITY_TYPE("Name") VALUES('Walking');
+*/
 --Challenge registration
-EXEC SP_RegisterChallenge 
+EXEC RegisterChallenge 
 	@User= 'sfv',
-	@Name='Challenge 1',
+	@Name='Challenge 2',
 	@Class='Master',
 	@Privacy=1,
 	@StartDate='2022-06-15',
-	@EndDate= '2022-006-20';
-*/
+	@EndDate= '2022-06-20',
+	@Activity_Type = 'Running';
+
 						
+
+
+	
+
 
 

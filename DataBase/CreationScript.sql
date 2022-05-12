@@ -67,6 +67,7 @@ CREATE Table CHALLENGE
     Privacy 	BIT,
     StartDate 	DATE 			NOT NULL,
     EndDate 	DATE 			NOT NULL,
+	Activity_Type	NVARCHAR(15),
     PRIMARY KEY(Id)
 );
 
@@ -199,6 +200,10 @@ REFERENCES CHALLENGE(Id);
 ALTER TABLE CHALLENGE
 ADD CONSTRAINT FK_CHALLENGE_USERADMIN FOREIGN KEY (UserAdmin)
 REFERENCES "USER"("User");
+
+ALTER TABLE CHALLENGE
+ADD CONSTRAINT FK_CHALLENGE_ACTIVITY_TYPE FOREIGN KEY (Activity_type)
+REFERENCES ACTIVITY_TYPE("Name");
 
 ALTER TABLE CHALLENGE_PARTICIPANTS
 ADD CONSTRAINT FK_CHALLENGE_PART_USER FOREIGN KEY ("User")
@@ -348,14 +353,19 @@ CREATE PROCEDURE RegisterChallenge
 	@Class NVARCHAR(15),
 	@Privacy BIT,
 	@StartDate DATE,
-	@EndDate DATE
+	@EndDate DATE,
+	@Activity_Type NVARCHAR(15)
 AS
 BEGIN 
 	SET NOCOUNT ON;
-	IF EXISTS(SELECT "UserAdmin" FROM CHALLENGE WHERE "UserAdmin" = @User)
-    BEGIN
-        SELECT -1  --Challenge already exists
-    END
+	IF EXISTS(SELECT "Name" FROM CHALLENGE WHERE "Name" = @Name)
+		BEGIN
+			SELECT -1  --Challenge already exists
+		END
+	ELSE IF NOT EXISTS(SELECT "Name" FROM ACTIVITY_TYPE WHERE "Name"=@Activity_Type)
+		BEGIN
+			SELECT -2 --Not Type Found
+		END
 	ELSE
 	BEGIN
 		INSERT INTO CHALLENGE
@@ -364,13 +374,17 @@ BEGIN
 				Class,
 				Privacy,
 				StartDate,
-				EndDate)
+				EndDate,
+				Activity_Type
+				)
 		VALUES(@User,
 				@Name,
 				@Class,
 				@Privacy,
 				@StartDate,
-				@EndDate)
+				@EndDate,
+				@Activity_Type
+				)
 		SELECT 0 --Challenge registered
 	END
 END;
