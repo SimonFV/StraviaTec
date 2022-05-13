@@ -25,6 +25,8 @@ INSERT INTO ACTIVITY_TYPE("Name") VALUES('Kayaking');
 INSERT INTO ACTIVITY_TYPE("Name") VALUES('Walking');
 */
 --Challenge registration
+
+
 EXEC RegisterChallenge 
 	@Id=0,
 	@User= 'sfv',
@@ -35,9 +37,11 @@ EXEC RegisterChallenge
 	@StartDate='2022-06-15',
 	@EndDate= '2022-06-20',
 	@Activity_Type = 'Running';
-
---INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group 1');						
-
+/*
+INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group 1');						
+INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group 2');
+INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group 3');
+*/
 
 	
 
