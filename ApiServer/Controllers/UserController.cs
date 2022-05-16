@@ -24,10 +24,10 @@ namespace ApiServer.Controllers
         }
 
         [HttpGet]
-        [Route("friendsFrontPage")]
-        public IActionResult GetFriendsFrontPage()
+        [Route("friendsFrontPage/{user}")]
+        public IActionResult GetFriendsFrontPage(string user)
         {
-            var friends = UserDAL.GetFriendsFrontPageDB();
+            var friends = UserDAL.GetFriendsFrontPageDB(user);
             if (friends is null)
                 return new JsonResult("Something went wrong retrieving the friends.") { StatusCode = 500 };
             return Ok(friends);
@@ -83,6 +83,48 @@ namespace ApiServer.Controllers
                 return new JsonResult("Activity added.") { StatusCode = 201 };
             }
             return new JsonResult("Invalid model for Activity.") { StatusCode = 400 };
+        }
+
+        [HttpPost]
+        [Route("addFriend/{user}/{friend}")]
+        public IActionResult PostFriend(string user, string friend)
+        {
+            if (ModelState.IsValid)
+            {
+                string result = UserDAL.AddFriend(user, friend);
+                if (result is "Error")
+                    return new JsonResult("Something went wrong while adding the friend.") { StatusCode = 500 };
+                return new JsonResult("Friend added.") { StatusCode = 201 };
+            }
+            return new JsonResult("Invalid model for User/Friend.") { StatusCode = 400 };
+        }
+
+        [HttpPost]
+        [Route("createGroup/{admin}/{name}")]
+        public IActionResult CreateGroup(string admin, string name)
+        {
+            if (ModelState.IsValid)
+            {
+                string result = UserDAL.CreateGroup(admin, name);
+                if (result is "Error")
+                    return new JsonResult("Something went wrong while creating the group.") { StatusCode = 500 };
+                return new JsonResult("Group created.") { StatusCode = 201 };
+            }
+            return new JsonResult("Invalid model for Admin/Name.") { StatusCode = 400 };
+        }
+
+        [HttpPost]
+        [Route("joinGroup/{id}/{user}")]
+        public IActionResult JoinGroup(int id, string user)
+        {
+            if (ModelState.IsValid)
+            {
+                string result = UserDAL.JoinGroup(id, user);
+                if (result is "Error")
+                    return new JsonResult("Something went wrong while joining the group.") { StatusCode = 500 };
+                return new JsonResult("Joined.") { StatusCode = 201 };
+            }
+            return new JsonResult("Invalid model for Id/User.") { StatusCode = 400 };
         }
     }
 }

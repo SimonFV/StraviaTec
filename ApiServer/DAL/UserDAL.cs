@@ -49,16 +49,18 @@ namespace ApiServer.DAL
             return users;
         }
 
-        public static List<FriendsFrontPage> GetFriendsFrontPageDB()
+        public static List<FriendsFrontPage> GetFriendsFrontPageDB(string user)
         {
             List<FriendsFrontPage> friends = new();
             try
             {
                 using (SqlConnection con = new SqlConnection(GetConnection()))
                 {
-                    string query = @"SELECT * FROM MyFriendsStartPage;";
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    string procedure = @"FriendsLatestActivities";
+                    using (SqlCommand cmd = new SqlCommand(procedure, con))
                     {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@User", user);
                         con.Open();
                         using (SqlDataReader sdr = cmd.ExecuteReader())
                         {
@@ -73,7 +75,7 @@ namespace ApiServer.DAL
                                     Type = (string)sdr["Type"],
                                     Start = (DateTime)sdr["Start"],
                                     Route = (string)sdr["Route"],
-                                    Distance = (float)sdr["Distance"]
+                                    Distance = (double)sdr["Distance"]
                                 };
                                 friends.Add(friend);
                             }
@@ -182,6 +184,78 @@ namespace ApiServer.DAL
                             return "Taken";
                         else if (sdr == -2)
                             return "CurrentDate";
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return "Error";
+            }
+            return "Done";
+        }
+
+        public static string AddFriend(string user, string friend)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query = @"INSERT INTO FRIENDS(" + "\"User\"" + ", FriendUser) " +
+                                    "VALUES('" + user + "', '" + friend + "');";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader sdr = cmd.ExecuteReader();
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return "Error";
+            }
+            return "Done";
+        }
+
+        public static string CreateGroup(string admin, string name)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query = @"INSERT INTO GROUPS(AdminUser, " + "\"Name\"" + ") " +
+                                    "VALUES('" + admin + "', '" + name + "');";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader sdr = cmd.ExecuteReader();
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return "Error";
+            }
+            return "Done";
+        }
+
+        public static string JoinGroup(int id, string user)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query = @"INSERT INTO GROUP_USERS(GroupId, " + "\"User\"" + ") " +
+                                    "VALUES(" + id + ", '" + user + "');";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader sdr = cmd.ExecuteReader();
+                        con.Close();
                     }
                 }
             }

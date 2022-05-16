@@ -11,6 +11,6 @@ namespace ApiServer.DTOs.Responses
         public string Type { get; set; }
         public DateTime Start { get; set; }
         public string Route { get; set; }
-        public float Distance { get; set; }
+        public double Distance { get; set; }
     }
 }

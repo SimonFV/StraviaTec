@@ -339,6 +339,18 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE FriendsLatestActivities
+	@User NVARCHAR(15)
+AS
+BEGIN
+    SELECT * FROM LATEST_ACTIVITY 
+	WHERE EXISTS(
+				SELECT FriendUser FROM FRIENDS 
+				WHERE LATEST_ACTIVITY."User" = FRIENDS.FriendUser AND FRIENDS."User" = @User)
+END;
+GO
+
+
 CREATE PROCEDURE ChallengeGroups
 	@Groups varchar(1000),
 	@ChallengeName NVARCHAR(15)
@@ -451,7 +463,7 @@ GO
 ----------------------------------------------
 
 
-CREATE VIEW MyFriendsStartPage AS
+CREATE VIEW LATEST_ACTIVITY AS
 SELECT "User", FirstName, LastName1, LastName2, "Type", "Start", "Route", Distance
 FROM "USER", ACTIVITY 
 WHERE "User" = UserId AND "Start" = (SELECT MAX("Start") FROM ACTIVITY WHERE UserId = "User");
