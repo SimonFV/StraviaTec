@@ -43,10 +43,10 @@ CREATE TABLE ACTIVITY
 (
 	Id			INT				NOT NULL	IDENTITY(1,1),
 	UserId		NVARCHAR(15)	NOT NULL,
-	Distance	INT,
+	Distance	DECIMAL(9,3),
 	Duration	TIME			NOT NULL,
 	"Route"		NVARCHAR(255),
-	Altitude	INT,
+	Altitude	DECIMAL(9,3),
 	"Start"		DATETIME		NOT NULL,
 	"Type"		NVARCHAR(15)	NOT NULL,
 	PRIMARY KEY(Id)
@@ -293,14 +293,8 @@ GO
 	Users registration. Checks if the User already exists and saves the Password with hash.
 */
 CREATE PROCEDURE Register
-	@User NVARCHAR(15),
-	@FirstName NVARCHAR(15),
-	@LastName1 NVARCHAR(15),
-	@LastName2 NVARCHAR(15),
-	@BirthDate DATE,
-	@Password NVARCHAR(30),
-	@Picture NVARCHAR(255),
-	@Nationality VARCHAR(15)
+	@User NVARCHAR(15), @FirstName NVARCHAR(15), @LastName1 NVARCHAR(15), @LastName2 NVARCHAR(15),
+	@BirthDate DATE, @Password NVARCHAR(30), @Picture NVARCHAR(255), @Nationality VARCHAR(15)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -312,22 +306,11 @@ BEGIN
     ELSE
     BEGIN
         INSERT INTO "USER"
-                ("User",
-				FirstName,
-				LastName1,
-				LastName2,
-				BirthDate,
-				"Password",
-				Picture,
-				Nationality)
-        VALUES (@User,
-				@FirstName,
-				@LastName1,
-				@LastName2,
-				@BirthDate,
-				HASHBYTES('SHA2_512', @Password),
-				@Picture,
-				@Nationality)
+                ("User", FirstName, LastName1, LastName2, BirthDate,
+				"Password", Picture, Nationality)
+        VALUES (
+				@User, @FirstName, @LastName1, @LastName2, @BirthDate,
+				HASHBYTES('SHA2_512', @Password), @Picture, @Nationality)
         SELECT 0 --User registered
     END
 END;
@@ -353,6 +336,36 @@ BEGIN
 	BEGIN
 		SELECT 0 --User logged in
 	END
+END;
+GO
+
+
+CREATE PROCEDURE AddActivity
+	@UserId	NVARCHAR(15), @Distance FLOAT, @Duration TIME, @Route NVARCHAR(255),
+	@Altitude FLOAT, @Start DATETIME, @Type	NVARCHAR(15)
+AS
+BEGIN
+    SET NOCOUNT ON;
+     
+    IF EXISTS(SELECT UserId FROM ACTIVITY WHERE UserId = @UserId AND 
+												"Start" < @Start + CAST(@Duration AS datetime) AND
+												"Start" + CAST(Duration AS datetime) > @Start)
+    BEGIN
+        SELECT -1  --An Activity at that time already in the database
+    END
+	ELSE IF GETDATE() < @Start + CAST(@Duration AS datetime)
+	BEGIN
+        SELECT -2  --The time and duration of the activity doesn't match with the current time
+    END
+    ELSE
+    BEGIN
+        INSERT INTO ACTIVITY
+                (UserId, Distance, Duration, "Route", 
+				Altitude, "Start", "Type")
+        VALUES (@UserId, @Distance, @Duration, @Route, 
+				@Altitude, @Start, @Type)
+        SELECT 0 --Activity added
+    END
 END;
 GO
 
@@ -402,15 +415,25 @@ BEGIN
 	END
 
 	IF (@Privacy=1)
-		BEGIN
-			INSERT INTO CHALLENGE_VISIBILITY
-					(GroupId, ChallengeId)
-			VALUES(
-					(SELECT Id FROM GROUPS WHERE "Name" = @GroupName), 
-					(SELECT Id FROM CHALLENGE WHERE "Name" = @Name)
-					)
+	BEGIN
+		INSERT INTO CHALLENGE_VISIBILITY
+				(GroupId, ChallengeId)
+		VALUES(
+				(SELECT Id FROM GROUPS WHERE "Name" = @GroupName), 
+				(SELECT Id FROM CHALLENGE WHERE "Name" = @Name))
 		END
-
-
 END;
+GO
+
+
+
+----------------------------------------------
+--					VIEWS					--
+----------------------------------------------
+
+
+CREATE VIEW MyFriendsStartPage AS
+SELECT "User", FirstName, LastName1, LastName2, "Type", "Start", "Route", Distance
+FROM "USER", ACTIVITY 
+WHERE "User" = UserId AND "Start" = (SELECT MAX("Start") FROM ACTIVITY WHERE UserId = "User");
 GO

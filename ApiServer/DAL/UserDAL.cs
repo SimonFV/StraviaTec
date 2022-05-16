@@ -49,6 +49,47 @@ namespace ApiServer.DAL
             return users;
         }
 
+        public static List<FriendsFrontPage> GetFriendsFrontPageDB()
+        {
+            List<FriendsFrontPage> friends = new();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query = @"SELECT * FROM MyFriendsStartPage;";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                FriendsFrontPage friend = new()
+                                {
+                                    User = (string)sdr["User"],
+                                    FirstName = (string)sdr["FirstName"],
+                                    LastName1 = (string)sdr["LastName1"],
+                                    LastName2 = (string)sdr["LastName2"],
+                                    Type = (string)sdr["Type"],
+                                    Start = (DateTime)sdr["Start"],
+                                    Route = (string)sdr["Route"],
+                                    Distance = (float)sdr["Distance"]
+                                };
+                                friends.Add(friend);
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return null;
+            }
+            return friends;
+        }
+
 
         public static string RegisterUserDB(UserRegisterDto user)
         {
@@ -102,13 +143,45 @@ namespace ApiServer.DAL
                         int sdr = (int)cmd.ExecuteScalar();
                         con.Close();
                         if (sdr == -1)
-                        {
                             return "NotFound";
-                        }
                         else if (sdr == -2)
-                        {
                             return "WrongPass";
-                        }
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return "Error";
+            }
+            return "Done";
+        }
+
+        public static string AddActivity(ActivityDto act)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string procedure = @"AddActivity";
+                    using (SqlCommand cmd = new SqlCommand(procedure, con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@UserId", act.UserId);
+                        cmd.Parameters.AddWithValue("@Distance", act.Distance);
+                        cmd.Parameters.AddWithValue("@Duration", act.Duration.ToString("HH:mm:ss"));
+                        cmd.Parameters.AddWithValue("@Route", act.Route);
+                        cmd.Parameters.AddWithValue("@Altitude", act.Altitude);
+                        cmd.Parameters.AddWithValue("@Start", act.Start.ToString("yyyy-MM-dd HH:mm:ss"));
+                        cmd.Parameters.AddWithValue("@Type", act.Type);
+
+                        con.Open();
+                        int sdr = (int)cmd.ExecuteScalar();
+                        con.Close();
+                        if (sdr == -1)
+                            return "Taken";
+                        else if (sdr == -2)
+                            return "CurrentDate";
                     }
                 }
             }

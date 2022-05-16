@@ -3,27 +3,23 @@ GO
 
 /*
 --User registration
-EXEC Register @User = 'sfv',
-			@FirstName = 'Simon',
-			@LastName1 = 'Fallas',
-			@LastName2 = 'Villalobos',
-			@BirthDate = '1998-02-15',
+EXEC Register @User = 'asd',
+			@FirstName = 'asd1',
+			@LastName1 = 'asd2',
+			@LastName2 = 'asd3',
+			@BirthDate = '1998-02-21',
 			@Password = 'Simon-12345',
-			@Picture = 'profilePic',
-			@Nationality = 'CostaRican';
+			@Picture = 'profilePic2',
+			@Nationality = 'CostaRicana';
+GO
+
 
 --User login
 EXEC LoginUser @User = 'sfv',
 				@Password = 'Simon-12345';
 
---Default Activity Types
-INSERT INTO ACTIVITY_TYPE("Name") VALUES('Running');
-INSERT INTO ACTIVITY_TYPE("Name") VALUES('Swimming');
-INSERT INTO ACTIVITY_TYPE("Name") VALUES('Cycling');
-INSERT INTO ACTIVITY_TYPE("Name") VALUES('Hiking');
-INSERT INTO ACTIVITY_TYPE("Name") VALUES('Kayaking');
-INSERT INTO ACTIVITY_TYPE("Name") VALUES('Walking');
-*/
+
+
 --Challenge registration
 EXEC RegisterChallenge 
 	@Id=0,
@@ -39,7 +35,26 @@ EXEC RegisterChallenge
 --INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group 1');						
 
 
-	
+--Default Activity Types
+INSERT INTO ACTIVITY_TYPE("Name") VALUES('Running');
+INSERT INTO ACTIVITY_TYPE("Name") VALUES('Swimming');
+INSERT INTO ACTIVITY_TYPE("Name") VALUES('Cycling');
+INSERT INTO ACTIVITY_TYPE("Name") VALUES('Hiking');
+INSERT INTO ACTIVITY_TYPE("Name") VALUES('Kayaking');
+INSERT INTO ACTIVITY_TYPE("Name") VALUES('Walking');
+GO
 
 
+EXEC AddActivity
+	@UserId	= 'asd',
+	@Distance = 34.34,
+	@Duration = '05:45:23',
+	@Route = 'routeasd',
+	@Altitude = 14.1,
+	@Start = '2022-11-13 03:50:00',
+	@Type = 'Hiking';
+GO
 
+SELECT * FROM MyFriendsStartPage;
+GO
+*/
