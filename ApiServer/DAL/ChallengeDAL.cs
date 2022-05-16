@@ -54,9 +54,9 @@ namespace ApiServer.DAL{
                         cmd.Parameters.AddWithValue("@Class", challenge.Class);
                         cmd.Parameters.AddWithValue("@Privacy", challenge.Privacy);
                         if(challenge.Privacy){
-                            cmd.Parameters.AddWithValue("@GroupName", challenge.GroupName);
+                            cmd.Parameters.AddWithValue("@Groups", challenge.Groups);
                         }else{
-                            cmd.Parameters.AddWithValue("@GroupName", "");
+                            cmd.Parameters.AddWithValue("@Groups", "");
                         }
                         cmd.Parameters.AddWithValue("@StartDate", challenge.StartDate.ToString("yyyy-MM-dd HH:mm:ss"));
                         cmd.Parameters.AddWithValue("@EndDate", challenge.EndDate.ToString("yyyy-MM-dd HH:mm:ss"));

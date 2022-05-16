@@ -21,19 +21,23 @@ EXEC LoginUser @User = 'sfv',
 
 
 --Challenge registration
+
+
 EXEC RegisterChallenge 
 	@Id=0,
 	@User= 'sfv',
 	@Name='Reto ',
 	@Class='Master',
 	@Privacy=1,
-	@GroupName='Group 1',
+	@Groups='Group 1,Group 2,Group 3',
 	@StartDate='2022-06-15',
 	@EndDate= '2022-06-20',
 	@Activity_Type = 'Running';
-
---INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group 1');						
-
+/*
+INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group 1');						
+INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group 2');
+INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group 3');
+*/
 
 --Default Activity Types
 INSERT INTO ACTIVITY_TYPE("Name") VALUES('Running');
