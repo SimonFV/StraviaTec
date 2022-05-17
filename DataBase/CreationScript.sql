@@ -374,7 +374,6 @@ BEGIN
 END;
 GO
 
-
 CREATE PROCEDURE ChallengeGroups
 	@Groups varchar(1000),
 	@ChallengeName NVARCHAR(15)
@@ -480,7 +479,80 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE RaceGroups
+	@Groups varchar(1000),
+	@RaceName NVARCHAR(15)
+AS
+	DECLARE @Position INT
+	DECLARE @Group varchar (1000)
+	SET @Groups=@Groups+','
+	WHILE PATINDEX('%,%', @Groups)<>0
+		BEGIN
+			SELECT @Position=PATINDEX('%,%', @Groups)
+			SELECT @Group = left(@Groups, @Position - 1)
 
+			INSERT INTO RACE_VISIBILITY(GroupId,RaceId)
+			VALUES (
+				(SELECT Id FROM GROUPS WHERE "Name" = @Group),
+				(SELECT Id FROM RACE WHERE "Name" = @RaceName))
+			SELECT @Groups=STUFF(@Groups, 1, @Position, '')
+		END;
+GO
+
+CREATE PROCEDURE RegisterRace
+	@Id INT,
+	@Admin NVARCHAR(15),
+	@Name NVARCHAR(15),
+	@Route NVARCHAR(15),
+	@Cost DECIMAL(9,3),
+	@Privacy BIT,
+	@Groups VARCHAR(1000),
+	@StartDate DATE,
+	@Category NVARCHAR(15),
+	@Type NVARCHAR(15)
+AS
+BEGIN 
+	SET NOCOUNT ON;
+	IF EXISTS(SELECT "Name" FROM RACE WHERE "Name" = @Name)
+		BEGIN
+			SELECT -1  -- Race already exists
+		END
+	ELSE IF NOT EXISTS(SELECT "Name" FROM ACTIVITY_TYPE WHERE "Name"=@Activity_Type)
+		BEGIN
+			SELECT -2 -- Not Type Found
+		END
+
+	ELSE
+	BEGIN
+		INSERT INTO Race
+				(UserAdmin,
+				"Name",
+				"Route",
+				"Cost",
+				Privacy,
+				StartDate,
+				Category,
+				"Type"
+				)
+		VALUES(@Admin,
+				@Name,
+				@Route,
+				@Cost,
+				@Privacy,
+				@StartDate,
+				@Category,
+				@Type
+				)
+		SELECT 0 -- Race registered
+	END
+
+	IF (@Privacy=1)
+		BEGIN
+			EXEC RaceGroups @Groups=@Groups,
+						    @Racename=@Name;
+		END
+END;
+GO
 
 ----------------------------------------------
 --					VIEWS					--
