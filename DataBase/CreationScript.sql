@@ -122,7 +122,7 @@ CREATE TABLE RACE (
 	"Route"			NVARCHAR(15) 	NOT NULL,
 	"Cost"			DECIMAL(9,3) 	NOT NULL,
 	Privacy			BIT 			NOT NULL,
-	StarDate		DATETIME		NOT NULL,
+	StartDate		DATETIME		NOT NULL,
 	Category		NVARCHAR(15) 	NOT NULL,
 	"Type"			NVARCHAR(15) 	NOT NULL,
 	PRIMARY KEY(Id)
@@ -374,29 +374,6 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE ChallengeGroups
-	@Groups varchar(1000),
-	@ChallengeName NVARCHAR(15)
-AS
-	DECLARE @Position INT
-	DECLARE @Group varchar (1000)
-	SET @Groups=@Groups+','
-	WHILE PATINDEX('%,%', @Groups)<>0
-		BEGIN
-			SELECT @Position=PATINDEX('%,%', @Groups)
-			SELECT @Group = left(@Groups, @Position - 1)
-
-			INSERT INTO CHALLENGE_VISIBILITY(GroupId,ChallengeId)
-			VALUES (
-				(SELECT Id FROM GROUPS WHERE "Name" = @Group),
-				(SELECT Id FROM CHALLENGE WHERE "Name" = @ChallengeName))
-			SELECT @Groups=STUFF(@Groups, 1, @Position, '')
-		END
-GO
-
-
-
-
 CREATE PROCEDURE AddActivity
 	@UserId	NVARCHAR(15), @Distance FLOAT, @Duration TIME, @Route NVARCHAR(255),
 	@Altitude FLOAT, @Start DATETIME, @Type	NVARCHAR(15)
@@ -426,6 +403,25 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE ChallengeGroups
+	@Groups varchar(1000),
+	@ChallengeName NVARCHAR(15)
+AS
+	DECLARE @Position INT
+	DECLARE @Group varchar (1000)
+	SET @Groups=@Groups+','
+	WHILE PATINDEX('%,%', @Groups)<>0
+		BEGIN
+			SELECT @Position=PATINDEX('%,%', @Groups)
+			SELECT @Group = left(@Groups, @Position - 1)
+
+			INSERT INTO CHALLENGE_VISIBILITY(GroupId,ChallengeId)
+			VALUES (
+				(SELECT Id FROM GROUPS WHERE "Name" = @Group),
+				(SELECT Id FROM CHALLENGE WHERE "Name" = @ChallengeName))
+			SELECT @Groups=STUFF(@Groups, 1, @Position, '')
+		END
+GO
 
 CREATE PROCEDURE RegisterChallenge
 	@Id INT,
@@ -517,7 +513,7 @@ BEGIN
 		BEGIN
 			SELECT -1  -- Race already exists
 		END
-	ELSE IF NOT EXISTS(SELECT "Name" FROM ACTIVITY_TYPE WHERE "Name"=@Activity_Type)
+	ELSE IF NOT EXISTS(SELECT "Name" FROM ACTIVITY_TYPE WHERE "Name"=@Type)
 		BEGIN
 			SELECT -2 -- Not Type Found
 		END

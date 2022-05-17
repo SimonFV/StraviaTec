@@ -58,7 +58,7 @@ namespace ApiServer.DAL
                         cmd.Parameters.AddWithValue("@Route", race.Route);
                         cmd.Parameters.AddWithValue("@Cost", race.Cost);
                         cmd.Parameters.AddWithValue("@Privacy", race.Privacy);
-                        if(challenge.Privacy){
+                        if(race.Privacy){
                             cmd.Parameters.AddWithValue("@Groups", race.Groups);
                         }else{
                             cmd.Parameters.AddWithValue("@Groups", "");
