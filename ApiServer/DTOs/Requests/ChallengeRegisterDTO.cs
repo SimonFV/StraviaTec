@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ApiServer.DTOs.Requests
 {
-    public partial class ChallengeRegisterDto
+    public class ChallengeRegisterDto
     {
         [Required]
         public string User { get; set; }

@@ -2,7 +2,7 @@ using System;
 
 namespace ApiServer.DTOs.Responses
 {
-    public partial class UserResponseDto
+    public class UserResponseDto
     {
         public string User { get; set; }
         public string FirstName { get; set; }

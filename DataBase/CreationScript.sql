@@ -350,6 +350,30 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE FriendsAvailable
+	@User NVARCHAR(15)
+AS
+BEGIN
+    SELECT "USER"."User", FirstName, LastName1 FROM "USER" 
+	WHERE "USER"."User" NOT IN(
+		SELECT FRIENDS.FriendUser FROM FRIENDS 
+		WHERE "User" = @User)
+		AND "USER"."User" != @User;
+END;
+GO
+
+CREATE PROCEDURE GroupsAvailable
+	@User NVARCHAR(15)
+AS
+BEGIN
+    SELECT * FROM GROUPS
+	WHERE Id NOT IN(
+		SELECT GROUP_USERS.GroupId FROM GROUP_USERS 
+		WHERE GROUP_USERS."User" = @User)
+		AND AdminUser != @User;
+END;
+GO
+
 
 CREATE PROCEDURE ChallengeGroups
 	@Groups varchar(1000),

@@ -33,6 +33,26 @@ namespace ApiServer.Controllers
             return Ok(friends);
         }
 
+        [HttpGet]
+        [Route("friendsAvailable/{user}")]
+        public IActionResult GetFriendsAvailable(string user)
+        {
+            var friends = UserDAL.GetFriendsAvailable(user);
+            if (friends is null)
+                return new JsonResult("Something went wrong retrieving the users.") { StatusCode = 500 };
+            return Ok(friends);
+        }
+
+        [HttpGet]
+        [Route("groupsAvailable/{user}")]
+        public IActionResult GetGroupsAvailable(string user)
+        {
+            var groups = UserDAL.GetGroupsAvailable(user);
+            if (groups is null)
+                return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
+            return Ok(groups);
+        }
+
         [HttpPost]
         [Route("register")]
         public IActionResult RegisterUser(UserRegisterDto user)

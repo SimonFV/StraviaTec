@@ -2,7 +2,7 @@ using System;
 
 namespace ApiServer.DTOs.Responses
 {
-    public partial class ChallengeResponseDto
+    public class ChallengeResponseDto
     {
         public int Id { get; set; }
         public string UserAdmin { get; set; }
@@ -13,4 +13,4 @@ namespace ApiServer.DTOs.Responses
         public DateTime EndDate { get; set; }
         public string Activity_Type { get; set; }
     }
-}   
+}

@@ -2,7 +2,7 @@ using System;
 
 namespace ApiServer.DTOs.Responses
 {
-    public partial class FriendsFrontPage
+    public class FriendsFrontPage
     {
         public string User { get; set; }
         public string FirstName { get; set; }
