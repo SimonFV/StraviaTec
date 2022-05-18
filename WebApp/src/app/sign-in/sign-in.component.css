@@ -10,8 +10,9 @@
   }
   .btn-outline-primary {
     --bs-btn-font-weight: 600;
-    --bs-btn-color:  #7742BE;;
+    --bs-btn-color:  #7742BE;
     --bs-btn-bg: var(--bd-violet);
+    --bs-btn-active-color:#7742BE;
     --bs-btn-border-color:  #7742BE;;
     --bs-btn-border-radius: .5rem;
     --bs-btn-hover-color: var(--bs-white);
