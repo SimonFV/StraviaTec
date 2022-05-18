@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using ApiServer.DTOs;
 using ApiServer.DTOs.Requests;
 using ApiServer.DTOs.Responses;
 
@@ -330,6 +331,31 @@ namespace ApiServer.DAL
                 {
                     string query = @"INSERT INTO GROUP_USERS(GroupId, " + "\"User\"" + ") " +
                                     "VALUES(" + id + ", '" + user + "');";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader sdr = cmd.ExecuteReader();
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return "Error";
+            }
+            return "Done";
+        }
+
+        public static string UpdateGroup(GroupDTO group)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query = @"UPDATE GROUPS SET AdminUser = '" + group.AdminUser +
+                                    "', " + "\"Name\"" + "= '" + group.Name +
+                                    "' WHERE Id = " + group.Id + ";";
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         con.Open();

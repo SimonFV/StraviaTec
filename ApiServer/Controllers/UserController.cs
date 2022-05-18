@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using ApiServer.DAL;
 using ApiServer.DTOs.Requests;
+using ApiServer.DTOs.Responses;
+using ApiServer.DTOs;
+using System.Collections.Generic;
 
 namespace ApiServer.Controllers
 {
@@ -17,7 +20,7 @@ namespace ApiServer.Controllers
         [Route("users")]
         public IActionResult GetUsers()
         {
-            var users = UserDAL.GetUsers();
+            List<UserResponseDto> users = UserDAL.GetUsers();
             if (users is null)
                 return new JsonResult("Something went wrong retrieving the users.") { StatusCode = 500 };
             return Ok(users);
@@ -27,7 +30,7 @@ namespace ApiServer.Controllers
         [Route("friendsFrontPage/{user}")]
         public IActionResult GetFriendsFrontPage(string user)
         {
-            var friends = UserDAL.GetFriendsFrontPageDB(user);
+            List<FriendsFrontPage> friends = UserDAL.GetFriendsFrontPageDB(user);
             if (friends is null)
                 return new JsonResult("Something went wrong retrieving the friends.") { StatusCode = 500 };
             return Ok(friends);
@@ -37,7 +40,7 @@ namespace ApiServer.Controllers
         [Route("friendsAvailable/{user}")]
         public IActionResult GetFriendsAvailable(string user)
         {
-            var friends = UserDAL.GetFriendsAvailable(user);
+            List<UserResponseDto> friends = UserDAL.GetFriendsAvailable(user);
             if (friends is null)
                 return new JsonResult("Something went wrong retrieving the users.") { StatusCode = 500 };
             return Ok(friends);
@@ -47,7 +50,7 @@ namespace ApiServer.Controllers
         [Route("groupsAvailable/{user}")]
         public IActionResult GetGroupsAvailable(string user)
         {
-            var groups = UserDAL.GetGroupsAvailable(user);
+            List<GroupDTO> groups = UserDAL.GetGroupsAvailable(user);
             if (groups is null)
                 return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
             return Ok(groups);
@@ -145,6 +148,21 @@ namespace ApiServer.Controllers
                 return new JsonResult("Joined.") { StatusCode = 201 };
             }
             return new JsonResult("Invalid model for Id/User.") { StatusCode = 400 };
+        }
+
+
+        [HttpPut]
+        [Route("updateGroup")]
+        public IActionResult UpdateGroup(GroupDTO group)
+        {
+            if (ModelState.IsValid)
+            {
+                string result = UserDAL.UpdateGroup(group);
+                if (result is "Error")
+                    return new JsonResult("Something went wrong while updating the group.") { StatusCode = 500 };
+                return new JsonResult("Group updated.") { StatusCode = 201 };
+            }
+            return new JsonResult("Invalid model for Group.") { StatusCode = 400 };
         }
     }
 }

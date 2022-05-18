@@ -5,18 +5,27 @@ using System.Data.SqlClient;
 using ApiServer.DTOs.Requests;
 using ApiServer.DTOs.Responses;
 
-namespace ApiServer.DAL{
-    public static class ChallengeDAL{
-        public static List<ChallengeResponseDto> GetChallenges(){
+namespace ApiServer.DAL
+{
+    public static class ChallengeDAL
+    {
+        public static List<ChallengeResponseDto> GetChallenges()
+        {
             List<ChallengeResponseDto> challenges = new();
-            try {
-                using (SqlConnection con = new SqlConnection(GetConnection())){
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
                     string query = @"SELECT * FROM CHALLENGE;";
-                    using (SqlCommand cmd = new SqlCommand(query, con)){
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
                         con.Open();
-                        using (SqlDataReader sdr = cmd.ExecuteReader()){
-                            while (sdr.Read()){
-                                ChallengeResponseDto challenge = new(){
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                ChallengeResponseDto challenge = new()
+                                {
                                     Id = (int)sdr["Id"],
                                     UserAdmin = (string)sdr["UserAdmin"],
                                     Class = (string)sdr["Class"],
@@ -32,7 +41,8 @@ namespace ApiServer.DAL{
                     }
                 }
             }
-            catch (Exception err){
+            catch (Exception err)
+            {
                 Console.Write(err);
                 return null;
             }
@@ -53,9 +63,12 @@ namespace ApiServer.DAL{
                         cmd.Parameters.AddWithValue("@Name", challenge.Name);
                         cmd.Parameters.AddWithValue("@Class", challenge.Class);
                         cmd.Parameters.AddWithValue("@Privacy", challenge.Privacy);
-                        if(challenge.Privacy){
+                        if (challenge.Privacy)
+                        {
                             cmd.Parameters.AddWithValue("@Groups", challenge.Groups);
-                        }else{
+                        }
+                        else
+                        {
                             cmd.Parameters.AddWithValue("@Groups", "");
                         }
                         cmd.Parameters.AddWithValue("@StartDate", challenge.StartDate.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -65,10 +78,12 @@ namespace ApiServer.DAL{
                         con.Open();
                         int sdr = (int)cmd.ExecuteScalar();
                         con.Close();
-                        if (sdr == -1){
+                        if (sdr == -1)
+                        {
                             return "Already Exists";
                         }
-                        if(sdr==-2){
+                        if (sdr == -2)
+                        {
                             return "Activity Type not found";
                         }
                     }
@@ -84,7 +99,8 @@ namespace ApiServer.DAL{
 
 
 
-        private static string GetConnection(){
+        private static string GetConnection()
+        {
             return "Server=.;Database=StraviaTecDB;User Id=tec;Password=Stravia.12345;";
         }
     }

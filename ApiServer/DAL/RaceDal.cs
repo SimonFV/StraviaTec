@@ -9,16 +9,23 @@ namespace ApiServer.DAL
 {
     public static class RaceDAL
     {
-        public static List<RaceResponseDto> GetRaces(){
+        public static List<RaceResponseDto> GetRaces()
+        {
             List<RaceResponseDto> races = new();
-            try {
-                using (SqlConnection con = new SqlConnection(GetConnection())){
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
                     string query = @"SELECT * FROM RACE;";
-                    using (SqlCommand cmd = new SqlCommand(query, con)){
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
                         con.Open();
-                        using (SqlDataReader sdr = cmd.ExecuteReader()){
-                            while (sdr.Read()){
-                                RaceResponseDto race = new(){
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                RaceResponseDto race = new()
+                                {
                                     Id = (int)sdr["Id"],
                                     UserAdmin = (string)sdr["UserAdmin"],
                                     Name = (string)sdr["Name"],
@@ -36,7 +43,8 @@ namespace ApiServer.DAL
                     }
                 }
             }
-            catch (Exception err){
+            catch (Exception err)
+            {
                 Console.Write(err);
                 return null;
             }
@@ -58,9 +66,12 @@ namespace ApiServer.DAL
                         cmd.Parameters.AddWithValue("@Route", race.Route);
                         cmd.Parameters.AddWithValue("@Cost", race.Cost);
                         cmd.Parameters.AddWithValue("@Privacy", race.Privacy);
-                        if(race.Privacy){
+                        if (race.Privacy)
+                        {
                             cmd.Parameters.AddWithValue("@Groups", race.Groups);
-                        }else{
+                        }
+                        else
+                        {
                             cmd.Parameters.AddWithValue("@Groups", "");
                         }
                         cmd.Parameters.AddWithValue("@StartDate", race.StartDate.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -70,10 +81,12 @@ namespace ApiServer.DAL
                         con.Open();
                         int sdr = (int)cmd.ExecuteScalar();
                         con.Close();
-                        if (sdr == -1){
+                        if (sdr == -1)
+                        {
                             return "Already Exists";
                         }
-                        if(sdr==-2){
+                        if (sdr == -2)
+                        {
                             return "Activity Type not found";
                         }
                     }
@@ -89,7 +102,8 @@ namespace ApiServer.DAL
 
 
 
-        private static string GetConnection(){
+        private static string GetConnection()
+        {
             return "Server=.;Database=StraviaTecDB;User Id=tec;Password=Stravia.12345;";
         }
     }

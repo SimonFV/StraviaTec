@@ -6,7 +6,7 @@ using ApiServer.DTOs.Requests;
 namespace ApiServer.Controllers
 {
     [ApiController]
-    [Route("[race]")]
+    [Route("[controller]")]
     public class RaceController : ControllerBase
     {
         public RaceController()
