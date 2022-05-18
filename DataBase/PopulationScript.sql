@@ -6,7 +6,9 @@ GO
 EXEC Register @User = 'andres', @FirstName = 'andres', @LastName1 = 'perico', @LastName2 = 'perico',
 			@BirthDate = '2000-12-24', @Password = '12345', @Picture = 'profilePic3', @Nationality = 'German';
 GO
-
+EXEC Register @User = 'sfv', @FirstName = 'sfv', @LastName1 = 'sfv', @LastName2 = 'sfv',
+			@BirthDate = '2000-12-24', @Password = '12345', @Picture = 'profilePic5', @Nationality = 'French';
+GO
 
 --User login
 EXEC LoginUser @User = 'sfv', @Password = 'Simon-12345';

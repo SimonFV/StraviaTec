@@ -1,1 +1,20 @@
-<p>challenge works!</p>
+<app-navbar></app-navbar>
+<div class="container">
+    <div class="abs-center mt-3" *ngFor="let challenge of challenges; let i index">
+        <div class="card w-50" >
+            <div class="card-header">
+              Owner: {{challenge.userAdmin}}
+            </div>
+            <div class="card-body text-center">
+              <h5 class="card-title">{{challenge.name}}</h5>
+              <p class="card-text">Category: {{challenge.class}}</p>
+              <p class="card-text">{{challenge.activity_Type}}</p>
+              <p class="card-text">Start date: {{challenge.startDate}} </p>
+              <p class="card-text">End Date: {{challenge.endDate}}</p>
+              
+              <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+          </div>
+    </div>
+    
+  </div>

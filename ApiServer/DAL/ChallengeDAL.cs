@@ -28,6 +28,7 @@ namespace ApiServer.DAL
                                 {
                                     Id = (int)sdr["Id"],
                                     UserAdmin = (string)sdr["UserAdmin"],
+                                    Name=(string)sdr["Name"],
                                     Class = (string)sdr["Class"],
                                     Privacy = (Boolean)sdr["Privacy"],
                                     StartDate = (DateTime)sdr["StartDate"],

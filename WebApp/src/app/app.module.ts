@@ -11,6 +11,9 @@ import { RaceComponent } from './race/race.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { MyActivitiesComponent } from './my-activities/my-activities.component';
+import { GroupsComponent } from './groups/groups.component';
+import { FriendsComponent } from './friends/friends.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +23,10 @@ import { RouterModule } from '@angular/router';
     HomeComponent,
     ChallengeComponent,
     RaceComponent,
-    NavbarComponent
+    NavbarComponent,
+    MyActivitiesComponent,
+    GroupsComponent,
+    FriendsComponent
   ],
   imports: [
     BrowserModule,
@@ -32,8 +38,11 @@ import { RouterModule } from '@angular/router';
       {path: 'challenge', component: ChallengeComponent},
       {path: 'home', component: HomeComponent},
       {path: 'race', component: RaceComponent},
-      {path: 'signIn', component: SignInComponent},
-      {path: 'signUp', component: SignUpComponent}
+      {path: '', component: SignInComponent},
+      {path: 'signUp', component: SignUpComponent},
+      {path: 'myAct', component: MyActivitiesComponent},
+      {path: 'groups', component: GroupsComponent},
+      {path: 'friends', component: FriendsComponent},
     ])
   ],
   providers: [],
