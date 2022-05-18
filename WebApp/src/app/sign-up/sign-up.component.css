@@ -1,0 +1,16 @@
+.btn-primary {
+    --bs-btn-font-weight: 600;
+    --bs-btn-color: var(--bs-white);
+    --bs-btn-bg: #7742BE;
+    --bs-btn-border-color: #7742BE;
+    --bs-btn-border-radius: .5rem;
+    --bs-btn-disabled-bg: #7742BE;
+    --bs-btn-disabled-border-color: #7742BE;
+    --bs-btn-hover-bg: #8c5ace;
+  }
+  .btn-link {
+    --bs-btn-font-weight: 600;
+    --bs-btn-color: #7742BE;
+    --bs-btn-border-radius: .5rem;
+    --bs-btn-hover-color: #8c5ace;
+  }

@@ -1,0 +1,58 @@
+<div class="text-center mt-3 ">
+
+    <img class="mt-4 mb-4" src="assets/logo.png" width="200px">
+    <h1 class="h3 mb-3 front-weight-normal">Welcome to StraviaTEC Web Page</h1>
+    <h1 class="h3 mb-3 front-weight-normal">Please sign up</h1>
+
+    <form [formGroup]="form" (submit)="getData()" style="max-width: 300px;margin: auto;">
+        
+        <div class="form-floating">
+            <input  required type="Name" id="Name" class="form-control mb-1" placeholder="Name" formControlName="FirstName">
+            <label for="floatingInput">Name</label>
+        </div>
+
+        <div class="form-floating">
+            <input required type="Last Name" id="Last Name" placeholder="Last Name" class="form-control mb-1"
+                formControlName="LastName1">
+            <label for="floatingInput">Last Name</label>
+        </div>
+        <div class="form-floating">
+            <input required type="text" id="2° Last Name" class="form-control mb-1" placeholder="2° Last Name"
+                formControlName="LastName2">
+            <label for="floatingInput">2° Last Name</label>
+        </div>
+        <div class="form-floating" >
+            <input required  type="date" id="BirthDay"  placeholder="Birth Day" class="form-control mb-1" formControlName="BirthDay">
+            <label for="floatingInput">Birth Day</label>
+        </div>
+        <div class="form-floating">
+            <input required type="text" id="Nationality" placeholder="Nationality" class="form-control mb-1" formControlName="Nationality">
+            <label for="floatingInput">Nationality</label>
+        </div>
+        <div >
+            <label for="inputGroupFile02" class="text-left ">Photo</label>
+            <div class="input-group">
+                <input (change)="getFile($event)" type="file"  accept="image/*" class="form-control mb-2" id="inputGroupFile02">
+            </div>
+        </div>
+        
+        <div class="form-floating">
+            <input  type="text" id="User" placeholder="User" class="form-control mb-1" formControlName="User">
+            <label for="floatingInput">User</label>
+        </div>
+
+        <div class="form-floating">
+            <input  required type="password" id="password" placeholder="Password" class="form-control mb-1 "
+                formControlName="Password" >
+            <label for="floatingInput">Password</label>
+        </div>
+
+
+        <div class="mt-3" id="alertDiv"> </div>
+        <div class="mt-3 mb-5 d-grid gap-2 justify-content-center">
+            <button type="button" class="btn btn-link" routerLink="/signIn">I already have an account</button>
+            <button id="signUp" class="btn btn-lg btn-primary btn-block">Sign Up</button>
+                <!--[disabled]="form.invalid" -->
+        </div>
+    </form>
+</div>
