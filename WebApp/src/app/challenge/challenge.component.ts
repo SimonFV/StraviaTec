@@ -39,7 +39,7 @@ export class ChallengeComponent implements OnInit {
       "activity_Type": challenge.activity_Type
     })
     console.log(this.challenges);
-    
+
   }
 
 

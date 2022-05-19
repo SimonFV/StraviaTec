@@ -16,34 +16,37 @@ export class SignUpComponent implements OnInit {
     private service: ApiService,
     private router: Router,
     private sanitizer: DomSanitizer
-    ) { 
-    
+  ) {
+
   }
-  
+
   public token: any;//Tocken del usuario actual
-  data:any=[];//Lista utilizada para enviar los datos del usuario
-  student:boolean=false;//Flag para saber si el usuario actual es un estudiante
+  data: any = [];//Lista utilizada para enviar los datos del usuario
+  student: boolean = false;//Flag para saber si el usuario actual es un estudiante
   ngOnInit(): void {
-    this.form= this.formBuilder.group({
-      FirstName: ['',[Validators.required]],
-      LastName1: ['',[Validators.required]],
-      LastName2: ['',[Validators.required]],
-      BirthDay: ['',[Validators.required]],
-      Nationality: ['',[Validators.required]],
-      Photo: ['',[Validators.required]],
-      User: ['',[Validators.required, Validators.email]],
-      Password: ['',[Validators.required, Validators.minLength(6)]],
-      
+    this.form = this.formBuilder.group({
+      FirstName: ['', [Validators.required]],
+      LastName1: ['', [Validators.required]],
+      LastName2: ['', [Validators.required]],
+      BirthDay: ['', [Validators.required]],
+      Nationality: ['', [Validators.required]],
+      Picture: ['', [Validators.required]],
+      User: ['', [Validators.required]],
+      Password: ['', [Validators.required]],
+
     });
-    
+
   }
   //Funcion para capturar y enviar los datos introducidos en el formulario
-  getData(){
-    console.log(this.form.value);
+  getData() {
+    this.service.registerUser(this.form.value).subscribe({
+      next: (response) => console.log(response),
+      error: (error) => console.log(error),
+    })
   }
-  
-//Funcion que introduce una alerta dentro de la vista
-  alert(message:string, type: string){
+
+  //Funcion que introduce una alerta dentro de la vista
+  alert(message: string, type: string) {
     const alertPlaceholder = document.getElementById('alertDiv')!
     var wrapper = document.createElement('div')
     wrapper.innerHTML = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' + message +
@@ -52,13 +55,16 @@ export class SignUpComponent implements OnInit {
   }
 
   //Funcion utilizada para leer la respuesta del API
-  readResp(response:any){
-    
+  readResp(response: any) {
+    const data = <JSON>response;
+    console.log(data);
   }
 
-  getFile(event:any){
-    const userPhoto=event.target.files[0];
+  getFile(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.form.get('Picture')!.setValue(file);
+    }
   }
-    
-  
+
 }
