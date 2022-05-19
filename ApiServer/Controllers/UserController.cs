@@ -60,12 +60,13 @@ namespace ApiServer.Controllers
 
         [HttpPost]
         [Route("register")]
-        public IActionResult RegisterUser(
+        public IActionResult RegisterUser([FromForm] string User,
             [FromForm] IFormFile Picture)
         {
             if (ModelState.IsValid)
             {
 
+                Console.Write(User);
                 /*
                 string result = UserDAL.RegisterUserDB(user);
                 if (result is "Error")

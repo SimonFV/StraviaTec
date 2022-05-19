@@ -15,9 +15,10 @@ export class ApiService {
   }
 
 
-  registerUser(user: any): Observable<any> {
-    let header = new HttpHeaders().set('Type-contet', 'multipart/form-data');
-    return this.http.post('http://localhost:5000/User/register', { headers: header, user, observe: 'response' });
+  registerUser(user: FormData) {
+    let header = new HttpHeaders().set('Type-contet', 'undefined');
+    console.log(user);
+    return this.http.post('http://localhost:5000/User/register', user, { headers: header, observe: 'response' });
   }
 
 }

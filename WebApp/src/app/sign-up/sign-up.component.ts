@@ -39,7 +39,18 @@ export class SignUpComponent implements OnInit {
   }
   //Funcion para capturar y enviar los datos introducidos en el formulario
   getData() {
-    this.service.registerUser(this.form.value).subscribe({
+    let formData: FormData = new FormData();
+
+    formData.append('FirstName', this.form.get('FirstName')!.value);
+    formData.append('LastName1', this.form.get('LastName1')!.value);
+    formData.append('LastName2', this.form.get('LastName2')!.value);
+    formData.append('BirthDay', this.form.get('BirthDay')!.value);
+    formData.append('Nationality', this.form.get('Nationality')!.value);
+    formData.append('Picture', this.form.get('Picture')!.value);
+    formData.append('User', this.form.get('User')!.value);
+    formData.append('Password', this.form.get('Password')!.value);
+
+    this.service.registerUser(formData).subscribe({
       next: (response) => console.log(response),
       error: (error) => console.log(error),
     })
