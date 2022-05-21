@@ -60,32 +60,49 @@ namespace ApiServer.Controllers
 
         [HttpPost]
         [Route("register")]
-        public IActionResult RegisterUser([FromForm] string User,
-            [FromForm] IFormFile Picture)
+        public IActionResult RegisterUser(
+            [FromForm] string User,
+            [FromForm] string FirstName,
+            [FromForm] string LastName1,
+            [FromForm] string LastName2,
+            [FromForm] DateTime BirthDate,
+            [FromForm] string Password,
+            [FromForm] IFormFile Picture,
+            [FromForm] string Nationality)
         {
-            if (ModelState.IsValid)
+            try
             {
+                Directory.CreateDirectory("Images\\" + User);
+                var fileName = Path.GetFileName(Picture.FileName);
+                var filePath = Path.Combine("Images", User, fileName);
+                UserRegisterDto user = new()
+                {
+                    User = User,
+                    FirstName = FirstName,
+                    LastName1 = LastName1,
+                    LastName2 = LastName2,
+                    BirthDate = BirthDate,
+                    Password = Password,
+                    Picture = filePath,
+                    Nationality = Nationality
+                };
 
-                Console.Write(User);
-                /*
                 string result = UserDAL.RegisterUserDB(user);
                 if (result is "Error")
                     return new JsonResult("Something went wrong in the registration.") { StatusCode = 500 };
                 else if (result is "Taken")
                     return new JsonResult("User already exists.") { StatusCode = 409 };
-                return new JsonResult("Registration completed") { StatusCode = 201 };
-                */
-
-                var fileName = Path.GetFileName(Picture.FileName);
-                var filePath = Path.Combine("C:\\Users\\Leyser\\Desktop\\sfv\\StraviaTec\\ApiServer", fileName);
-
-                using (var fileSteam = new FileStream(filePath, FileMode.Create))
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    Picture.CopyToAsync(fileSteam);
+                    Picture.CopyToAsync(fileStream);
                 }
-                return Ok();
+                return new JsonResult("Registration completed.") { StatusCode = 201 };
             }
-            return new JsonResult("Invalid model for an User.") { StatusCode = 400 };
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return new JsonResult("Something went wrong in the registration.") { StatusCode = 500 };
+            }
         }
 
         [HttpPost]

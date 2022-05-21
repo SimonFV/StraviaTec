@@ -10,7 +10,6 @@ import { ApiService } from '../services/ApiService/api.service';
   styleUrls: ['./sign-up.component.css']
 })
 export class SignUpComponent implements OnInit {
-
   public form!: FormGroup;//Formulario utilizado para capturar los datos requeridos
   constructor(private formBuilder: FormBuilder,
     private service: ApiService,
@@ -28,7 +27,7 @@ export class SignUpComponent implements OnInit {
       FirstName: ['', [Validators.required]],
       LastName1: ['', [Validators.required]],
       LastName2: ['', [Validators.required]],
-      BirthDay: ['', [Validators.required]],
+      BirthDate: ['', [Validators.required]],
       Nationality: ['', [Validators.required]],
       Picture: ['', [Validators.required]],
       User: ['', [Validators.required]],
@@ -44,7 +43,7 @@ export class SignUpComponent implements OnInit {
     formData.append('FirstName', this.form.get('FirstName')!.value);
     formData.append('LastName1', this.form.get('LastName1')!.value);
     formData.append('LastName2', this.form.get('LastName2')!.value);
-    formData.append('BirthDay', this.form.get('BirthDay')!.value);
+    formData.append('BirthDate', this.form.get('BirthDate')!.value);
     formData.append('Nationality', this.form.get('Nationality')!.value);
     formData.append('Picture', this.form.get('Picture')!.value);
     formData.append('User', this.form.get('User')!.value);
@@ -76,6 +75,10 @@ export class SignUpComponent implements OnInit {
       const file = event.target.files[0];
       this.form.get('Picture')!.setValue(file);
     }
+  }
+
+  selectCountryHandler(event: any) {
+    this.form.get('Nationality')!.setValue(event.target.value);
   }
 
 }

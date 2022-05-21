@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiServer.DTOs.Requests
 {
-    [Bind]
     public class UserRegisterDto
     {
         public string User { get; set; }
@@ -14,7 +13,7 @@ namespace ApiServer.DTOs.Requests
         public string LastName2 { get; set; }
         public DateTime BirthDate { get; set; }
         public string Password { get; set; }
-        public IFormFile Picture { get; set; }
+        public string Picture { get; set; }
         public string Nationality { get; set; }
     }
 }
