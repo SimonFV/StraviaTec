@@ -10,6 +10,7 @@ import { ApiService } from '../services/ApiService/api.service';
   styleUrls: ['./sign-up.component.css']
 })
 export class SignUpComponent implements OnInit {
+
   public form!: FormGroup;//Formulario utilizado para capturar los datos requeridos
   constructor(private formBuilder: FormBuilder,
     private service: ApiService,
@@ -19,6 +20,9 @@ export class SignUpComponent implements OnInit {
 
   }
 
+  alert: boolean = false;
+  alertMessage: string = '';
+  typeAlert: string = 'success';
   public token: any;//Tocken del usuario actual
   data: any = [];//Lista utilizada para enviar los datos del usuario
   student: boolean = false;//Flag para saber si el usuario actual es un estudiante
@@ -50,24 +54,19 @@ export class SignUpComponent implements OnInit {
     formData.append('Password', this.form.get('Password')!.value);
 
     this.service.registerUser(formData).subscribe({
-      next: (response) => console.log(response),
-      error: (error) => console.log(error),
+      next: (response) => this.readResp(response),
+      error: (error) => {
+        console.log(error);
+        this.riseAlert(error.error, 'danger');
+      }
     })
-  }
-
-  //Funcion que introduce una alerta dentro de la vista
-  alert(message: string, type: string) {
-    const alertPlaceholder = document.getElementById('alertDiv')!
-    var wrapper = document.createElement('div')
-    wrapper.innerHTML = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' + message +
-      '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
-    alertPlaceholder.appendChild(wrapper)
   }
 
   //Funcion utilizada para leer la respuesta del API
   readResp(response: any) {
-    const data = <JSON>response;
-    console.log(data);
+    this.data = <JSON>response;
+    console.log(this.data);
+    this.riseAlert(response.body, 'success');
   }
 
   getFile(event: any) {
@@ -79,6 +78,16 @@ export class SignUpComponent implements OnInit {
 
   selectCountryHandler(event: any) {
     this.form.get('Nationality')!.setValue(event.target.value);
+  }
+
+  riseAlert(message: string, type: string) {
+    this.alertMessage = message;
+    this.typeAlert = type;
+    this.alert = true;
+  }
+
+  closeAlert() {
+    this.alert = false
   }
 
 }
