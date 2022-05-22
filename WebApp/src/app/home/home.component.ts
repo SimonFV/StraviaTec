@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiMongoService } from '../services/ApiMongo/api-mongo.service';
 import { ApiService } from '../services/ApiService/api.service';
 
 @Component({
@@ -8,7 +9,10 @@ import { ApiService } from '../services/ApiService/api.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private service: ApiService) { }
+  constructor(
+    private service: ApiService,
+    private mongoService: ApiMongoService
+    ) { }
 
   activities = [{
     "User": "sfv",
@@ -20,6 +24,13 @@ export class HomeComponent implements OnInit {
     "Route": "ff",
     "Distance": 10
   }];
+  comments=[{
+    "id":0,
+    "user": "",
+    "activityId":"",
+    "postTime":"",
+    "body":""
+  }]
   ngOnInit(): void {
 
     this.activities.splice(0, 1);
@@ -47,5 +58,9 @@ export class HomeComponent implements OnInit {
   }
   showComments(i:any){
     console.log("comment");
+    this.mongoService.getCommentsByActivity(0).subscribe(resp=>{
+      console.log(resp);
+      
+    })
   }
 }

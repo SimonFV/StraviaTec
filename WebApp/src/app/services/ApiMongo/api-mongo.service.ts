@@ -17,8 +17,8 @@ export class ApiMongoService {
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
     return this.http.post<JSON[]>('http://localhost:5001/Comments/add',comment, { headers: header, observe: 'response' });
   }
-  getCommentsByActivity(activityId: string){
+  getCommentsByActivity(activityId: any){
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
-    return this.http.get<JSON[]>('http://localhost:5001/Comments/byUser'+activityId, { headers: header, observe: 'response' });
+    return this.http.get<JSON[]>('http://localhost:5001/Comments/activityId'+activityId, { headers: header, observe: 'response' });
   }
 }
