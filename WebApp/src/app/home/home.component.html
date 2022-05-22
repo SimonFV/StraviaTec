@@ -14,13 +14,33 @@
               
               
             </div>
-            <div class="card-footer bg-transparent input-group">
-                <input type="text" class="form-control" placeholder="Comment" aria-label="Comment" aria-describedby="button-addon2">
-                <button class="btn btn-outline-secondary" type="button" id="commentBtn">Submit</button>
-
+            <div class="card-footer bg-transparent ">
+                <button class="btn btn-link" type="button" id="commentBtn" data-bs-toggle="modal" 
+                data-bs-target="#exampleModal" (click)="showComments(i)" >
+                  Add a comment
+                </button>
             </div>
 
           </div>
     </div>
     
   </div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Comments</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        SHOW COMMENTS API
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

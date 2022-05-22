@@ -3,7 +3,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ApiService } from '../services/ApiService/api.service';
-import { UserService } from '../services/userManagment/user.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -16,7 +15,6 @@ export class SignUpComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
     private service: ApiService,
     private router: Router,
-    private usrManagment: UserService,
     private sanitizer: DomSanitizer
   ) {
 
@@ -99,10 +97,6 @@ export class SignUpComponent implements OnInit {
   readResp(response: any) {
     this.data = <JSON>response;
     this.token = this.data.token
-
-    this.usrManagment.trigger.emit({
-      tok: this.data.token
-    });
 
     this.router.navigate(["/home"]);
   }
