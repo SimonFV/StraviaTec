@@ -14,6 +14,10 @@ export class ApiService {
     return this.http.get<JSON[]>('http://localhost:5000/Challenge/challenges', { headers: header, observe: 'response' });
   }
 
+  getRaces(){
+    let header = new HttpHeaders().set('Type-contet', 'aplication/json');
+    return this.http.get<JSON[]>('http://localhost:5000/Race/races', { headers: header, observe: 'response' });
+  }
 
   registerUser(user: FormData) {
     let header = new HttpHeaders().set('Type-contet', 'multipart/form-data');
@@ -29,4 +33,5 @@ export class ApiService {
     let header = new HttpHeaders().set('Type-contet', 'multipart/form-data');
     return this.http.get<JSON[]>('http://localhost:5000/User/friendsFrontPage/'+user, { headers: header, observe: 'response' });
   }
+  
 }

@@ -56,8 +56,8 @@ export class SignUpComponent implements OnInit {
     this.service.registerUser(formData).subscribe({
       next: (response) => this.readResp(response),
       error: (error) => {
-        console.log(error);
-        this.riseAlert(error.error, 'danger');
+        console.log(error.error);
+        this.riseAlert(error.error.title, 'danger');
       }
     })
   }
