@@ -30,7 +30,7 @@ namespace ApiServer.Controllers
         }
 
         [HttpGet]
-        [Route("users/{user}")]
+        [Route("users/{userId}")]
         public IActionResult GetUser(string userId)
         {
             UserResponseDto user = UserDAL.GetUser(userId);

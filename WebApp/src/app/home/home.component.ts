@@ -9,6 +9,7 @@ import { ApiService } from '../services/ApiService/api.service';
 export class HomeComponent implements OnInit {
 
   constructor(private service: ApiService) { }
+
   activities = [{
     "User": "sfv",
     "FirstName": "sfv",
@@ -18,17 +19,17 @@ export class HomeComponent implements OnInit {
     "Start": "f",
     "Route": "ff",
     "Distance": 10
-  }]
+  }];
   ngOnInit(): void {
+
     this.activities.splice(0, 1);
     this.service.GetFriendsFrontPage('andres').subscribe(resp=>{
       console.log(resp.body);
       for(let i of resp.body!){
         this.loadActivity(i);
       }
-
-      
     })
+
   }
   loadActivity(acts:any){
     console.log(acts);
@@ -42,8 +43,9 @@ export class HomeComponent implements OnInit {
       "Start": acts.start,
       "Route": acts.route,
       "Distance": acts.distance
-
     })
   }
-
+  showComments(i:any){
+    console.log("comment");
+  }
 }
