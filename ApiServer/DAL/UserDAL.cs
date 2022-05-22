@@ -50,6 +50,43 @@ namespace ApiServer.DAL
             return users;
         }
 
+        public static UserResponseDto GetUser(string userId)
+        {
+            UserResponseDto user = new() { User = "" };
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query = @"SELECT * FROM " + "\"USER\"" +
+                                    " WHERE " + "\"User\" = '" + userId + "';";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                user.User = (string)sdr["User"];
+                                user.FirstName = (string)sdr["FirstName"];
+                                user.LastName1 = (string)sdr["LastName1"];
+                                user.LastName2 = (string)sdr["LastName2"];
+                                user.BirthDate = (DateTime)sdr["BirthDate"];
+                                user.Picture = (string)sdr["Picture"];
+                                user.Nationality = (string)sdr["Nationality"];
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return null;
+            }
+            return user;
+        }
+
         public static List<FriendsFrontPage> GetFriendsFrontPageDB(string user)
         {
             List<FriendsFrontPage> friends = new();
@@ -371,6 +408,9 @@ namespace ApiServer.DAL
             }
             return "Done";
         }
+
+
+
 
         private static string GetConnection()
         {

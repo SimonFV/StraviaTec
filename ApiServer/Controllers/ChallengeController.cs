@@ -2,11 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using ApiServer.DAL;
 using ApiServer.DTOs.Requests;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace ApiServer.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ChallengeController : ControllerBase
     {
         public ChallengeController()

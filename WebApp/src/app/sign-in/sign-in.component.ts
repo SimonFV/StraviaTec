@@ -10,49 +10,53 @@ import { ApiService } from '../services/ApiService/api.service';
 })
 export class SignInComponent implements OnInit {
   public form!: FormGroup;//Formulario utilizado para capturar los datos requeridos
-  data:any=[];//Lista utilizada guardar los datos del usuario
+  data: any = [];//Lista utilizada guardar los datos del usuario
   public token: any;//Tocken del usuario
+  alert: boolean = false;
+  alertMessage: string = '';
+  typeAlert: string = 'success';
 
   constructor(private formBuilder: FormBuilder,
     private service: ApiService,
     private router: Router
-    ) { 
-    
+  ) {
+
   }
-  
+
   ngOnInit(): void {
-    this.form= this.formBuilder.group({
-      User: ['',[Validators.required]],
-      Password: ['',[Validators.required, /*Validators.minLength(6)*/]]
+    this.form = this.formBuilder.group({
+      User: ['', [Validators.required], Validators.maxLength(15)],
+      Password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(15)]]
     });
   }
   //Funcion para capturar y enviar los datos introducidos en el formulario
-  getData(){
+  getData() {
     console.log(this.form.value);
-    this.service.loginUser(this.form.value).subscribe(resp=>{
-    console.log(resp);
-    /*
-      GUARDAR USUARIO
-    */
-    this.router.navigate(['/home'])
-    },err=>{
-      this.alert(err.error,'danger');
-      
+    this.service.loginUser(this.form.value).subscribe(resp => {
+      console.log(resp);
+      /*
+        GUARDAR USUARIO
+      */
+      this.router.navigate(['/home'])
+    }, err => {
+      this.riseAlert(err.error, 'danger');
+
     })
-    
+
   }
 
-    //Funcion para capturar y enviar los datos introducidos en el formulario
-  alert(message:string, type: string){
-    const alertPlaceholder = document.getElementById('alertDiv')!
-    var wrapper = document.createElement('div')
-    wrapper.innerHTML = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' + message +
-      '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
-    alertPlaceholder.appendChild(wrapper)
+  riseAlert(message: string, type: string) {
+    this.alertMessage = message;
+    this.typeAlert = type;
+    this.alert = true;
+  }
+
+  closeAlert() {
+    this.alert = false
   }
 
   //Funcion para leer la respuesta del API
-  readResp(response:any){
+  readResp(response: any) {
   }
 
 }

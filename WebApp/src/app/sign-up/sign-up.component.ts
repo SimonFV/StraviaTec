@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ApiService } from '../services/ApiService/api.service';
+import { UserService } from '../services/userManagment/user.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -15,6 +16,7 @@ export class SignUpComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
     private service: ApiService,
     private router: Router,
+    private usrManagment: UserService,
     private sanitizer: DomSanitizer
   ) {
 
@@ -96,8 +98,13 @@ export class SignUpComponent implements OnInit {
   //Funcion utilizada para leer la respuesta del API
   readResp(response: any) {
     this.data = <JSON>response;
-    console.log(this.data);
-    this.riseAlert(response.body, 'success');
+    this.token = this.data.token
+
+    this.usrManagment.trigger.emit({
+      tok: this.data.token
+    });
+
+    this.router.navigate(["/home"]);
   }
 
   getFile(event: any) {
