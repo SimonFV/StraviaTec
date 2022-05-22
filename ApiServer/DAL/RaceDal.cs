@@ -56,7 +56,7 @@ namespace ApiServer.DAL
             {
                 using (SqlConnection con = new SqlConnection(GetConnection()))
                 {
-                    string procedure = @"RegisterRase";
+                    string procedure = @"RegisterRace";
                     using (SqlCommand cmd = new SqlCommand(procedure, con))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;

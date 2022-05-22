@@ -1,1 +1,26 @@
 <app-navbar></app-navbar>
+<div class="container">
+    <div class="abs-center mt-3" *ngFor="let activity of activities; let i index">
+        <div class="card w-50" >
+            <div class="card-header">
+              {{activity.User}}
+            </div>
+            <div class="card-body ">
+              <h5 class="card-title text-center">Made a {{activity.Type}} activity</h5>
+              <p class="card-text">Starting at: {{activity.Start}}</p>
+              <p class="card-text">Distance: {{activity.Distance}}</p>
+              <!--<img src={{activity.Route}} class="card-img-top" alt="...">-->
+              <p class="card-text">{{activity.Route}} </p>
+              
+              
+            </div>
+            <div class="card-footer bg-transparent input-group">
+                <input type="text" class="form-control" placeholder="Comment" aria-label="Comment" aria-describedby="button-addon2">
+                <button class="btn btn-outline-secondary" type="button" id="commentBtn">Submit</button>
+
+            </div>
+
+          </div>
+    </div>
+    
+  </div>

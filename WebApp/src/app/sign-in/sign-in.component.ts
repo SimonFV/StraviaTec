@@ -22,13 +22,23 @@ export class SignInComponent implements OnInit {
   
   ngOnInit(): void {
     this.form= this.formBuilder.group({
-      Email: ['',[Validators.required, Validators.email]],
-      Password: ['',[Validators.required, Validators.minLength(6)]]
+      User: ['',[Validators.required]],
+      Password: ['',[Validators.required, /*Validators.minLength(6)*/]]
     });
   }
   //Funcion para capturar y enviar los datos introducidos en el formulario
   getData(){
     console.log(this.form.value);
+    this.service.loginUser(this.form.value).subscribe(resp=>{
+    console.log(resp);
+    /*
+      GUARDAR USUARIO
+    */
+    this.router.navigate(['/home'])
+    },err=>{
+      this.alert(err.error,'danger');
+      
+    })
     
   }
 

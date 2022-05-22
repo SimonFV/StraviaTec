@@ -50,8 +50,13 @@ export class SignUpComponent implements OnInit {
     formData.append('Password', this.form.get('Password')!.value);
 
     this.service.registerUser(formData).subscribe({
-      next: (response) => console.log(response),
-      error: (error) => console.log(error),
+      next: (response) =>{
+        console.log(response);
+        this.router.navigate(['/home']);
+      },
+      error: (error) => {
+        console.log(error.error.errors)
+      }
     })
   }
 

@@ -76,7 +76,7 @@ namespace ApiServer.DAL
                                     Type = (string)sdr["Type"],
                                     Start = (DateTime)sdr["Start"],
                                     Route = (string)sdr["Route"],
-                                    Distance = (double)sdr["Distance"]
+                                    Distance = (decimal)sdr["Distance"]
                                 };
                                 friends.Add(friend);
                             }

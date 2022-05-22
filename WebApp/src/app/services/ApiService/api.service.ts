@@ -20,4 +20,13 @@ export class ApiService {
     return this.http.post('http://localhost:5000/User/register', user, { headers: header, observe: 'response' });
   }
 
+  loginUser(user:JSON){
+    let header = new HttpHeaders().set('Type-contet', 'aplication/json');
+    return this.http.post('http://localhost:5000/User/login', user, { headers: header, observe: 'response' });
+  }
+
+  GetFriendsFrontPage(user: string){
+    let header = new HttpHeaders().set('Type-contet', 'multipart/form-data');
+    return this.http.get<JSON[]>('http://localhost:5000/User/friendsFrontPage/'+user, { headers: header, observe: 'response' });
+  }
 }
