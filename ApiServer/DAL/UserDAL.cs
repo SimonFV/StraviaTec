@@ -106,6 +106,7 @@ namespace ApiServer.DAL
                             {
                                 FriendsFrontPage friend = new()
                                 {
+                                    Id = (int)sdr["Id"],
                                     User = (string)sdr["User"],
                                     FirstName = (string)sdr["FirstName"],
                                     LastName1 = (string)sdr["LastName1"],

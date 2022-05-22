@@ -557,7 +557,7 @@ GO
 
 
 CREATE VIEW LATEST_ACTIVITY AS
-SELECT "User", FirstName, LastName1, LastName2, "Type", "Start", "Route", Distance
+SELECT "User", FirstName, LastName1, LastName2, Id, "Type", "Start", "Route", Distance
 FROM "USER", ACTIVITY 
 WHERE "User" = UserId AND "Start" = (SELECT MAX("Start") FROM ACTIVITY WHERE UserId = "User");
 GO
