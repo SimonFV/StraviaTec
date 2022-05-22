@@ -72,9 +72,9 @@ namespace ApiServer.Controllers
         {
             try
             {
-                Directory.CreateDirectory("Images\\" + User);
+                Directory.CreateDirectory("Files\\Profiles\\" + User);
                 var fileName = Path.GetFileName(Picture.FileName);
-                var filePath = Path.Combine("Images", User, fileName);
+                var filePath = Path.Combine("Files\\Profiles", User, fileName);
                 UserRegisterDto user = new()
                 {
                     User = User,
