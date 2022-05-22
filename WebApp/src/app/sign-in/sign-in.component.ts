@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from '../services/ApiService/api.service';
+import { SharedService } from '../services/SharedService/shared.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -18,6 +19,7 @@ export class SignInComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     private service: ApiService,
+    private sharedService: SharedService,
     private router: Router
   ) {
 
@@ -25,19 +27,15 @@ export class SignInComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      User: ['', [Validators.required], Validators.maxLength(15)],
-      Password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(15)]]
+      User: ['', [Validators.required, Validators.maxLength(15)]],
+      Password: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(15)]]
     });
   }
   //Funcion para capturar y enviar los datos introducidos en el formulario
   getData() {
     console.log(this.form.value);
     this.service.loginUser(this.form.value).subscribe(resp => {
-      console.log(resp);
-      /*
-        GUARDAR USUARIO
-      */
-      this.router.navigate(['/home'])
+      this.readResp(resp);
     }, err => {
       this.riseAlert(err.error, 'danger');
 
@@ -57,6 +55,9 @@ export class SignInComponent implements OnInit {
 
   //Funcion para leer la respuesta del API
   readResp(response: any) {
+    this.data = <JSON>response.body;
+    this.sharedService.setToken(this.data.token);
+    this.router.navigate(['/home']);
   }
 
 }

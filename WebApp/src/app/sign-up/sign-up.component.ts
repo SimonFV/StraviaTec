@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ApiService } from '../services/ApiService/api.service';
+import { SharedService } from '../services/SharedService/shared.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -14,6 +15,7 @@ export class SignUpComponent implements OnInit {
   public form!: FormGroup;//Formulario utilizado para capturar los datos requeridos
   constructor(private formBuilder: FormBuilder,
     private service: ApiService,
+    private sharedService: SharedService,
     private router: Router,
     private sanitizer: DomSanitizer
   ) {
@@ -95,10 +97,9 @@ export class SignUpComponent implements OnInit {
 
   //Funcion utilizada para leer la respuesta del API
   readResp(response: any) {
-    this.data = <JSON>response;
-    this.token = this.data.token
-
-    this.router.navigate(["/home"]);
+    this.data = <JSON>response.body;
+    this.sharedService.setToken(this.data.token);
+    this.router.navigate(['/home']);
   }
 
   getFile(event: any) {

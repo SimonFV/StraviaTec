@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiMongoService } from '../services/ApiMongo/api-mongo.service';
 import { ApiService } from '../services/ApiService/api.service';
+import { SharedService } from '../services/SharedService/shared.service';
 
 @Component({
   selector: 'app-home',
@@ -11,8 +12,9 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private service: ApiService,
+    private sharedService: SharedService,
     private mongoService: ApiMongoService
-    ) { }
+  ) { }
 
   activities = [{
     "User": "sfv",
@@ -24,27 +26,28 @@ export class HomeComponent implements OnInit {
     "Route": "ff",
     "Distance": 10
   }];
-  comments=[{
-    "id":0,
+  comments = [{
+    "id": 0,
     "user": "",
-    "activityId":"",
-    "postTime":"",
-    "body":""
+    "activityId": "",
+    "postTime": "",
+    "body": ""
   }]
   ngOnInit(): void {
 
     this.activities.splice(0, 1);
-    this.service.GetFriendsFrontPage('andres').subscribe(resp=>{
+    this.service.GetFriendsFrontPage('andres').subscribe(resp => {
       console.log(resp.body);
-      for(let i of resp.body!){
+      for (let i of resp.body!) {
         this.loadActivity(i);
       }
+      console.log("token: " + this.sharedService.getToken());
     })
 
   }
-  loadActivity(acts:any){
+  loadActivity(acts: any) {
     console.log(acts);
-    
+
     this.activities.push({
       "User": acts.user,
       "FirstName": acts.firstName,
@@ -56,11 +59,11 @@ export class HomeComponent implements OnInit {
       "Distance": acts.distance
     })
   }
-  showComments(i:any){
+  showComments(i: any) {
     console.log("comment");
-    this.mongoService.getCommentsByActivity(0).subscribe(resp=>{
+    this.mongoService.getCommentsByActivity(0).subscribe(resp => {
       console.log(resp);
-      
+
     })
   }
 }

@@ -14,6 +14,7 @@ import { RouterModule } from '@angular/router';
 import { MyActivitiesComponent } from './my-activities/my-activities.component';
 import { GroupsComponent } from './groups/groups.component';
 import { FriendsComponent } from './friends/friends.component';
+import { SharedService } from './services/SharedService/shared.service';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,7 @@ import { FriendsComponent } from './friends/friends.component';
       { path: 'friends', component: FriendsComponent },
     ])
   ],
-  providers: [],
+  providers: [SharedService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
