@@ -33,12 +33,15 @@ export class SignInComponent implements OnInit {
   }
   //Funcion para capturar y enviar los datos introducidos en el formulario
   getData() {
-    console.log(this.form.value);
     this.service.loginUser(this.form.value).subscribe(resp => {
       this.readResp(resp);
-    }, err => {
-      this.riseAlert(err.error, 'danger');
-
+    }, error => {
+      if (error.status == 0) {
+        this.riseAlert('Connection failed.', 'danger');
+      }
+      else {
+        this.riseAlert(error.error, 'danger');
+      }
     })
 
   }
@@ -57,6 +60,7 @@ export class SignInComponent implements OnInit {
   readResp(response: any) {
     this.data = <JSON>response.body;
     this.sharedService.setToken(this.data.token);
+    this.sharedService.setUser(this.form.get('User')!.value);
     this.router.navigate(['/home']);
   }
 

@@ -34,6 +34,10 @@ export class HomeComponent implements OnInit {
     "body": ""
   }]
   ngOnInit(): void {
+    //Check de usuario logeado
+    if (this.sharedService.getUser() == '') {
+      return;
+    }
 
     this.activities.splice(0, 1);
     this.service.GetFriendsFrontPage('andres').subscribe(resp => {
@@ -41,7 +45,6 @@ export class HomeComponent implements OnInit {
       for (let i of resp.body!) {
         this.loadActivity(i);
       }
-      console.log("token: " + this.sharedService.getToken());
     })
 
   }
