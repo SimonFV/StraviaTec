@@ -28,20 +28,46 @@ export class SignUpComponent implements OnInit {
   student: boolean = false;//Flag para saber si el usuario actual es un estudiante
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      FirstName: ['', [Validators.required]],
-      LastName1: ['', [Validators.required]],
-      LastName2: ['', [Validators.required]],
+      FirstName: ['', [Validators.required, Validators.maxLength(15)]],
+      LastName1: ['', [Validators.required, Validators.maxLength(15)]],
+      LastName2: ['', [Validators.required, Validators.maxLength(15)]],
       BirthDate: ['', [Validators.required]],
-      Nationality: ['', [Validators.required]],
+      User: ['', [Validators.required, Validators.maxLength(15)]],
+      Password: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(15)]],
       Picture: ['', [Validators.required]],
-      User: ['', [Validators.required]],
-      Password: ['', [Validators.required]],
-
+      Nationality: ['', [Validators.required]],
     });
 
   }
+
   //Funcion para capturar y enviar los datos introducidos en el formulario
   getData() {
+    this.closeAlert();
+    let result = true;
+    Object.keys(this.form.controls).forEach(key => {
+      if (!this.form.get(key)?.valid) {
+        if (this.form.get(key)?.errors?.['required']) {
+          this.riseAlert('Required ' + key + '.', 'danger');
+        }
+        else if (this.form.get(key)?.errors?.['maxlength']) {
+          this.riseAlert('Maximum length for ' + key + ' is 15 characters.', 'danger');
+        }
+        else if (this.form.get(key)?.errors?.['minlength']) {
+          this.riseAlert('Minimum length for ' + key + ' is 5 characters.', 'danger');
+        }
+        result = false;
+      }
+    });
+
+    if (!result) {
+      return;
+    }
+    if ((new Date()).getFullYear() - (new Date(this.form.get('BirthDate')!.value)).getFullYear() < 5 ||
+      (new Date()).getFullYear() - (new Date(this.form.get('BirthDate')!.value)).getFullYear() > 100) {
+      this.riseAlert('Range for the age is 5-100', 'danger');
+      return;
+    }
+
     let formData: FormData = new FormData();
 
     formData.append('FirstName', this.form.get('FirstName')!.value);
@@ -57,7 +83,12 @@ export class SignUpComponent implements OnInit {
       next: (response) => this.readResp(response),
       error: (error) => {
         console.log(error);
-        this.riseAlert(error.error, 'danger');
+        if (error.status == 0) {
+          this.riseAlert('Connection failed.', 'danger');
+        }
+        else {
+          this.riseAlert(error.error, 'danger');
+        }
       }
     })
   }
