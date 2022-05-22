@@ -34,6 +34,13 @@ INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group 1');
 INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group 2');
 INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group 3');
 
+INSERT INTO CATEGORY("Name", Description) VALUES('Junior','Junior');
+INSERT INTO CATEGORY("Name", Description) VALUES('Sub-23','Sub-23');
+INSERT INTO CATEGORY("Name", Description) VALUES('Elite','Elite');
+INSERT INTO CATEGORY("Name", Description) VALUES('Master A','Master A');
+INSERT INTO CATEGORY("Name", Description) VALUES('Master B','Master B');
+INSERT INTO CATEGORY("Name", Description) VALUES('Master C','Master C');
+
 --Default Activity Types
 INSERT INTO ACTIVITY_TYPE("Name") VALUES('Running');
 INSERT INTO ACTIVITY_TYPE("Name") VALUES('Swimming');
@@ -44,8 +51,8 @@ INSERT INTO ACTIVITY_TYPE("Name") VALUES('Walking');
 GO
 
 
-EXEC AddActivity @UserId	= 'asd', @Distance = 34.34, @Duration = '05:45:23', @Route = 'routeasd',
-	@Altitude = 14.1, @Start = '2022-11-13 03:50:00', @Type = 'Hiking';
+EXEC AddActivity @UserId	= 'SRC', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Rout.gpx',
+	@Altitude = 10.1, @Start = '2022-05-21 14:10:00', @Type = 'Running';
 GO
 
 */

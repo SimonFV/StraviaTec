@@ -30,7 +30,7 @@ namespace ApiServer.DAL
                                     UserAdmin = (string)sdr["UserAdmin"],
                                     Name = (string)sdr["Name"],
                                     Route = (string)sdr["Route"],
-                                    Cost = (float)sdr["Cost"],
+                                    Cost = (decimal)sdr["Cost"],
                                     Privacy = (Boolean)sdr["Privacy"],
                                     StartDate = (DateTime)sdr["StartDate"],
                                     Category = (string)sdr["Category"],
@@ -56,7 +56,7 @@ namespace ApiServer.DAL
             {
                 using (SqlConnection con = new SqlConnection(GetConnection()))
                 {
-                    string procedure = @"RegisterRase";
+                    string procedure = @"RegisterRace";
                     using (SqlCommand cmd = new SqlCommand(procedure, con))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;

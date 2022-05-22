@@ -1,2 +1,21 @@
 <app-navbar></app-navbar>
-<p>race works!</p>
+<div class="container">
+    <div class="abs-center mt-3" *ngFor="let race of races; let i index">
+        <div class="card w-50" >
+            <div class="card-header">
+              Owner: {{race.userAdmin}}
+            </div>
+            <div class="card-body text-center">
+              <h5 class="card-title">{{race.name}}</h5>
+              <p class="card-text">Category: {{race.category}}</p>
+              <p class="card-text">{{race.activity_Type}}</p>
+              <p class="card-text">Start date: {{race.startDate}} </p>
+              <p class="card-text">Cost: {{race.cost}}$ </p>
+              <p class="card-text">Route: {{race.route}} </p>
+              
+              <a href="///" class="btn btn-primary">Complete Challenge!!</a>
+            </div>
+          </div>
+    </div>
+    
+  </div>
