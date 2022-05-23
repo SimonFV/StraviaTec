@@ -13,9 +13,9 @@ export class NavbarComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    if (this.sharedService.getUser() == '') {
+    /*if (this.sharedService.getUser() == '') {
       this.LogOut();
-    }
+    }*/
   }
 
   LogOut() {

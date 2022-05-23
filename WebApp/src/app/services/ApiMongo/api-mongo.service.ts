@@ -10,7 +10,7 @@ export class ApiMongoService {
 
   getComments(user: string){
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
-    return this.http.get<JSON[]>('http://localhost:5001/Comments/byUser'+user, { headers: header, observe: 'response' });
+    return this.http.get<JSON[]>('http://localhost:5001/Comments/byUser/'+user, { headers: header, observe: 'response' });
   }
 
   postComments(comment: any){
@@ -19,6 +19,6 @@ export class ApiMongoService {
   }
   getCommentsByActivity(activityId: any){
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
-    return this.http.get<JSON[]>('http://localhost:5001/Comments/activityId'+activityId, { headers: header, observe: 'response' });
+    return this.http.get<JSON[]>('http://localhost:5001/Comments/byActivity/'+activityId, { headers: header, observe: 'response' });
   }
 }

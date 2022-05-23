@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 <div class="container">
-    <div class="abs-center mt-3" *ngFor="let activity of activities; let i index">
+    <div class="abs-center mt-3" *ngFor="let activity of activities; let i = index">
         <div class="card w-50" >
             <div class="card-header">
               {{activity.User}}
@@ -16,7 +16,7 @@
             </div>
             <div class="card-footer bg-transparent ">
                 <button class="btn btn-link" type="button" id="commentBtn" data-bs-toggle="modal" 
-                data-bs-target="#exampleModal" (click)="showComments(i)" >
+                data-bs-target="#exampleModal" (click)="getCommentsByActivity(i)" >
                   Add a comment
                 </button>
             </div>
@@ -27,19 +27,24 @@
   </div>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Comments</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="hideComments()"></button>
       </div>
       <div class="modal-body">
-        SHOW COMMENTS API
+        <div  *ngFor="let comment of comments; let i = index">
+          <p class="card-text"> {{comment.user}}: {{comment.body}}</p>
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <div class="input-group mb-3">
+          <input #Comment type="text" class="form-control" placeholder="Comment" aria-label="Comment" aria-describedby="button-addon2">
+          <button class="btn btn-primary" type="button" id="button-addon2" (click)="addComment(Comment.value)">Submit</button>
+        </div>
+        
       </div>
     </div>
   </div>
