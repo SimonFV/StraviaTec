@@ -36,6 +36,16 @@ namespace ApiServer
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiServer", Version = "v1" });
             });
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyCors", builder =>
+                {
+                    builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -57,16 +67,6 @@ namespace ApiServer
                     RequireExpirationTime = false
                 };
             });
-
-            services.AddCors(options =>
-            {
-                options.AddPolicy("MyCors", builder =>
-                {
-                    builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-                });
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,6 +78,7 @@ namespace ApiServer
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiServer v1"));
             }
+            app.UseCors("MyCors");
 
             app.UseHttpsRedirection();
 
@@ -86,8 +87,6 @@ namespace ApiServer
             app.UseAuthentication();
 
             app.UseAuthorization();
-
-            app.UseCors("MyCors");
 
             app.UseEndpoints(endpoints =>
             {

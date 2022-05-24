@@ -3,11 +3,19 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class SharedService {
     globalToken;
-    globalUser;
+    globalUserData;
 
     constructor() {
         this.globalToken = '';
-        this.globalUser = '';
+        this.globalUserData = {
+            "User": 'sfv',
+            "FirstName": '',
+            "LastName1": '',
+            "LastName2": '',
+            "BirthDate": '',
+            "Picture": '',
+            "Nationality": ''
+        }
     }
 
     setToken(val: string) {
@@ -18,11 +26,7 @@ export class SharedService {
         return this.globalToken;
     }
 
-    setUser(val: string) {
-        this.globalUser = val;
-    }
-
-    getUser() {
-        return this.globalUser;
+    getUserData() {
+        return this.globalUserData;
     }
 }

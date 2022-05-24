@@ -60,7 +60,7 @@ export class SignInComponent implements OnInit {
   readResp(response: any) {
     this.data = <JSON>response.body;
     this.sharedService.setToken(this.data.token);
-    this.sharedService.setUser(this.form.get('User')!.value);
+    this.sharedService.getUserData().User = this.form.get('User')!.value;
     this.router.navigate(['/home']);
   }
 

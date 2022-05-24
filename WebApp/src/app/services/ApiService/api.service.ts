@@ -24,11 +24,13 @@ export class ApiService {
   }
 
   getUser(user: string) {
-    return this.http.get('http://localhost:5000/User/users/' + user, { observe: 'response' });
+    let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.get('http://localhost:5000/User/users/' + user, { headers: header, observe: 'response' });
   }
 
   getUserImage(imagePath: JSON): Observable<Blob> {
-    return this.http.post('http://localhost:5000/User/userImage', imagePath, { responseType: 'blob' });
+    let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.post('http://localhost:5000/User/userImage', imagePath, { headers: header, responseType: 'blob' });
   }
 
   registerUser(user: FormData) {

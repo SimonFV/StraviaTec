@@ -1,30 +1,57 @@
 <app-navbar></app-navbar>
-<div class="container">
-  <div class="abs-center mt-3" *ngFor="let activity of activities; let i = index">
-    <div class="card w-50">
-      <div class="card-header">
-        {{activity.User}}
+
+<div class="container-fluid">
+  <div class="row justify-content-between">
+
+    <div class="col-2 d-flex justify-content-center mt-3">
+      <div class="well">
+        <div class="card p-3">
+          <img [src]="userImage" alt="User profile picture" *ngIf="!isImageLoading; else noImageFound"
+            class="round-circle">
+          <ng-template #noImageFound>
+            <img src="assets\generic_user_icon.png" alt="Fallbackimage" class="round-circle">
+          </ng-template>
+          <h5 class="card-title text-center">{{sharedService.getUserData().FirstName}}
+            {{sharedService.getUserData().LastName1}}</h5>
+          <p class="card-text text-center">{{sharedService.getUserData().User}}</p>
+          <button class="btn btn-link" routerLink="/signUp">Edit</button>
+        </div>
       </div>
-      <div class="card-body ">
-        <h5 class="card-title text-center">Made a {{activity.Type}} activity</h5>
-        <p class="card-text">Starting at: {{activity.Start}}</p>
-        <p class="card-text">Distance: {{activity.Distance}}</p>
-        <!--<img src={{activity.Route}} class="card-img-top" alt="...">-->
-        <p class="card-text">{{activity.Route}} </p>
+    </div>
+
+    <div class="col-8 justify-content-center">
+      <div class="well">
+        <div class="abs-center mt-3" *ngFor="let activity of activities; let i = index">
+          <div class="card w-75">
+            <div class="card-header">
+              {{activity.User}}
+            </div>
+            <div class="card-body ">
+              <h5 class="card-title text-center">Made a {{activity.Type}} activity</h5>
+              <p class="card-text">Starting at: {{activity.Start}}</p>
+              <p class="card-text">Distance: {{activity.Distance}}</p>
+              <!--<img src={{activity.Route}} class="card-img-top" alt="...">-->
+              <p class="card-text">{{activity.Route}} </p>
 
 
-      </div>
-      <div class="card-footer bg-transparent ">
-        <button class="btn btn-link" type="button" id="commentBtn" data-bs-toggle="modal" data-bs-target="#exampleModal"
-          (click)="getCommentsByActivity(i)">
-          Add a comment
-        </button>
+            </div>
+            <div class="card-footer bg-transparent ">
+              <button class="btn btn-link" type="button" id="commentBtn" data-bs-toggle="modal"
+                data-bs-target="#exampleModal" (click)="getCommentsByActivity(i)">
+                Add a comment
+              </button>
+            </div>
+
+          </div>
+
+        </div>
       </div>
 
     </div>
   </div>
-
 </div>
+
+
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -53,8 +80,3 @@
     </div>
   </div>
 </div>
-
-<img [src]="userImage" alt="User profile picture" *ngIf="!isImageLoading; else noImageFound" width="200px">
-<ng-template #noImageFound>
-  <img src="assets\generic_user_icon.png" alt="Fallbackimage" width="200px">
-</ng-template>

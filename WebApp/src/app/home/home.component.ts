@@ -1,5 +1,6 @@
 import { DatePipe, formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ApiMongoService } from '../services/ApiMongo/api-mongo.service';
 import { ApiService } from '../services/ApiService/api.service';
 import { SharedService } from '../services/SharedService/shared.service';
@@ -14,13 +15,13 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private service: ApiService,
-    private sharedService: SharedService,
+    public sharedService: SharedService,
     private mongoService: ApiMongoService,
+    private router: Router,
     private datePipe: DatePipe
   ) { }
 
   userImage: any;
-  userImagePath: string = '';
   isImageLoading = false;
   data: any = [];
 
@@ -46,33 +47,43 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.activities.splice(0, 1);
     this.comments.splice(0, 1);
-    //Check de usuario logeado
-    /*if (this.sharedService.getUser() == '') {
-      return;
-    }else{
-      this.service.GetFriendsFrontPage(this.sharedService.getUser()).subscribe(resp => {
+
+    // solicita y carga la informacion del usuario
+    // y luego carga la imagen
+    this.service.getUser(this.sharedService.getUserData().User).subscribe({
+      next: (resp) => {
+        console.log(resp.body);
+        this.data = <JSON>resp.body;
+        this.sharedService.getUserData().FirstName = this.data.firstName;
+        this.sharedService.getUserData().LastName1 = this.data.lastName1;
+        this.sharedService.getUserData().LastName2 = this.data.lastName2;
+        this.sharedService.getUserData().BirthDate = this.data.birthDate;
+        this.sharedService.getUserData().Picture = this.data.picture;
+        this.sharedService.getUserData().Nationality = this.data.nationality;
+        this.getImageFromService(this.sharedService.getUserData().Picture);
+      },
+      error: (error) => {
+        console.log(error);
+        if (error.status == 401) {
+          this.router.navigate(['/']);
+        }
+      }
+    });
+
+    this.service.GetFriendsFrontPage(this.sharedService.getUserData().User).subscribe({
+      next: (resp) => {
         console.log(resp.body);
         for (let i of resp.body!) {
           this.loadActivity(i);
         }
-      })
-  }*/
-    this.service.GetFriendsFrontPage('sfv').subscribe(resp => {
-      console.log(resp.body);
-      for (let i of resp.body!) {
-        this.loadActivity(i);
+      },
+      error: (error) => {
+        console.log(error);
+        if (error.status == 401) {
+          this.router.navigate(['/']);
+        }
       }
     });
-
-    // solicita y carga la informacion del usuario
-    // y luego carga la imagen
-    this.service.getUser('sfv').subscribe(resp => {
-      console.log(resp.body);
-      this.data = <JSON>resp.body;
-      this.userImagePath = this.data.picture;
-      this.getImageFromService(this.userImagePath);
-    });
-
   }
 
   loadActivity(acts: any) {
@@ -95,11 +106,19 @@ export class HomeComponent implements OnInit {
 
     this.activityNumber = this.activities[i].id;
     console.log("ACT NUM: " + this.activityNumber);
-    this.mongoService.getCommentsByActivity(this.activities[i].id).subscribe(resp => {
-      console.log(resp);
-
-      for (let i of resp.body!) {
-        this.showComments(i);
+    this.mongoService.getCommentsByActivity(this.activities[i].id).subscribe({
+      next: (resp) => {
+        console.log(resp);
+        for (let i of resp.body!) {
+          this.showComments(i);
+        }
+      },
+      error: (error) => {
+        console.log(error);
+        if (error.status == 401) {
+          this.router.navigate(['/']);
+          return;
+        }
       }
     })
   }
@@ -163,6 +182,10 @@ export class HomeComponent implements OnInit {
       error: (error) => {
         this.isImageLoading = true;
         console.log(error);
+        if (error.status == 401) {
+          this.router.navigate(['/']);
+          return;
+        }
       }
     });
   }

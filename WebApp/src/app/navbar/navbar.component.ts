@@ -13,13 +13,10 @@ export class NavbarComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    /*if (this.sharedService.getUser() == '') {
-      this.LogOut();
-    }*/
   }
 
   LogOut() {
-    this.sharedService.setUser('');
+    this.sharedService.getUserData().User = '';
     this.sharedService.setToken('');
     this.router.navigate(['/']);
   }
