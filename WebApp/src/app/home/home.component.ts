@@ -8,7 +8,7 @@ import { SharedService } from '../services/SharedService/shared.service';
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  providers:[DatePipe]
+  providers: [DatePipe]
 })
 export class HomeComponent implements OnInit {
 
@@ -18,9 +18,14 @@ export class HomeComponent implements OnInit {
     private mongoService: ApiMongoService,
     private datePipe: DatePipe
   ) { }
-  
-  activities= [{
-    "id":0,
+
+  userImage: any;
+  userImagePath: string = '';
+  isImageLoading = false;
+  data: any = [];
+
+  activities = [{
+    "id": 0,
     "User": "sfv",
     "FirstName": "sfv",
     "LastName1": "sfv",
@@ -37,7 +42,7 @@ export class HomeComponent implements OnInit {
     "postTime": "",
     "body": ""
   }];
-  activityNumber=-1;
+  activityNumber = -1;
   ngOnInit(): void {
     this.activities.splice(0, 1);
     this.comments.splice(0, 1);
@@ -52,16 +57,25 @@ export class HomeComponent implements OnInit {
         }
       })
   }*/
-  this.service.GetFriendsFrontPage('SRC').subscribe(resp => {
-    console.log(resp.body);
-    for (let i of resp.body!) {
-      this.loadActivity(i);
-    }
-  })
+    this.service.GetFriendsFrontPage('sfv').subscribe(resp => {
+      console.log(resp.body);
+      for (let i of resp.body!) {
+        this.loadActivity(i);
+      }
+    });
+
+    // solicita y carga la informacion del usuario
+    // y luego carga la imagen
+    this.service.getUser('sfv').subscribe(resp => {
+      console.log(resp.body);
+      this.data = <JSON>resp.body;
+      this.userImagePath = this.data.picture;
+      this.getImageFromService(this.userImagePath);
+    });
 
   }
+
   loadActivity(acts: any) {
-    
 
     this.activities.push({
       "id": acts.id,
@@ -76,11 +90,11 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  getCommentsByActivity(i:number){
-    
-    
-    this.activityNumber=this.activities[i].id;
-    console.log("ACT NUM: "+this.activityNumber);
+  getCommentsByActivity(i: number) {
+
+
+    this.activityNumber = this.activities[i].id;
+    console.log("ACT NUM: " + this.activityNumber);
     this.mongoService.getCommentsByActivity(this.activities[i].id).subscribe(resp => {
       console.log(resp);
 
@@ -97,36 +111,59 @@ export class HomeComponent implements OnInit {
       "postTime": comment.postTime,
       "body": comment.body
     })
-    var postTime=new Date();
-    const cValue= formatDate(postTime,'yyyy-MM-ddTHH:mm:SS','en-US');
-    console.log(cValue+'Z');
-    
+    var postTime = new Date();
+    const cValue = formatDate(postTime, 'yyyy-MM-ddTHH:mm:SS', 'en-US');
+    console.log(cValue + 'Z');
+
   }
-  hideComments(){
+  hideComments() {
     this.comments.splice(0, this.comments.length);
   }
 
 
-  addComment(comment:any){
-    var postTime=new Date();
-    const cValue= formatDate(postTime,'yyyy-MM-ddTHH:mm:SS','en-US');
-    var newComment={
+  addComment(comment: any) {
+    var postTime = new Date();
+    const cValue = formatDate(postTime, 'yyyy-MM-ddTHH:mm:SS', 'en-US');
+    var newComment = {
       "user": 'SRC'/*this.sharedService.getUser()*/,
       "activityId": this.activityNumber,
-      "postTime": cValue+"Z",
+      "postTime": cValue + "Z",
       "body": comment
     }
-    
-    if(comment==''){
+
+    if (comment == '') {
       return;
-    }else{
-      this.mongoService.postComments(newComment).subscribe(resp=>{
+    } else {
+      this.mongoService.postComments(newComment).subscribe(resp => {
         console.log(resp);
       })
       this.showComments(newComment);
     }
-    
-    
-    
+  }
+
+  createImageFromBlob(image: Blob) {
+    let reader = new FileReader();
+    reader.addEventListener("load", () => {
+      this.userImage = reader.result;
+    }, false);
+
+    if (image) {
+      reader.readAsDataURL(image);
+    }
+  }
+
+  getImageFromService(imageUrl: string) {
+    this.isImageLoading = true;
+    const path: any = { path: imageUrl };
+    this.service.getUserImage(<JSON>path).subscribe({
+      next: (data) => {
+        this.createImageFromBlob(data);
+        this.isImageLoading = false;
+      },
+      error: (error) => {
+        this.isImageLoading = true;
+        console.log(error);
+      }
+    });
   }
 }

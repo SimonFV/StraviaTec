@@ -7,6 +7,8 @@ using ApiServer.DTOs;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace ApiServer.Controllers
 {
@@ -49,6 +51,21 @@ namespace ApiServer.Controllers
             if (friends is null)
                 return new JsonResult("Something went wrong retrieving the friends.") { StatusCode = 500 };
             return Ok(friends);
+        }
+
+        [HttpPost]
+        [Route("userImage")]
+        public IActionResult GetUserImage(FilePathDto route)
+        {
+            try
+            {
+                return File(System.IO.File.ReadAllBytes(route.Path), "image/" + Path.GetExtension(route.Path).Remove(0, 1));
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return new JsonResult("Something went wrong retrieving the image.") { StatusCode = 500 };
+            }
         }
 
         [HttpGet]

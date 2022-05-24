@@ -1,51 +1,60 @@
 <app-navbar></app-navbar>
 <div class="container">
-    <div class="abs-center mt-3" *ngFor="let activity of activities; let i = index">
-        <div class="card w-50" >
-            <div class="card-header">
-              {{activity.User}}
-            </div>
-            <div class="card-body ">
-              <h5 class="card-title text-center">Made a {{activity.Type}} activity</h5>
-              <p class="card-text">Starting at: {{activity.Start}}</p>
-              <p class="card-text">Distance: {{activity.Distance}}</p>
-              <!--<img src={{activity.Route}} class="card-img-top" alt="...">-->
-              <p class="card-text">{{activity.Route}} </p>
-              
-              
-            </div>
-            <div class="card-footer bg-transparent ">
-                <button class="btn btn-link" type="button" id="commentBtn" data-bs-toggle="modal" 
-                data-bs-target="#exampleModal" (click)="getCommentsByActivity(i)" >
-                  Add a comment
-                </button>
-            </div>
+  <div class="abs-center mt-3" *ngFor="let activity of activities; let i = index">
+    <div class="card w-50">
+      <div class="card-header">
+        {{activity.User}}
+      </div>
+      <div class="card-body ">
+        <h5 class="card-title text-center">Made a {{activity.Type}} activity</h5>
+        <p class="card-text">Starting at: {{activity.Start}}</p>
+        <p class="card-text">Distance: {{activity.Distance}}</p>
+        <!--<img src={{activity.Route}} class="card-img-top" alt="...">-->
+        <p class="card-text">{{activity.Route}} </p>
 
-          </div>
+
+      </div>
+      <div class="card-footer bg-transparent ">
+        <button class="btn btn-link" type="button" id="commentBtn" data-bs-toggle="modal" data-bs-target="#exampleModal"
+          (click)="getCommentsByActivity(i)">
+          Add a comment
+        </button>
+      </div>
+
     </div>
-    
   </div>
 
+</div>
+
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Comments</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="hideComments()"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="hideComments()"></button>
       </div>
       <div class="modal-body">
-        <div  *ngFor="let comment of comments; let i = index">
+        <div *ngFor="let comment of comments; let i = index">
           <p class="card-text"> {{comment.user}}: {{comment.body}}</p>
         </div>
       </div>
       <div class="modal-footer">
         <div class="input-group mb-3">
-          <input #Comment type="text" class="form-control" placeholder="Comment" aria-label="Comment" aria-describedby="button-addon2">
-          <button class="btn btn-primary" type="button" id="button-addon2" (click)="addComment(Comment.value)">Submit</button>
+          <input #Comment type="text" class="form-control" placeholder="Comment" aria-label="Comment"
+            aria-describedby="button-addon2">
+          <button class="btn btn-primary" type="button" id="button-addon2"
+            (click)="addComment(Comment.value)">Submit</button>
         </div>
-        
+
       </div>
     </div>
   </div>
 </div>
+
+<img [src]="userImage" alt="User profile picture" *ngIf="!isImageLoading; else noImageFound" width="200px">
+<ng-template #noImageFound>
+  <img src="assets\generic_user_icon.png" alt="Fallbackimage" width="200px">
+</ng-template>

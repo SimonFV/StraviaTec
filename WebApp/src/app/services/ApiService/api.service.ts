@@ -23,6 +23,14 @@ export class ApiService {
     return this.http.get<JSON[]>('http://localhost:5000/Race/races', { headers: header, observe: 'response' });
   }
 
+  getUser(user: string) {
+    return this.http.get('http://localhost:5000/User/users/' + user, { observe: 'response' });
+  }
+
+  getUserImage(imagePath: JSON): Observable<Blob> {
+    return this.http.post('http://localhost:5000/User/userImage', imagePath, { responseType: 'blob' });
+  }
+
   registerUser(user: FormData) {
     let header = new HttpHeaders().set('Type-contet', 'multipart/form-data');
     return this.http.post('http://localhost:5000/Authentication/register', user, { headers: header, observe: 'response' });
