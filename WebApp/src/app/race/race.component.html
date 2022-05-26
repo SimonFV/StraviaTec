@@ -1,5 +1,8 @@
 <app-navbar></app-navbar>
 <div class="container">
+  <div class="col-auto">
+    <button class="btn btn-primary mt-3"(click)="createRace()">Create Race</button>
+  </div>
     <div class="abs-center mt-3" *ngFor="let race of races; let i index">
         <div class="card w-50" >
             <div class="card-header">

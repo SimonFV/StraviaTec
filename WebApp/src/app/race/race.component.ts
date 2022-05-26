@@ -40,4 +40,8 @@ export class RaceComponent implements OnInit {
     })
     console.log(this.races);
   }
+
+  createRace(){
+    
+  }
 }

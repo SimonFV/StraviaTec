@@ -49,4 +49,10 @@ export class ApiService {
     return this.http.get<JSON[]>('http://localhost:5000/User/friendsFrontPage/' + user, { headers: header, observe: 'response' });
   }
 
+  addActivity(activity: FormData) {
+    let header = new HttpHeaders().set('Type-contet', 'multipart/form-data');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.post('http://localhost:5000/User/addActivity', activity, { headers: header, observe: 'response' });
+  }
+
 }
