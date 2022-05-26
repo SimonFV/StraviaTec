@@ -58,8 +58,6 @@ export class SignInComponent implements OnInit {
 
   //Funcion para leer la respuesta del API
   readResp(response: any) {
-    console.log(response);
-    
     this.data = <JSON>response.body;
     this.sharedService.setToken(this.data.token);
     this.sharedService.getUserData().User = this.form.get('User')!.value;

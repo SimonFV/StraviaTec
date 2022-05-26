@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ApiService } from '../services/ApiService/api.service';
 import { SharedService } from '../services/SharedService/shared.service';
 
@@ -11,7 +12,8 @@ export class ChallengeComponent implements OnInit {
 
   constructor(
     private ApiService: ApiService,
-    public sharedService: SharedService) { }
+    public sharedService: SharedService,
+    private router: Router) { }
   challenges = [{
     "userAdmin": "",
     "name": "",
@@ -22,13 +24,17 @@ export class ChallengeComponent implements OnInit {
     "activity_Type": ""
   }]
   ngOnInit(): void {
-    console.log(this.sharedService.getToken());
-    
     this.challenges.splice(0, 1);
-    this.ApiService.getChallenges().subscribe(resp => {
-      console.log(resp.body);
-      for (let challenge of resp.body!) {
-        this.loadChallenges(challenge);
+    this.ApiService.getChallenges().subscribe({
+      next: (resp) => {
+        for (let challenge of resp.body!) {
+          this.loadChallenges(challenge);
+        }
+      }, error: (error) => {
+        console.log(error);
+        if (error.status == 401) {
+          this.router.navigate(['/']);
+        }
       }
     })
   }
@@ -43,8 +49,6 @@ export class ChallengeComponent implements OnInit {
       "endDate": challenge.endDate,
       "activity_Type": challenge.activity_Type
     })
-    console.log(this.challenges);
-
   }
 
 

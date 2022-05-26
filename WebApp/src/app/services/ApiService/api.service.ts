@@ -49,4 +49,11 @@ export class ApiService {
     return this.http.get<JSON[]>('http://localhost:5000/User/friendsFrontPage/' + user, { headers: header, observe: 'response' });
   }
 
+  updateUser(user: FormData) {
+    let header = new HttpHeaders().set('Type-contet', 'multipart/form-data');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.put('http://localhost:5000/User/edit', user, { headers: header, observe: 'response' });
+  }
+
+
 }

@@ -11,10 +11,10 @@
           <ng-template #noImageFound>
             <img src="assets\generic_user_icon.png" alt="Fallbackimage" class="round-circle">
           </ng-template>
-          <h5 class="card-title text-center">{{sharedService.getUserData().FirstName}}
+          <h5 class="card-title text-center mt-3">{{sharedService.getUserData().FirstName}}
             {{sharedService.getUserData().LastName1}}</h5>
           <p class="card-text text-center">{{sharedService.getUserData().User}}</p>
-          <button class="btn btn-link" routerLink="/signUp">Edit</button>
+          <button class="btn btn-link" (click)="editUser()">Edit</button>
         </div>
       </div>
     </div>

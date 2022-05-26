@@ -87,6 +87,44 @@ namespace ApiServer.DAL
             return user;
         }
 
+        public static string UpdateUser(UserRegisterDto user, string currenPassword)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string procedure = @"UpdateUser";
+                    using (SqlCommand cmd = new SqlCommand(procedure, con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@User", user.User);
+                        cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
+                        cmd.Parameters.AddWithValue("@LastName1", user.LastName1);
+                        cmd.Parameters.AddWithValue("@LastName2", user.LastName2);
+                        cmd.Parameters.AddWithValue("@BirthDate", user.BirthDate.ToString("yyyy-MM-dd HH:mm:ss"));
+                        cmd.Parameters.AddWithValue("@Password", currenPassword);
+                        cmd.Parameters.AddWithValue("@NewPassword", user.Password);
+                        cmd.Parameters.AddWithValue("@Picture", user.Picture);
+                        cmd.Parameters.AddWithValue("@Nationality", user.Nationality);
+
+                        con.Open();
+                        int sdr = (int)cmd.ExecuteScalar();
+                        con.Close();
+                        if (sdr == -1)
+                            return "NotFound";
+                        else if (sdr == -2)
+                            return "WrongPass";
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return "error";
+            }
+            return "done";
+        }
+
         public static List<FriendsFrontPage> GetFriendsFrontPageDB(string user)
         {
             List<FriendsFrontPage> friends = new();

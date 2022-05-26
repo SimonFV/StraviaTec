@@ -15,6 +15,7 @@ import { MyActivitiesComponent } from './my-activities/my-activities.component';
 import { GroupsComponent } from './groups/groups.component';
 import { FriendsComponent } from './friends/friends.component';
 import { SharedService } from './services/SharedService/shared.service';
+import { EditUserComponent } from './edit-user/edit-user.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { SharedService } from './services/SharedService/shared.service';
     NavbarComponent,
     MyActivitiesComponent,
     GroupsComponent,
-    FriendsComponent
+    FriendsComponent,
+    EditUserComponent
   ],
   imports: [
     BrowserModule,
@@ -44,6 +46,7 @@ import { SharedService } from './services/SharedService/shared.service';
       { path: 'myAct', component: MyActivitiesComponent },
       { path: 'groups', component: GroupsComponent },
       { path: 'friends', component: FriendsComponent },
+      { path: 'editUser', component: EditUserComponent },
     ])
   ],
   providers: [SharedService],

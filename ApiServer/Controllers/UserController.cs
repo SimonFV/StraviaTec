@@ -163,5 +163,67 @@ namespace ApiServer.Controllers
             return new JsonResult("Invalid model for Group.") { StatusCode = 400 };
         }
 
+        [HttpPut]
+        [Route("edit")]
+        public IActionResult UpdateUser(
+            [FromForm] string User,
+            [FromForm] string FirstName,
+            [FromForm] string LastName1,
+            [FromForm] string LastName2,
+            [FromForm] DateTime BirthDate,
+            [FromForm] string NewPassword,
+            [FromForm] string CurrentPassword,
+            [FromForm] IFormFile Picture,
+            [FromForm] string CurrentPicture,
+            [FromForm] string Nationality)
+        {
+            try
+            {
+                string fileName = "";
+                string filePath = "";
+                if (Picture is not null)
+                {
+                    fileName = Path.GetFileName(Picture.FileName);
+                    filePath = Path.Combine("Files\\Profiles", User, fileName);
+                }
+                UserRegisterDto user = new()
+                {
+                    User = User,
+                    FirstName = FirstName,
+                    LastName1 = LastName1,
+                    LastName2 = LastName2,
+                    BirthDate = BirthDate,
+                    Password = NewPassword is not null ? NewPassword : CurrentPassword,
+                    Picture = Picture is not null ? filePath : CurrentPicture,
+                    Nationality = Nationality
+                };
+
+                string result = UserDAL.UpdateUser(user, CurrentPassword);
+                if (result is "Error")
+                    return new JsonResult("Something went wrong in the registration.") { StatusCode = 500 };
+                else if (result is "NotFound")
+                    return new JsonResult("User not found.") { StatusCode = 403 };
+                else if (result is "WrongPass")
+                    return new JsonResult("Incorrect password.") { StatusCode = 403 };
+                if (Picture is not null)
+                {
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        if (System.IO.File.Exists(CurrentPicture))
+                        {
+                            System.IO.File.Delete(CurrentPicture);
+                        }
+                        Picture.CopyToAsync(fileStream);
+                    }
+                }
+                return Ok();
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return new JsonResult("Something went wrong while updating.") { StatusCode = 500 };
+            }
+        }
+
     }
 }

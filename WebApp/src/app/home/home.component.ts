@@ -52,7 +52,6 @@ export class HomeComponent implements OnInit {
     // y luego carga la imagen
     this.service.getUser(this.sharedService.getUserData().User).subscribe({
       next: (resp) => {
-        console.log(resp.body);
         this.data = <JSON>resp.body;
         this.sharedService.getUserData().FirstName = this.data.firstName;
         this.sharedService.getUserData().LastName1 = this.data.lastName1;
@@ -72,7 +71,6 @@ export class HomeComponent implements OnInit {
 
     this.service.GetFriendsFrontPage(this.sharedService.getUserData().User).subscribe({
       next: (resp) => {
-        //console.log(resp.body);
         for (let i of resp.body!) {
           this.loadActivity(i);
         }
@@ -105,7 +103,6 @@ export class HomeComponent implements OnInit {
     this.activityNumber = this.activities[i].id;
     this.mongoService.getCommentsByActivity(this.activities[i].id).subscribe({
       next: (resp) => {
-        console.log(resp);
         for (let i of resp.body!) {
           this.showComments(i);
         }
@@ -150,7 +147,7 @@ export class HomeComponent implements OnInit {
       return;
     } else {
       this.mongoService.postComments(newComment).subscribe(resp => {
-        console.log('comment resp: '+resp);
+        console.log('comment resp: ' + resp);
       })
       this.showComments(newComment);
     }
@@ -184,5 +181,9 @@ export class HomeComponent implements OnInit {
         }
       }
     });
+  }
+
+  editUser() {
+    this.router.navigate(['/editUser']);
   }
 }

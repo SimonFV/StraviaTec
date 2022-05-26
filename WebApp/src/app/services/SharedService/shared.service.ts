@@ -12,7 +12,7 @@ export class SharedService {
             "FirstName": '',
             "LastName1": '',
             "LastName2": '',
-            "BirthDate": '',
+            "BirthDate": '2000-01-01',
             "Picture": '',
             "Nationality": ''
         }

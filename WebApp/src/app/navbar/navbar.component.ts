@@ -14,19 +14,22 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  challenge(){
+  home() {
+    this.router.navigate(['/home']);
+  }
+  challenge() {
     this.router.navigate(['/challenge']);
   }
-  race(){
+  race() {
     this.router.navigate(['/race']);
   }
-  myAct(){
+  myAct() {
     this.router.navigate(['/myAct']);
   }
-  friends(){
+  friends() {
     this.router.navigate(['/friends']);
   }
-  groups(){
+  groups() {
     this.router.navigate(['/groups']);
   }
   LogOut() {

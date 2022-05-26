@@ -339,6 +339,38 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE UpdateUser
+	@User NVARCHAR(15), @FirstName NVARCHAR(15), @LastName1 NVARCHAR(15), @LastName2 NVARCHAR(15),
+	@BirthDate DATE, @Password NVARCHAR(30), @NewPassword NVARCHAR(30), @Picture NVARCHAR(255), @Nationality VARCHAR(15)
+AS
+BEGIN
+    SET NOCOUNT ON;
+     
+    IF NOT EXISTS(SELECT "User" FROM "USER" WHERE "User" = @User)
+    BEGIN
+        SELECT -1  --User not found
+    END
+    ELSE IF NOT EXISTS(SELECT "User" FROM "USER" WHERE "User" = @User AND "Password" = HASHBYTES('SHA2_512', @Password))
+    BEGIN
+        SELECT -2 --Incorrect password
+    END
+    ELSE
+    BEGIN
+        UPDATE "USER"
+        SET		FirstName = @FirstName, 
+				LastName1 = @LastName1, 
+				LastName2 = @LastName2, 
+				BirthDate = @BirthDate,
+				"Password" = HASHBYTES('SHA2_512', @NewPassword),
+				Picture = @Picture, 
+				Nationality = @Nationality
+		WHERE	"User" = @User;
+
+        SELECT 0 --User updated
+    END
+END;
+GO
+
 CREATE PROCEDURE FriendsLatestActivities
 	@User NVARCHAR(15)
 AS
@@ -561,3 +593,4 @@ SELECT "User", FirstName, LastName1, LastName2, Id, "Type", "Start", "Route", Di
 FROM "USER", ACTIVITY 
 WHERE "User" = UserId AND "Start" = (SELECT MAX("Start") FROM ACTIVITY WHERE UserId = "User");
 GO
+
