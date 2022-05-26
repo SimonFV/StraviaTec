@@ -11,32 +11,41 @@ import { SharedService } from '../services/SharedService/shared.service';
 export class MyActivitiesComponent implements OnInit {
   public form!: FormGroup;
   alert: boolean = false;
-  private: boolean= false;
   alertMessage: string = '';
+
+  activityType='';
   typeAlert: string = 'success';
-  public token: any;//Tocken del usuario actual
   data: any = [];//Lista utilizada para enviar los datos del usuario
+  start;
+  duration;
   constructor(
     private formBuilder: FormBuilder,
     private service: ApiService,
     private sharedService: SharedService
-    ) { }
+    ) { 
+      this.start=new Date();
+      this.duration=new Date();
+    }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       UserId: ['SRC'/*this.sharedService.getToken()*/, [Validators.required]],
       Distance: ['', [Validators.required]],
-      Start: ['', [Validators.required]],
-      Duration: ['', [Validators.required]],
+      Start: [Date, [Validators.required]],
+      Duration: [Date, [Validators.required]],
       Type: ['', [Validators.required]],
       Route:['route.gpx', [Validators.required]]
     });
+    
+
    
   }
   getActivity(){
-    //this.form.get('Duration')!.setValue(this.form.get('Duration')!.value+'.000Z');
+    
+    this.form.get('Type')!.setValue(this.activityType);
+    this.form.get('Start')!.setValue(this.start);
+    this.form.get('Duration')!.setValue(this.duration);
     console.log(this.form.value);
-    console.log(this.form.get('Duration')!.value);
     
     this.service.addActivity(this.form.value).subscribe(resp=>{
       console.log(resp);

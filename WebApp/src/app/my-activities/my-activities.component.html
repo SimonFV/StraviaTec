@@ -13,13 +13,14 @@
 
         <div >
             <label for="floatingInput">Start Day</label>
-            <input required type="date" id="Start" class="form-control mb-2" formControlName="Start">
+            <input required type="datetime-local" id="Start" class="form-control mb-2" [(ngModel)]="start" [ngModelOptions]="{standalone: true}">
         </div>
 
         <div >
             <label for="floatingInput">Activity Time</label>
-            <input required type="date" id="Duration" class="form-control mb-1" formControlName="Duration">
+            <input required type="datetime-local" [(ngModel)]="duration" [ngModelOptions]="{standalone: true}" id="Duration" class="form-control mb-1" >
         </div>
+        
 
         <div>
             <label for="inputGroupFile02" class="text-left ">Route</label>
@@ -31,9 +32,19 @@
 
         
         <div class="form-floating">
-            <input required type="text" id="type" placeholder="type" class="form-control mb-1 "
-                formControlName="Type">
-            <label for="floatingInput">Type</label>
+            <!--<input required type="text" id="type" placeholder="type" class="form-control mb-1 "
+                formControlName="Type">-->
+            
+            <select class="form-select" [(ngModel)]="activityType" [ngModelOptions]="{standalone: true}" aria-label="Default select example">
+                
+                <option value="Running" selected >Running</option>
+                <option value="Swimming">Swimming</option>
+                <option value="Cycling">Cycling</option>
+                <option value="Hiking">Hiking</option>
+                <option value="Kayaking">Kayaking</option>
+                <option value="Walking">Walking</option>
+              </select>
+              <label for="floatingSelect">Type</label>
         </div>
         
 
