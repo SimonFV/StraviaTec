@@ -14,7 +14,21 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
+  challenge(){
+    this.router.navigate(['/challenge']);
+  }
+  race(){
+    this.router.navigate(['/race']);
+  }
+  myAct(){
+    this.router.navigate(['/myAct']);
+  }
+  friends(){
+    this.router.navigate(['/friends']);
+  }
+  groups(){
+    this.router.navigate(['/groups']);
+  }
   LogOut() {
     this.sharedService.getUserData().User = '';
     this.sharedService.setToken('');

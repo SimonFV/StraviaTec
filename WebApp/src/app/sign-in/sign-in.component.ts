@@ -12,7 +12,7 @@ import { SharedService } from '../services/SharedService/shared.service';
 export class SignInComponent implements OnInit {
   public form!: FormGroup;//Formulario utilizado para capturar los datos requeridos
   data: any = [];//Lista utilizada guardar los datos del usuario
-  public token: any;//Tocken del usuario
+  public token: any;//Token del usuario
   alert: boolean = false;
   alertMessage: string = '';
   typeAlert: string = 'success';
@@ -58,6 +58,8 @@ export class SignInComponent implements OnInit {
 
   //Funcion para leer la respuesta del API
   readResp(response: any) {
+    console.log(response);
+    
     this.data = <JSON>response.body;
     this.sharedService.setToken(this.data.token);
     this.sharedService.getUserData().User = this.form.get('User')!.value;
@@ -65,4 +67,3 @@ export class SignInComponent implements OnInit {
   }
 
 }
-//#7742BE

@@ -27,7 +27,6 @@ export class SignUpComponent implements OnInit {
   typeAlert: string = 'success';
   public token: any;//Tocken del usuario actual
   data: any = [];//Lista utilizada para enviar los datos del usuario
-  student: boolean = false;//Flag para saber si el usuario actual es un estudiante
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       FirstName: ['', [Validators.required, Validators.maxLength(15)]],

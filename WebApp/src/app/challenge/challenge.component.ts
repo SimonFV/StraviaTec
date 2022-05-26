@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../services/ApiService/api.service';
+import { SharedService } from '../services/SharedService/shared.service';
 
 @Component({
   selector: 'app-challenge',
@@ -8,7 +9,9 @@ import { ApiService } from '../services/ApiService/api.service';
 })
 export class ChallengeComponent implements OnInit {
 
-  constructor(private ApiService: ApiService) { }
+  constructor(
+    private ApiService: ApiService,
+    public sharedService: SharedService) { }
   challenges = [{
     "userAdmin": "",
     "name": "",
@@ -19,6 +22,8 @@ export class ChallengeComponent implements OnInit {
     "activity_Type": ""
   }]
   ngOnInit(): void {
+    console.log(this.sharedService.getToken());
+    
     this.challenges.splice(0, 1);
     this.ApiService.getChallenges().subscribe(resp => {
       console.log(resp.body);

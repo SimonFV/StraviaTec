@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit {
 
     this.service.GetFriendsFrontPage(this.sharedService.getUserData().User).subscribe({
       next: (resp) => {
-        console.log(resp.body);
+        //console.log(resp.body);
         for (let i of resp.body!) {
           this.loadActivity(i);
         }
@@ -102,10 +102,7 @@ export class HomeComponent implements OnInit {
   }
 
   getCommentsByActivity(i: number) {
-
-
     this.activityNumber = this.activities[i].id;
-    console.log("ACT NUM: " + this.activityNumber);
     this.mongoService.getCommentsByActivity(this.activities[i].id).subscribe({
       next: (resp) => {
         console.log(resp);
@@ -132,7 +129,6 @@ export class HomeComponent implements OnInit {
     })
     var postTime = new Date();
     const cValue = formatDate(postTime, 'yyyy-MM-ddTHH:mm:SS', 'en-US');
-    console.log(cValue + 'Z');
 
   }
   hideComments() {
@@ -144,7 +140,7 @@ export class HomeComponent implements OnInit {
     var postTime = new Date();
     const cValue = formatDate(postTime, 'yyyy-MM-ddTHH:mm:SS', 'en-US');
     var newComment = {
-      "user": 'SRC'/*this.sharedService.getUser()*/,
+      "user": this.sharedService.getUserData().User,
       "activityId": this.activityNumber,
       "postTime": cValue + "Z",
       "body": comment
@@ -154,7 +150,7 @@ export class HomeComponent implements OnInit {
       return;
     } else {
       this.mongoService.postComments(newComment).subscribe(resp => {
-        console.log(resp);
+        console.log('comment resp: '+resp);
       })
       this.showComments(newComment);
     }
