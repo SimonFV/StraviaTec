@@ -55,5 +55,15 @@ export class ApiService {
     return this.http.put('http://localhost:5000/User/edit', user, { headers: header, observe: 'response' });
   }
 
+  addActivity(activity: FormData) {
+    let header = new HttpHeaders().set('Type-contet', 'multipart/form-data');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.post('http://localhost:5000/User/addActivity', activity, { headers: header, observe: 'response' });
+  }
+  addRace(race: string){
+    let header = new HttpHeaders().set('Type-contet', 'multipart/form-data');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.post('http://localhost:5000/Race/races', race, { headers: header, observe: 'response' });
+  }
 
 }

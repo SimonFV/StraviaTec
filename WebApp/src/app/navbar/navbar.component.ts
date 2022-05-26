@@ -14,10 +14,10 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  home() {
+  home(){
     this.router.navigate(['/home']);
   }
-  challenge() {
+  challenge(){
     this.router.navigate(['/challenge']);
   }
   race() {
