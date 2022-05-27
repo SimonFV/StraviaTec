@@ -86,8 +86,6 @@ export class EditUserComponent implements OnInit {
     formData.append('CurrentPassword', this.form.get('CurrentPassword')!.value);
     formData.append('User', this.sharedService.getUserData().User);
 
-
-    console.log(this.form.value);
     this.service.updateUser(formData).subscribe({
       next: (response) => this.readResp(response),
       error: (error) => {
@@ -105,8 +103,7 @@ export class EditUserComponent implements OnInit {
   //Funcion utilizada para leer la respuesta del API
   readResp(response: any) {
     this.data = <JSON>response.body;
-    console.log(this.data);
-    //this.router.navigate(['/home']);
+    this.router.navigate(['/']);
   }
 
   getFile(event: any) {
