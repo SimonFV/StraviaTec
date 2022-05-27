@@ -79,6 +79,16 @@ namespace ApiServer.Controllers
         }
 
         [HttpGet]
+        [Route("friends/{user}")]
+        public IActionResult GetFriends(string user)
+        {
+            List<UserResponseDto> friends = UserDAL.GetFriends(user);
+            if (friends is null)
+                return new JsonResult("Something went wrong retrieving the users.") { StatusCode = 500 };
+            return Ok(friends);
+        }
+
+        [HttpGet]
         [Route("groupsAvailable/{user}")]
         public IActionResult GetGroupsAvailable(string user)
         {

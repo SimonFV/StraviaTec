@@ -48,6 +48,11 @@ export class ApiService {
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.get<JSON[]>('http://localhost:5000/User/friendsFrontPage/' + user, { headers: header, observe: 'response' });
   }
+  getFriends(user: string) {
+    let header = new HttpHeaders().set('Type-contet', 'multipart/form-data');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.get<JSON[]>('http://localhost:5000/User/friends/' + user, { headers: header, observe: 'response' });
+  }
 
   updateUser(user: FormData) {
     let header = new HttpHeaders().set('Type-contet', 'multipart/form-data');

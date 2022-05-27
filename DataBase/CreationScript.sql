@@ -405,6 +405,19 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE getFriends
+	@User NVARCHAR(15)
+AS
+BEGIN
+    SELECT "User", FirstName, LastName1, BirthDate,Picture
+	FROM "USER" 
+	WHERE "USER"."User" IN(
+		SELECT FRIENDS.FriendUser FROM FRIENDS 
+		WHERE "User" = @User)
+		AND "USER"."User" != @User;
+END;
+GO
+
 CREATE PROCEDURE GroupsAvailable
 	@User NVARCHAR(15)
 AS

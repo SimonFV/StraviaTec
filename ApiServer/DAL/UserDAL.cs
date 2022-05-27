@@ -211,6 +211,49 @@ namespace ApiServer.DAL
             return users;
         }
 
+
+        public static List<UserResponseDto> GetFriends(string myuser)
+        {
+            List<UserResponseDto> users = new();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string procedure = @"getFriends";
+                    using (SqlCommand cmd = new SqlCommand(procedure, con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@User", myuser);
+                        con.Open();
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                UserResponseDto user = new()
+                                {
+                                    User = (string)sdr["User"],
+                                    FirstName = (string)sdr["FirstName"],
+                                    LastName1 = (string)sdr["LastName1"],
+                                    //LastName2 = (string)sdr["LastName2"],
+                                    BirthDate = (DateTime)sdr["BirthDate"],
+                                    Picture = (string)sdr["Picture"],
+                                    //Nationality = (string)sdr["Nationality"]
+                                };
+                                users.Add(user);
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return null;
+            }
+            return users;
+        }
+
         public static List<GroupDTO> GetGroupsAvailable(string user)
         {
             List<GroupDTO> groups = new();
