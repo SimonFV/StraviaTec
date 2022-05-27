@@ -1,38 +1,22 @@
 USE StraviaTecDB;
 GO
 
-/*
+
 --User registration
-EXEC Register @User = 'andres', @FirstName = 'andres', @LastName1 = 'perico', @LastName2 = 'perico',
-			@BirthDate = '2000-12-24', @Password = '12345', @Picture = 'profilePic3', @Nationality = 'German';
+EXEC Register @User = 'src', @FirstName = 'Sergio', @LastName1 = 'Ríos', @LastName2 = 'Campos',
+			@BirthDate = '2000-12-24', @Password = '12345', @Picture = 'Files\\Profiles\\src\\srcPic.jpg', @Nationality = 'Costa Rica';
 GO
-EXEC Register @User = 'sfv', @FirstName = 'sfv', @LastName1 = 'sfv', @LastName2 = 'sfv',
-			@BirthDate = '2000-12-24', @Password = '12345', @Picture = 'profilePic5', @Nationality = 'French';
+EXEC Register @User = 'sfv', @FirstName = 'Simón', @LastName1 = 'Fallas', @LastName2 = 'Villalobos',
+			@BirthDate = '1998-02-15', @Password = '12345', @Picture = 'Files\\Profiles\\sfv\\sfvPic.jpg', @Nationality = 'Costa Rica';
+GO
+EXEC Register @User = 'goc', @FirstName = 'Gretchell', @LastName1 = 'Ochoa', @LastName2 = 'Quintero',
+			@BirthDate = '2000-12-24', @Password = '12345', @Picture = 'Files\\Profiles\\goc\\gocPic.jpg', @Nationality = 'Costa Rica';
 GO
 
---User login
-EXEC LoginUser @User = 'sfv', @Password = 'Simon-12345';
+INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group Simon');						
+INSERT INTO GROUPS(AdminUser, "Name") VALUES('src','Group Sergio');
 
 
-
---Challenge registration
-
-
-EXEC RegisterChallenge 
-	@Id=0,
-	@User= 'sfv',
-	@Name='Reto ',
-	@Class='Master',
-	@Privacy=1,
-	@Groups='Group 1,Group 2,Group 3',
-	@StartDate='2022-06-15',
-	@EndDate= '2022-06-20',
-	@Activity_Type = 'Running';
-
-
-INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group 1');						
-INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group 2');
-INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group 3');
 
 INSERT INTO CATEGORY("Name", Description) VALUES('Junior','Junior');
 INSERT INTO CATEGORY("Name", Description) VALUES('Sub-23','Sub-23');
@@ -50,9 +34,30 @@ INSERT INTO ACTIVITY_TYPE("Name") VALUES('Kayaking');
 INSERT INTO ACTIVITY_TYPE("Name") VALUES('Walking');
 GO
 
+--Challenge registration
 
-EXEC AddActivity @UserId	= 'SRC', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Rout.gpx',
+EXEC RegisterChallenge 
+	@Id=0,
+	@User= 'sfv',
+	@Name='Reto',
+	@Class='Master',
+	@Privacy=1,
+	@Groups='Group Simon',
+	@StartDate='2022-06-15',
+	@EndDate= '2022-06-20',
+	@Activity_Type = 'Running';
+
+
+--Adding activities
+
+EXEC AddActivity @UserId = 'sfv', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Rout.gpx',
 	@Altitude = 10.1, @Start = '2022-05-21 14:10:00', @Type = 'Running';
 GO
 
-*/
+EXEC AddActivity @UserId = 'src', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Rout.gpx',
+	@Altitude = 10.1, @Start = '2022-05-21 14:10:00', @Type = 'Running';
+GO
+
+EXEC AddActivity @UserId = 'goc', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Rout.gpx',
+	@Altitude = 10.1, @Start = '2022-05-21 14:10:00', @Type = 'Running';
+GO
