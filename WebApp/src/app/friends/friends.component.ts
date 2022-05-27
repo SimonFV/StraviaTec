@@ -31,20 +31,22 @@ export class FriendsComponent implements OnInit {
       console.log(resp);
       this.loadFriends(resp.body);
       })
+      this.isImageLoading = false;
   }
   loadFriends(friends:any){
     for(let i of friends){
-      //this.getImageFromService(i.picture);
-      
+      this.getImageFromService(i.picture);
+
       this.friend.push({
         "user":i.user,
         "firstName":i.firstName,
         "lastName1":i.lastName1,
         "lastName2":i.lastName2,
         "birthDate":i.birthDate,
-        "picture":i.picture
+        "picture":this.userImage
       });
     }
+    
 
   }
 
@@ -54,8 +56,9 @@ export class FriendsComponent implements OnInit {
     
     this.service.getUserImage(<JSON>path).subscribe({
       next: (data) => {
-        this.createImageFromBlob(data);
         this.isImageLoading = false;
+        this.createImageFromBlob(data);
+        
       },
       error: (error) => {
         this.isImageLoading = true;
@@ -69,16 +72,18 @@ export class FriendsComponent implements OnInit {
   }
 
   createImageFromBlob(image: Blob) {
-    
-    
     let reader = new FileReader();
     reader.addEventListener("load", () => {
       this.userImage = reader.result;
-    }, false);
+      console.log(this.userImage);
 
+    }, false);
+    
     if (image) {
       reader.readAsDataURL(image);
     }
+    console.log(this.isImageLoading);
+    
   }
 
 }
