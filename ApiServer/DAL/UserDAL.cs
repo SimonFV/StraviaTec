@@ -192,8 +192,6 @@ namespace ApiServer.DAL
                                     FirstName = (string)sdr["FirstName"],
                                     LastName1 = (string)sdr["LastName1"],
                                     LastName2 = (string)sdr["LastName2"],
-                                    BirthDate = (DateTime)sdr["BirthDate"],
-                                    Picture = (string)sdr["Picture"],
                                     Nationality = (string)sdr["Nationality"]
                                 };
                                 users.Add(user);
@@ -260,16 +258,11 @@ namespace ApiServer.DAL
             {
                 using (SqlConnection con = new SqlConnection(GetConnection()))
                 {
-                    string query = @"DELETE FROM FRIENDS WHERE " + "\"User\" = '" + user +"' AND FriendUser='"+friend+ "';";
+                    string query = @"DELETE FROM FRIENDS WHERE " + "\"User\" = '" + user + "' AND FriendUser='" + friend + "';";
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         con.Open();
-                        using (SqlDataReader sdr = cmd.ExecuteReader()){
-                            while (sdr.Read())
-                            {
-                                Console.Write(sdr);
-                            }
-                        }
+                        SqlDataReader sdr = cmd.ExecuteReader();
                         con.Close();
                     }
                 }
@@ -519,7 +512,29 @@ namespace ApiServer.DAL
             return "Done";
         }
 
-
+        public static string DeleteUser(string user)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query = @"DELETE FROM " + "\"USER\" " +
+                                    "WHERE " + "\"User\" = '" + user + "';";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader sdr = cmd.ExecuteReader();
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return "Error";
+            }
+            return "Done";
+        }
 
 
         private static string GetConnection()

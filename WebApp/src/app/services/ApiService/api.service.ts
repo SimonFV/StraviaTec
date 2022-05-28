@@ -59,14 +59,14 @@ export class ApiService {
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.get<JSON[]>('http://localhost:5000/User/friendsAvailable/' + user, { headers: header, observe: 'response' });
   }
-  addFriend(user: string, friend:string) {
+  addFriend(user: string, friend: string) {
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
-    return this.http.post('http://localhost:5000/User/addFriend/'+user+'/'+friend, { headers: header, observe: 'response' });
+    return this.http.post('http://localhost:5000/User/addFriend/' + user + '/' + friend, { headers: header, observe: 'response' });
   }
 
-  delelteFriend(user:any, friend:any){
+  delelteFriend(user: any, friend: any) {
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
-    return this.http.delete('http://localhost:5000/User/friends/Delete/'+user+'/'+friend,{ headers: header, observe: 'response' })
+    return this.http.delete('http://localhost:5000/User/friends/Delete/' + user + '/' + friend, { headers: header, observe: 'response' })
   }
 
   updateUser(user: FormData) {
@@ -80,10 +80,17 @@ export class ApiService {
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.post('http://localhost:5000/User/addActivity', activity, { headers: header, observe: 'response' });
   }
-  addRace(race: string){
+
+  addRace(race: string) {
     let header = new HttpHeaders().set('Type-contet', 'multipart/form-data');
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.post('http://localhost:5000/Race/races', race, { headers: header, observe: 'response' });
+  }
+
+  deleteUser(user: string) {
+    let header = new HttpHeaders().set('Type-contet', 'aplication/json');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.delete('http://localhost:5000/User/delete/' + user, { headers: header, observe: 'response' });
   }
 
 }

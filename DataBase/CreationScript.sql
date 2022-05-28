@@ -385,7 +385,7 @@ CREATE PROCEDURE FriendsAvailable
 	@User NVARCHAR(15)
 AS
 BEGIN
-    SELECT "User", FirstName, LastName1, Picture
+    SELECT "User", FirstName, LastName1, LastName2, Nationality
 	FROM "USER" 
 	WHERE "USER"."User" NOT IN(
 		SELECT FRIENDS.FriendUser FROM FRIENDS 

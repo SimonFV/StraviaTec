@@ -292,7 +292,7 @@
             </div>
         </div>
 
-        <div class="form-floating">
+        <div class="form-floating mb-3">
             <input required type="password" id="current-password" placeholder="Current Password"
                 class="form-control mb-3 mt-3" formControlName="CurrentPassword">
             <label for="floatingInput">Current Password</label>
@@ -305,10 +305,14 @@
         </div>
 
         <div class="mt-3 mb-5 d-grid gap-2 justify-content-center">
-            <p>Login is required after the update.</p>
+            <p class="text-info">Login is required after the update.</p>
             <button id="signUp" class="btn btn-lg btn-primary btn-block">Apply Changes</button>
             <button class="btn btn-lg btn-outline-primary" (click)="home()">Cancel</button>
             <!--[disabled]="form.invalid" -->
+        </div>
+        <div class="mt-3 mb-5 d-grid gap-2 justify-content-center">
+            <p class="text-danger">Danger zone!</p>
+            <button type="button" class="btn btn-danger" (click)="deleteUser()">Delete Account</button>
         </div>
     </form>
 </div>

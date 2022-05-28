@@ -92,10 +92,13 @@ namespace ApiServer.Controllers
         [Route("friends/Delete/{user}/{friend}")]
         public IActionResult DeleteFriend(string user, string friend)
         {
-            if(UserDAL.DeleteFriend(user,friend)){
+            if (UserDAL.DeleteFriend(user, friend))
+            {
                 return new JsonResult("Friend deleted") { StatusCode = 200 };
-            }else{
-               return new JsonResult("Something went wrong deleting friend") { StatusCode = 500 }; 
+            }
+            else
+            {
+                return new JsonResult("Something went wrong deleting friend") { StatusCode = 500 };
             }
             //List<UserResponseDto> friends = UserDAL.GetFriends(user);
             /*if (friends is null)
@@ -249,6 +252,16 @@ namespace ApiServer.Controllers
                 Console.Write(err);
                 return new JsonResult("Something went wrong while updating.") { StatusCode = 500 };
             }
+        }
+
+        [HttpDelete]
+        [Route("delete/{user}")]
+        public IActionResult DeleteUser(string user)
+        {
+            string result = UserDAL.DeleteUser(user);
+            if (result is "Error")
+                return new JsonResult("Something went wrong while deleting the user.") { StatusCode = 500 };
+            return new JsonResult("User deleted.") { StatusCode = 201 };
         }
 
     }

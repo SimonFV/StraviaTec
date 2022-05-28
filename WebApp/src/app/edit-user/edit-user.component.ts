@@ -93,8 +93,9 @@ export class EditUserComponent implements OnInit {
         if (error.status == 0) {
           this.riseAlert('Connection failed.', 'danger');
         }
-        else {
-          this.riseAlert(error.error, 'danger');
+        this.riseAlert(error.error, 'danger');
+        if (error.status == 401) {
+          this.router.navigate(['/']);
         }
       }
     })
@@ -119,6 +120,24 @@ export class EditUserComponent implements OnInit {
 
   home() {
     this.router.navigate(['/home']);
+  }
+
+  deleteUser() {
+    if (confirm("All groups and events that your account manages will also be deleted!\n" +
+      "Do you want to continue?")) {
+      this.service.deleteUser(this.sharedService.getUserData().User).subscribe({
+        next: (resp) => {
+          this.router.navigate(['/']);
+        },
+        error: (error) => {
+          this.riseAlert(error.error, 'danger');
+          console.log(error.error);
+          if (error.status == 401) {
+            this.router.navigate(['/']);
+          }
+        }
+      })
+    }
   }
 
   riseAlert(message: string, type: string) {

@@ -11,21 +11,19 @@ import { SharedService } from '../services/SharedService/shared.service';
 export class FriendsComponent implements OnInit {
   friendImagesBlob = new Map<string, any>();
 
-  isImageLoading = false;
   userToShow = [{
     "user": "",
     "firstName": "",
     "lastName1": "",
     "lastName2": "",
-    "birthDate": Date,
-    "picture": ""
+    "nationality": ""
   }];
   friend = [{
     "user": "",
     "firstName": "",
     "lastName1": "",
     "lastName2": "",
-    "birthDate": Date,
+    "birthDate": 0,
     "picture": ""
   }]
   userFound = [{
@@ -33,8 +31,7 @@ export class FriendsComponent implements OnInit {
     "firstName": "",
     "lastName1": "",
     "lastName2": "",
-    "birthDate": Date,
-    "picture": ""
+    "nationality": ""
   }];
   userToFind = "";
 
@@ -46,9 +43,9 @@ export class FriendsComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.friend.splice(0, 1);
-    this.userFound.splice(0, 1);
-    this.userToShow.splice(0, 1);
+    this.friend.splice(0, this.friend.length);
+    this.userFound.splice(0, this.userFound.length);
+    this.userToShow.splice(0, this.userToShow.length);
 
     this.service.getFriends(this.sharedService.getUserData().User).subscribe(resp => {
       this.loadFriends(resp.body);
@@ -61,12 +58,14 @@ export class FriendsComponent implements OnInit {
 
   loadFriends(friends: any) {
     for (let i of friends) {
+      var date1: any = new Date(i.birthDate);
+      var date2: any = new Date();
       this.friend.push({
         "user": i.user,
         "firstName": i.firstName,
         "lastName1": i.lastName1,
         "lastName2": i.lastName2,
-        "birthDate": i.birthDate,
+        "birthDate": Math.floor((date2 - date1) / (1000 * 60 * 60 * 24 * 365)),
         "picture": i.picture
       });
     }
@@ -116,8 +115,7 @@ export class FriendsComponent implements OnInit {
           "firstName": i.firstName,
           "lastName1": i.lastName1,
           "lastName2": i.lastName2,
-          "birthDate": i.birthDate,
-          "picture": ""
+          "nationality": i.nationality
         });
       }
 
@@ -132,37 +130,38 @@ export class FriendsComponent implements OnInit {
         "firstName": i.firstName,
         "lastName1": i.lastName1,
         "lastName2": i.lastName2,
-        "birthDate": i.birthDate,
-        "picture": ""
+        "nationality": i.nationality
       });
     }
 
   }
   follow(i: any) {
 
-    this.service.addFriend(this.sharedService.getUserData().User, i.user).subscribe(resp => {
-      console.log(resp);
-      this.friend.push({
-        "user": i.user,
-        "firstName": i.firstName,
-        "lastName1": i.lastName1,
-        "lastName2": i.lastName2,
-        "birthDate": i.birthDate,
-        "picture": ""
-      });
-
-    })
+    this.service.addFriend(this.sharedService.getUserData().User, i.user).subscribe({
+      next: (resp) => {
+        this.ngOnInit();
+      },
+      error: (error) => {
+        console.log(error.error);
+        if (error.status == 401) {
+          this.router.navigate(['/']);
+        }
+      }
+    });
 
   }
   deleteFriend(i: any) {
-    this.service.delelteFriend(this.sharedService.getUserData().User, i.user).subscribe(resp => {
-      console.log(resp);
-      for (let u in this.friend) {
-        if (this.friend[u].user == i.user) {
-          this.friend.splice(Number(u), 1);
+    this.service.delelteFriend(this.sharedService.getUserData().User, i.user).subscribe({
+      next: (resp) => {
+        this.ngOnInit();
+      },
+      error: (error) => {
+        console.log(error.error);
+        if (error.status == 401) {
+          this.router.navigate(['/']);
         }
       }
-    })
+    });
   }
 
 
