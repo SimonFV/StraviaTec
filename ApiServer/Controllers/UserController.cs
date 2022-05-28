@@ -88,6 +88,22 @@ namespace ApiServer.Controllers
             return Ok(friends);
         }
 
+        [HttpDelete]
+        [Route("friends/Delete/{user}/{friend}")]
+        public IActionResult DeleteFriend(string user, string friend)
+        {
+            if(UserDAL.DeleteFriend(user,friend)){
+                return new JsonResult("Friend deleted") { StatusCode = 200 };
+            }else{
+               return new JsonResult("Something went wrong deleting friend") { StatusCode = 500 }; 
+            }
+            //List<UserResponseDto> friends = UserDAL.GetFriends(user);
+            /*if (friends is null)
+                return new JsonResult("Something went wrong retrieving the users.") { StatusCode = 500 };
+            return Ok(friends);*/
+        }
+
+
         [HttpGet]
         [Route("groupsAvailable/{user}")]
         public IActionResult GetGroupsAvailable(string user)

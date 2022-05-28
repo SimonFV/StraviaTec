@@ -12,6 +12,14 @@ export class FriendsComponent implements OnInit {
   friendImagesBlob = new Map<string, any>();
 
   isImageLoading = false;
+  userToShow = [{
+    "user": "",
+    "firstName": "",
+    "lastName1": "",
+    "lastName2": "",
+    "birthDate": Date,
+    "picture": ""
+  }];
   friend = [{
     "user": "",
     "firstName": "",
@@ -20,6 +28,16 @@ export class FriendsComponent implements OnInit {
     "birthDate": Date,
     "picture": ""
   }]
+  userFound = [{
+    "user": "",
+    "firstName": "",
+    "lastName1": "",
+    "lastName2": "",
+    "birthDate": Date,
+    "picture": ""
+  }];
+  userToFind = "";
+
   constructor(
     private service: ApiService,
     private sharedService: SharedService,
@@ -29,10 +47,16 @@ export class FriendsComponent implements OnInit {
 
   ngOnInit(): void {
     this.friend.splice(0, 1);
+    this.userFound.splice(0, 1);
+    this.userToShow.splice(0, 1);
 
     this.service.getFriends(this.sharedService.getUserData().User).subscribe(resp => {
       this.loadFriends(resp.body);
     })
+
+    this.service.getFriendsAvailable(this.sharedService.getUserData().User).subscribe(resp => {
+      this.loadUserFound(resp.body);
+    });
   }
 
   loadFriends(friends: any) {
@@ -50,6 +74,7 @@ export class FriendsComponent implements OnInit {
       this.getImageFromService(i.picture, i.user);
     }
   }
+
 
   getImageFromService(imageUrl: string, user: string) {
     const path: any = { path: imageUrl };
@@ -76,7 +101,69 @@ export class FriendsComponent implements OnInit {
     if (image) {
       reader.readAsDataURL(image);
     }
+  }
+
+
+  searchUser() {
+    this.userToShow.splice(0, 1);
+
+    for (let i of this.userFound) {
+
+      if (this.userToFind.toLowerCase() == i.user.substr(0, this.userToFind.length).toLowerCase() && this.userToFind.length != 0) {
+
+        this.userToShow.push({
+          "user": i.user,
+          "firstName": i.firstName,
+          "lastName1": i.lastName1,
+          "lastName2": i.lastName2,
+          "birthDate": i.birthDate,
+          "picture": ""
+        });
+      }
+
+    }
+  }
+
+  loadUserFound(user: any) {
+
+    for (let i of user) {
+      this.userFound.push({
+        "user": i.user,
+        "firstName": i.firstName,
+        "lastName1": i.lastName1,
+        "lastName2": i.lastName2,
+        "birthDate": i.birthDate,
+        "picture": ""
+      });
+    }
 
   }
+  follow(i: any) {
+
+    this.service.addFriend(this.sharedService.getUserData().User, i.user).subscribe(resp => {
+      console.log(resp);
+      this.friend.push({
+        "user": i.user,
+        "firstName": i.firstName,
+        "lastName1": i.lastName1,
+        "lastName2": i.lastName2,
+        "birthDate": i.birthDate,
+        "picture": ""
+      });
+
+    })
+
+  }
+  deleteFriend(i: any) {
+    this.service.delelteFriend(this.sharedService.getUserData().User, i.user).subscribe(resp => {
+      console.log(resp);
+      for (let u in this.friend) {
+        if (this.friend[u].user == i.user) {
+          this.friend.splice(Number(u), 1);
+        }
+      }
+    })
+  }
+
 
 }
