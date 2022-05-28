@@ -163,7 +163,7 @@ export class FriendsComponent implements OnInit {
       console.log(resp);
       for(let u in this.friend){
         if(this.friend[u].user==i.user){
-          this.friend.splice(this.friend.indexOf(i.user),1);
+          this.friend.splice(Number(u),1);
         }
       }
     })
