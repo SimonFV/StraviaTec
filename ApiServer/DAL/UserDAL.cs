@@ -254,6 +254,34 @@ namespace ApiServer.DAL
             return users;
         }
 
+        public static Boolean DeleteFriend(string user, string friend)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query = @"DELETE FROM FRIENDS WHERE " + "\"User\" = '" + user +"' AND FriendUser='"+friend+ "';";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        using (SqlDataReader sdr = cmd.ExecuteReader()){
+                            while (sdr.Read())
+                            {
+                                Console.Write(sdr);
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return false;
+            }
+            return true;
+        }
+
         public static List<GroupDTO> GetGroupsAvailable(string user)
         {
             List<GroupDTO> groups = new();
