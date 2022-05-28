@@ -4,8 +4,7 @@
         <div class="card mb-3" style="max-width: 540px;">
             <div class="row g-0">
                 <div class="col-md-4">
-                    <img [src]="f.picture" alt="User profile picture" *ngIf="!isImageLoading; else noImageFound"
-                        class="round-circle">
+                    <img [src]="friendImagesBlob.get(f.user)" alt="User profile picture" class="round-circle">
 
                     <ng-template #noImageFound>
                         <img src="assets\generic_user_icon.png" alt="Fallbackimage" class="round-circle">

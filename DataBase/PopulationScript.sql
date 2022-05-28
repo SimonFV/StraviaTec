@@ -4,18 +4,20 @@ GO
 
 --User registration
 EXEC Register @User = 'src', @FirstName = 'Sergio', @LastName1 = 'Ríos', @LastName2 = 'Campos',
-			@BirthDate = '2000-12-24', @Password = '12345', @Picture = 'Files\\Profiles\\src\\srcPic.jpg', @Nationality = 'Costa Rica';
+			@BirthDate = '2000-12-24', @Password = '12345', @Picture = 'Files\Profiles\src\srcPic.jpg', @Nationality = 'Costa Rica';
 GO
 EXEC Register @User = 'sfv', @FirstName = 'Simón', @LastName1 = 'Fallas', @LastName2 = 'Villalobos',
-			@BirthDate = '1998-02-15', @Password = '12345', @Picture = 'Files\\Profiles\\sfv\\sfvPic.jpg', @Nationality = 'Costa Rica';
+			@BirthDate = '1998-02-15', @Password = '12345', @Picture = 'Files\Profiles\sfv\sfvPic.jpg', @Nationality = 'Costa Rica';
 GO
 EXEC Register @User = 'goq', @FirstName = 'Gretchell', @LastName1 = 'Ochoa', @LastName2 = 'Quintero',
-			@BirthDate = '2000-12-24', @Password = '12345', @Picture = 'Files\\Profiles\\goq\\goqPic.jpg', @Nationality = 'Costa Rica';
+			@BirthDate = '2000-12-24', @Password = '12345', @Picture = 'Files\Profiles\goq\goqPic.jpg', @Nationality = 'Costa Rica';
 GO
 
 INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group Simon');						
 INSERT INTO GROUPS(AdminUser, "Name") VALUES('src','Group Sergio');
 
+INSERT INTO FRIENDS("User", FriendUser) VALUES('sfv','src');
+INSERT INTO FRIENDS("User", FriendUser) VALUES('sfv','goq');
 
 
 INSERT INTO CATEGORY("Name", Description) VALUES('Junior','Junior');
