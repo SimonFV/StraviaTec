@@ -9,8 +9,8 @@ GO
 EXEC Register @User = 'sfv', @FirstName = 'Simón', @LastName1 = 'Fallas', @LastName2 = 'Villalobos',
 			@BirthDate = '1998-02-15', @Password = '12345', @Picture = 'Files\\Profiles\\sfv\\sfvPic.jpg', @Nationality = 'Costa Rica';
 GO
-EXEC Register @User = 'goc', @FirstName = 'Gretchell', @LastName1 = 'Ochoa', @LastName2 = 'Quintero',
-			@BirthDate = '2000-12-24', @Password = '12345', @Picture = 'Files\\Profiles\\goc\\gocPic.jpg', @Nationality = 'Costa Rica';
+EXEC Register @User = 'goq', @FirstName = 'Gretchell', @LastName1 = 'Ochoa', @LastName2 = 'Quintero',
+			@BirthDate = '2000-12-24', @Password = '12345', @Picture = 'Files\\Profiles\\goq\\goqPic.jpg', @Nationality = 'Costa Rica';
 GO
 
 INSERT INTO GROUPS(AdminUser, "Name") VALUES('sfv','Group Simon');						
@@ -58,6 +58,6 @@ EXEC AddActivity @UserId = 'src', @Distance = 40.51, @Duration = '02:00:00', @Ro
 	@Altitude = 10.1, @Start = '2022-05-21 14:10:00', @Type = 'Running';
 GO
 
-EXEC AddActivity @UserId = 'goc', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Rout.gpx',
+EXEC AddActivity @UserId = 'goq', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Rout.gpx',
 	@Altitude = 10.1, @Start = '2022-05-21 14:10:00', @Type = 'Running';
 GO
