@@ -36,12 +36,12 @@ export class GroupsComponent implements OnInit {
     this.groups.splice(0,1);
     this.availableGroups.splice(0,1);
     this.groupToSHow.splice(0,1);
-    this.service.getGroupsAvailable('goq'/*this.sharedService.getUserData().User*/).subscribe(resp=>{
+    this.service.getGroupsAvailable(this.sharedService.getUserData().User).subscribe(resp=>{
       console.log(resp);
       this.loadGroupsAvailable(resp.body)
     });
 
-    this.service.getGroups('goq'/*this.sharedService.getUserData().User*/).subscribe(resp=>{
+    this.service.getGroups(this.sharedService.getUserData().User).subscribe(resp=>{
       console.log(resp);
       this.loadGroups(resp.body)
       
@@ -70,7 +70,7 @@ export class GroupsComponent implements OnInit {
 
 
   quitGroup(i:any){
-    this.service.quitGroup(i.Id,'goq'/*this.sharedService.getUserData().User*/).subscribe(resp=>{
+    this.service.quitGroup(i.Id,this.sharedService.getUserData().User).subscribe(resp=>{
       console.log(resp);
       this.ngOnInit();
       
@@ -91,7 +91,7 @@ export class GroupsComponent implements OnInit {
 
   }
   getIn(i:any){
-    this.service.joinGroup(i.Id,'goq'/*this.sharedService.getUserData().User*/).subscribe(resp=>{
+    this.service.joinGroup(i.Id,this.sharedService.getUserData().User).subscribe(resp=>{
       
     })
     this.groups.push({
@@ -101,7 +101,7 @@ export class GroupsComponent implements OnInit {
     })
   }
   createGroup(){
-    this.service.createGroup('goq'/*this.sharedService.getUserData().User*/, this.newGroup).subscribe(resp=>{
+    this.service.createGroup(this.sharedService.getUserData().User, this.newGroup).subscribe(resp=>{
       console.log(resp);
       
     })
