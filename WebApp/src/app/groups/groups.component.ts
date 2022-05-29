@@ -33,9 +33,9 @@ export class GroupsComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    this.groups.splice(0,1);
-    this.availableGroups.splice(0,1);
-    this.groupToSHow.splice(0,1);
+    this.groups.splice(0,this.groups.length);
+    this.availableGroups.splice(0,this.availableGroups.length);
+    this.groupToSHow.splice(0,this.groupToSHow.length);
     this.service.getGroupsAvailable(this.sharedService.getUserData().User).subscribe(resp=>{
       console.log(resp);
       this.loadGroupsAvailable(resp.body)
@@ -72,9 +72,14 @@ export class GroupsComponent implements OnInit {
   quitGroup(i:any){
     this.service.quitGroup(i.Id,this.sharedService.getUserData().User).subscribe(resp=>{
       console.log(resp);
-      this.ngOnInit();
-      
     })
+    for(let grp in this.groups){
+      if(this.groups[grp].Id==i.Id){
+        this.groups.splice(Number(grp),1);
+      }
+    }
+
+    //this.ngOnInit();
   }
 
   searchGroup(){
@@ -94,6 +99,12 @@ export class GroupsComponent implements OnInit {
     this.service.joinGroup(i.Id,this.sharedService.getUserData().User).subscribe(resp=>{
       
     })
+    for(let grp in this.groupToSHow){
+      if(this.groupToSHow[grp].Id==i.Id){
+        this.groupToSHow.splice(Number(grp),1);
+      }
+    }
+    //this.ngOnInit();
     this.groups.push({
       "Id":i.Id,
       "AdminUser":i.AdminUser,

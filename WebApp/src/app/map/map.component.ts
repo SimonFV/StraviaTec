@@ -39,6 +39,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   constructor(private elementRef: ElementRef) { }
 
   ngOnInit(): void {
+    
     this.mapEl = this.elementRef.nativeElement.querySelector('#map');
     this.setSize();
   }

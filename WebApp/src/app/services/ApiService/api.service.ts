@@ -17,6 +17,17 @@ export class ApiService {
     return this.http.get<JSON[]>('http://localhost:5000/Challenge/challenges', { headers: header, observe: 'response' });
   }
 
+  getInChallenge(user: string, challengeId:number){
+    let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.post('http://localhost:5000/Challenge/getInChallenge/'+user+'/'+challengeId, { headers: header, responseType: 'blob' });
+  }
+
+  getChallengeVisibility(){
+    let header = new HttpHeaders().set('Type-contet', 'aplication/json');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.get<JSON[]>('http://localhost:5000/Challenge/ChallengeVisibility', { headers: header, observe: 'response' });
+  }
+
   getRaces() {
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());

@@ -8,7 +8,7 @@ export class SharedService {
     constructor() {
         this.globalToken = '';
         this.globalUserData = {
-            "User": 'sfv',
+            "User": 'src',
             "FirstName": '',
             "LastName1": '',
             "LastName2": '',

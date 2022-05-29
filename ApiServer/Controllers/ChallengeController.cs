@@ -28,6 +28,31 @@ namespace ApiServer.Controllers
         }
 
         [HttpPost]
+        [Route("getInChallenge/{user}/{challengeId}")]
+        public IActionResult GetInChallenge(string user, int challengeId)
+        {
+            if (ModelState.IsValid)
+            {
+                string result = ChallengeDAL.GetInChallenge(user, challengeId);
+                if (result is "Error")
+                    return new JsonResult("Something went wrong while adding the challenge.") { StatusCode = 500 };
+                return new JsonResult("Challenge added.") { StatusCode = 201 };
+            }
+            return new JsonResult("Invalid model for User/ChallengeId.") { StatusCode = 400 };
+        }
+
+
+        [HttpGet]
+        [Route("ChallengeVisibility")]
+        public IActionResult GetChallengeVisibility()
+        {
+            var challenges =ChallengeDAL.GetChallengeVisibility();
+            if (challenges is null)
+                return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
+            return Ok(challenges);
+        }
+
+        [HttpPost]
         [Route("challenges")]
         public IActionResult RegisterChallenge(ChallengeRegisterDto challenge)
         {

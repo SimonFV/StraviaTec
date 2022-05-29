@@ -186,4 +186,6 @@ export class HomeComponent implements OnInit {
   editUser() {
     this.router.navigate(['/editUser']);
   }
+
+
 }

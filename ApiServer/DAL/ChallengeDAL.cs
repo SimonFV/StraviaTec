@@ -49,6 +49,67 @@ namespace ApiServer.DAL
             }
             return challenges;
         }
+
+        public static string GetInChallenge(string user, int challengeId)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query = @"INSERT INTO CHALLENGE_PARTICIPANTS (" + "\"User\"" + ", ChallengeId) " +
+                                    "VALUES('" + user + "', " + challengeId + ");";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader sdr = cmd.ExecuteReader();
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return "Error";
+            }
+            return "Done";
+        }
+
+        public static List<VisibilityrDto> GetChallengeVisibility()
+        {
+            List<VisibilityrDto> challenges = new();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query = @"SELECT * FROM CHALLENGE_VISIBILITY ;";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                VisibilityrDto challenge = new()
+                                {
+                                    GroupId = (int)sdr["GroupId"],
+                                    ChallengeId = (int)sdr["ChallengeId"]
+                                };
+                                challenges.Add(challenge);
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return null;
+            }
+            return challenges;
+        }
+
+        
         public static string RegisterChallengeDB(ChallengeRegisterDto challenge)
         {
             try
