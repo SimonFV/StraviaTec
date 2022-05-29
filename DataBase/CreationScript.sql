@@ -67,7 +67,8 @@ CREATE Table CHALLENGE
     Privacy 	BIT,
     StartDate 	DATE 			NOT NULL,
     EndDate 	DATE 			NOT NULL,
-	Activity_Type	NVARCHAR(15)
+	Activity_Type	NVARCHAR(15),
+	Objective	DECIMAL(9,3)
     PRIMARY KEY(Id)
 );
 
@@ -198,10 +199,6 @@ REFERENCES ACTIVITY_TYPE("Name");
 ALTER TABLE CHALLENGE_VISIBILITY
 ADD CONSTRAINT FK_CHALLENGE_VIS_GROUPID FOREIGN KEY(GroupId)
 REFERENCES GROUPS(Id);
-
-ALTER TABLE CHALLENGE
-ADD Objective	NVARCHAR(15)
-GO
 
 ALTER TABLE CHALLENGE_VISIBILITY
 ADD CONSTRAINT FK_CHALLENGE_VIS_CHALLENGEID FOREIGN KEY(ChallengeId)
@@ -493,7 +490,8 @@ CREATE PROCEDURE RegisterChallenge
 	@Groups VARCHAR(1000),
 	@StartDate DATE,
 	@EndDate DATE,
-	@Activity_Type NVARCHAR(15)
+	@Activity_Type NVARCHAR(15),
+	@Objective	DECIMAL(9,3)
 AS
 BEGIN 
 	SET NOCOUNT ON;
@@ -515,7 +513,8 @@ BEGIN
 				Privacy,
 				StartDate,
 				EndDate,
-				Activity_Type
+				Activity_Type,
+				Objective
 				)
 		VALUES(@User,
 				@Name,
@@ -523,7 +522,8 @@ BEGIN
 				@Privacy,
 				@StartDate,
 				@EndDate,
-				@Activity_Type
+				@Activity_Type,
+				@Objective
 				)
 		SELECT 0 --Challenge registered
 	END

@@ -47,7 +47,8 @@ EXEC RegisterChallenge
 	@Groups='Group Simon',
 	@StartDate='2022-06-15',
 	@EndDate= '2022-06-20',
-	@Activity_Type = 'Running';
+	@Activity_Type = 'Running',
+	@Objective= 10;
 
 
 --Adding activities
