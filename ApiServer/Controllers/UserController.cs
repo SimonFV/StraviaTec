@@ -107,15 +107,7 @@ namespace ApiServer.Controllers
         }
 
 
-        [HttpGet]
-        [Route("groupsAvailable/{user}")]
-        public IActionResult GetGroupsAvailable(string user)
-        {
-            List<GroupDTO> groups = UserDAL.GetGroupsAvailable(user);
-            if (groups is null)
-                return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
-            return Ok(groups);
-        }
+        
 
         [HttpPost]
         [Route("addActivity")]
@@ -149,6 +141,26 @@ namespace ApiServer.Controllers
             return new JsonResult("Invalid model for User/Friend.") { StatusCode = 400 };
         }
 
+        [HttpGet]
+        [Route("groupsAvailable/{user}")]
+        public IActionResult GetGroupsAvailable(string user)
+        {
+            List<GroupDTO> groups = UserDAL.GetGroupsAvailable(user);
+            if (groups is null)
+                return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
+            return Ok(groups);
+        }
+
+        [HttpGet]
+        [Route("groups/{user}")]
+        public IActionResult GetGroups(string user)
+        {
+            List<GroupDTO> groups = UserDAL.GetGroups(user);
+            if (groups is null)
+                return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
+            return Ok(groups);
+        }
+
         [HttpPost]
         [Route("createGroup/{admin}/{name}")]
         public IActionResult CreateGroup(string admin, string name)
@@ -173,6 +185,19 @@ namespace ApiServer.Controllers
                 if (result is "Error")
                     return new JsonResult("Something went wrong while joining the group.") { StatusCode = 500 };
                 return new JsonResult("Joined.") { StatusCode = 201 };
+            }
+            return new JsonResult("Invalid model for Id/User.") { StatusCode = 400 };
+        }
+        [HttpDelete]
+        [Route("quitGroup/{id}/{user}")]
+        public IActionResult QuitGroup(int id, string user)
+        {
+            if (ModelState.IsValid)
+            {
+                string result = UserDAL.QuitGroup(id, user);
+                if (result is "Error")
+                    return new JsonResult("Something went wrong while quitting the group.") { StatusCode = 500 };
+                return new JsonResult("Done.") { StatusCode = 201 };
             }
             return new JsonResult("Invalid model for Id/User.") { StatusCode = 400 };
         }
