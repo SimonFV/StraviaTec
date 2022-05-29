@@ -93,4 +93,29 @@ export class ApiService {
     return this.http.delete('http://localhost:5000/User/delete/' + user, { headers: header, observe: 'response' });
   }
 
+  getGroups(user:string){
+    let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.get('http://localhost:5000/User/groups/' + user, { headers: header, observe: 'response' });
+  }
+
+  getGroupsAvailable(user:string){
+    let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.get('http://localhost:5000/User/groupsAvailable/' + user, { headers: header, observe: 'response' });
+  }
+
+  joinGroup(id:number, user:string){
+    let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.post('http://localhost:5000/User/joinGroup/'+id+'/'+user, { headers: header, observe: 'response' });
+  }
+
+  quitGroup(id:number, user:string){
+    let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.delete('http://localhost:5000/User/quitGroup/'+id+'/'+user, { headers: header, observe: 'response' });
+  }
+
+  createGroup(user:string, grpName:string){
+    let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.post('http://localhost:5000/User/createGroup/'+user+'/'+grpName, { headers: header, observe: 'response' });
+  }
+
 }

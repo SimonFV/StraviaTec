@@ -313,6 +313,48 @@ namespace ApiServer.DAL
             return groups;
         }
 
+
+        public static List<GroupDTO> GetGroups(string user)
+        {
+            List<GroupDTO> groups = new();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string procedure = @"getGroups";
+                    using (SqlCommand cmd = new SqlCommand(procedure, con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@User", user);
+                        con.Open();
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                GroupDTO group = new()
+                                {
+                                    Id = (int)sdr["Id"],
+                                    AdminUser = (string)sdr["AdminUser"],
+                                    Name = (string)sdr["Name"]
+                                };
+                                groups.Add(group);
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return null;
+            }
+            return groups;
+        }
+
+
+
+
         public static string RegisterUserDB(UserRegisterDto user)
         {
             try
@@ -471,6 +513,30 @@ namespace ApiServer.DAL
                 {
                     string query = @"INSERT INTO GROUP_USERS(GroupId, " + "\"User\"" + ") " +
                                     "VALUES(" + id + ", '" + user + "');";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader sdr = cmd.ExecuteReader();
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return "Error";
+            }
+            return "Done";
+        }
+
+        public static string QuitGroup(int id, string user)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query = @"DELETE FROM GROUP_USERS WHERE" + "\"User\"" + "='" +user+
+                                    "'AND GroupId=" + id +";";
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         con.Open();
