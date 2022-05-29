@@ -16,6 +16,7 @@ import { GroupsComponent } from './groups/groups.component';
 import { FriendsComponent } from './friends/friends.component';
 import { SharedService } from './services/SharedService/shared.service';
 import { EditUserComponent } from './edit-user/edit-user.component';
+import { MapComponent } from './map/map.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { EditUserComponent } from './edit-user/edit-user.component';
     MyActivitiesComponent,
     GroupsComponent,
     FriendsComponent,
-    EditUserComponent
+    EditUserComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,
