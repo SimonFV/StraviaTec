@@ -457,6 +457,45 @@ namespace ApiServer.DAL
             return "Done";
         }
 
+
+        public static List<ActivityResponseDto> GetuserActivities(string name)
+        {
+            List<ActivityResponseDto> Activities=new();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query = @"SELECT * FROM ACTIVITY WHERE UserId ='"+ name+"';";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader sdr = cmd.ExecuteReader();
+                        while (sdr.Read())
+                            {
+                                ActivityResponseDto activity = new()
+                                {
+                                    UserId = (string)sdr["UserId"],
+                                    Distance = (Decimal)sdr["Distance"],
+                                    Duration = (TimeSpan)sdr["Duration"],
+                                    Route = (string)sdr["Route"],
+                                    Altitude = (Decimal)sdr["Altitude"],
+                                    Start = (DateTime)sdr["Start"],
+                                    Type = (string)sdr["Type"]
+                                };
+                                Activities.Add(activity);
+                            }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return null;
+            }
+            return Activities;
+        }
+
         public static string AddFriend(string user, string friend)
         {
             try

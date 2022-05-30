@@ -127,6 +127,16 @@ namespace ApiServer.Controllers
             return new JsonResult("Invalid model for Activity.") { StatusCode = 400 };
         }
 
+        [HttpGet]
+        [Route("userActivities/{user}")]
+        public IActionResult GetuserActivities(string user)
+        {
+            List<ActivityResponseDto> activities = UserDAL.GetuserActivities(user);
+            if (activities is null)
+                return new JsonResult("Something went wrong getting the activities.") { StatusCode = 500 };
+            return Ok(activities);
+        }
+
         [HttpPost]
         [Route("addFriend/{user}/{friend}")]
         public IActionResult PostFriend(string user, string friend)

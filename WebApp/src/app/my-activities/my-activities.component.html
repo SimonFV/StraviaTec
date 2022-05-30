@@ -1,62 +1,95 @@
 <app-navbar></app-navbar>
-<div class="text-center mt-3 ">
 
-    <h1 class="h3 mb-5 mt-5 front-weight-normal">What do you want to share?</h1>
 
-    <form [formGroup]="form" (submit)="getActivity()" style="max-width: 300px;margin: auto;">
+<button class="btn btn-primary mt-3 d-grid gap-2 d-md-flex justify-content-md-end" type="button"
+    data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+    Post Activity
+</button>
 
-        <div class="form-floating">
-            <input required type="text" id="distance" placeholder="distance" class="form-control mb-1"
-                formControlName="Distance">
-            <label for="floatingInput">Distance</label>
-        </div>
 
-        <div >
-            <label for="floatingInput">Start Day</label>
-            <input required type="datetime-local" id="Start" class="form-control mb-2" [(ngModel)]="start" [ngModelOptions]="{standalone: true}">
-        </div>
+<div class="mt-3 row justify-content-center">
+    <div class="mt-1 mb-2 row justify-content-center" *ngFor="let act of activity; let i index">
+        <div class="card mb-3" style="max-width: 540px;">
+            <div class="row g-0">
 
-        <div >
-            <label for="floatingInput">Activity Time</label>
-            <input required type="datetime-local" [(ngModel)]="duration" [ngModelOptions]="{standalone: true}" id="Duration" class="form-control mb-1" >
-        </div>
-        
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{act.Type}} Activity</h5>
+                        <p class="card-text">Duration: {{act.Duration}} </p>
+                        <p class="card-text">Altitude: {{act.Altitude}} </p>
+                        <p class="card-text">Start: {{act.Start}} </p>
 
-        <div>
-            <label for="inputGroupFile02" class="text-left ">Route</label>
-            <div class="input-group">
-                <input required (change)="getFile($event)" type="file" accept="image/*" class="form-control mb-3"
-                    id="inputGroupFile02">
+                        
+                    </div>
+                </div>
             </div>
         </div>
-
-        
-        <div class="form-floating">
-            <!--<input required type="text" id="type" placeholder="type" class="form-control mb-1 "
-                formControlName="Type">-->
-            
-            <select class="form-select" [(ngModel)]="activityType" [ngModelOptions]="{standalone: true}" aria-label="Default select example">
-                
-                <option value="Running" selected >Running</option>
-                <option value="Swimming">Swimming</option>
-                <option value="Cycling">Cycling</option>
-                <option value="Hiking">Hiking</option>
-                <option value="Kayaking">Kayaking</option>
-                <option value="Walking">Walking</option>
-              </select>
-              <label for="floatingSelect">Type</label>
-        </div>
-        
-
-        <div style="margin-top:20px" *ngIf="alert" class="alert alert-{{typeAlert}} alert-dismissible" role="alert">
-            {{alertMessage}}
-            <button (click)="closeAlert()" type="button" class="btn-close" data-bs-dismiss="alert"
-                aria-label="Close"></button>
-        </div>
-
-        <div class="mt-3 mb-5 d-grid gap-2 justify-content-center">
-            <button id="signUp" class="btn btn-lg btn-primary btn-block">Post</button>
-            
-        </div>
-    </form>
+    </div>
 </div>
+
+<div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop"
+    aria-labelledby="staticBackdropLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="staticBackdropLabel">What do you want to share?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form [formGroup]="form" (submit)="getActivity()" style="max-width: 300px;margin: auto;">
+
+            <div class="form-floating">
+                <input required type="text" id="distance" placeholder="distance" class="form-control mb-1"
+                    formControlName="Distance">
+                <label for="floatingInput">Distance</label>
+            </div>
+    
+            <div >
+                <label for="floatingInput">Start Day</label>
+                <input required type="datetime-local" id="Start" class="form-control mb-2" [(ngModel)]="start" [ngModelOptions]="{standalone: true}">
+            </div>
+    
+            <div >
+                <label for="floatingInput">Activity Time</label>
+                <input required type="datetime-local" [(ngModel)]="duration" [ngModelOptions]="{standalone: true}" id="Duration" class="form-control mb-1" >
+            </div>
+            
+    
+            <div>
+                <label for="inputGroupFile02" class="text-left ">Route</label>
+                <div class="input-group">
+                    <input required (change)="getFile($event)" type="file" accept="image/*" class="form-control mb-3"
+                        id="inputGroupFile02">
+                </div>
+            </div>
+    
+            
+            <div class="form-floating">
+                <!--<input required type="text" id="type" placeholder="type" class="form-control mb-1 "
+                    formControlName="Type">-->
+                
+                <select class="form-select" [(ngModel)]="activityType" [ngModelOptions]="{standalone: true}" aria-label="Default select example">
+                    
+                    <option value="Running" selected >Running</option>
+                    <option value="Swimming">Swimming</option>
+                    <option value="Cycling">Cycling</option>
+                    <option value="Hiking">Hiking</option>
+                    <option value="Kayaking">Kayaking</option>
+                    <option value="Walking">Walking</option>
+                  </select>
+                  <label for="floatingSelect">Type</label>
+            </div>
+            
+    
+            <div style="margin-top:20px" *ngIf="alert" class="alert alert-{{typeAlert}} alert-dismissible" role="alert">
+                {{alertMessage}}
+                <button (click)="closeAlert()" type="button" class="btn-close" data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+            </div>
+    
+            <div class="mt-3 mb-5 d-grid gap-2 justify-content-center">
+                <button id="signUp" class="btn btn-lg btn-primary btn-block">Post</button>
+                
+            </div>
+        </form>
+    </div>
+</div>
+
