@@ -86,5 +86,19 @@ namespace ApiServer.Controllers
 
             return Ok(challenges);
         }
+
+        [HttpPost]
+        [Route("AddChallengeActivity/{challengeId}/{activityId}")]
+        public IActionResult AddChallengeActivity(int challengeId, int activityId)
+        {
+            if (ModelState.IsValid)
+            {
+                string result = ChallengeDAL.AddChallengeActivity(challengeId, activityId);
+                if (result is "Error")
+                    return new JsonResult("Something went wrong while adding the challenge.") { StatusCode = 500 };
+                return new JsonResult("Activity added.") { StatusCode = 201 };
+            }
+            return new JsonResult("Invalid model for ChallengeId/ActId.") { StatusCode = 400 };
+        }
     }
 }

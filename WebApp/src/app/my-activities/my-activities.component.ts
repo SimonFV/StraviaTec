@@ -134,20 +134,24 @@ export class MyActivitiesComponent implements OnInit {
     })
   }
   getActId(){
-    let actId=0;
-    let challId
     this.service.getActivityId(this.form.value).subscribe(resp=>{
       console.log(resp);
-      actId=Number(resp.body)
-    });
-    for(let i of this.challenges){
-      if(i.name==this.challName){
-        challId=i.Id;
+      //Number(resp.body)
+      for(let i of this.challenges){
+        if(i.name==this.challName){
+          this.addChallengeActivity(i.Id,Number(resp.body))
+        }
       }
-    }
-    console.log(actId+" "+challId);
-    
+    });
   }
+  addChallengeActivity(challId:number, actId:number){
+    console.log(challId+" "+actId);
+    this.service.addChallengeActivity(challId,actId).subscribe(resp=>{
+      console.log(resp);
+      
+    })
+  }
+
   getFile(event: any) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];

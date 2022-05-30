@@ -200,6 +200,31 @@ namespace ApiServer.DAL
         }
 
 
+        public static string AddChallengeActivity(int challengeId, int activityId)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query = @"INSERT INTO CHALLENGE_ACTIVITIES(ChallengeId, ActivityId) VALUES (" + 
+                    challengeId +"," + activityId+");";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader sdr = cmd.ExecuteReader();
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return "Error";
+            }
+            return "Done";
+        }
+
+
 
         private static string GetConnection()
         {
