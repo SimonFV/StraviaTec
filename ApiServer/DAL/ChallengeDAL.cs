@@ -74,9 +74,9 @@ namespace ApiServer.DAL
             return "Done";
         }
 
-        public static List<VisibilityrDto> GetChallengeVisibility()
+        public static List<ChallengeVisibilityDto> GetChallengeVisibility()
         {
-            List<VisibilityrDto> challenges = new();
+            List<ChallengeVisibilityDto> challenges = new();
             try
             {
                 using (SqlConnection con = new SqlConnection(GetConnection()))
@@ -89,7 +89,7 @@ namespace ApiServer.DAL
                         {
                             while (sdr.Read())
                             {
-                                VisibilityrDto challenge = new()
+                                ChallengeVisibilityDto challenge = new()
                                 {
                                     GroupId = (int)sdr["GroupId"],
                                     ChallengeId = (int)sdr["ChallengeId"]

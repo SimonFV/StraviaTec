@@ -102,7 +102,6 @@ export class ChallengeComponent implements OnInit {
         "challengeId":i.challengeId
       });
     }
-    console.log(this.visibility);
   }
 
   loadChallenges(challenge: any) {

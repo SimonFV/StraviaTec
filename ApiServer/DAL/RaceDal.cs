@@ -101,6 +101,42 @@ namespace ApiServer.DAL
         }
 
 
+        public static List<RaceVisibilityDto> GetRaceVisibility()
+        {
+            List<RaceVisibilityDto> races = new();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query = @"SELECT * FROM RACE_VISIBILITY ;";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                RaceVisibilityDto race = new()
+                                {
+                                    GroupId = (int)sdr["GroupId"],
+                                    RaceId = (int)sdr["RaceId"]
+                                };
+                                races.Add(race);
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return null;
+            }
+            return races;
+        }
+
+
 
         private static string GetConnection()
         {

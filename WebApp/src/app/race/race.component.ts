@@ -22,14 +22,21 @@ export class RaceComponent implements OnInit {
   isPrivate:boolean=false;
 
   races=[{
+    "Id":0,
     "userAdmin": "",
     "name": "",
     "route": "",
+    "privacy":"",
     "cost": 0,
     "category": "",
     "startDate": "",
     "activity_Type": ""
-  }]
+  }];
+  visibility=[{
+    "groupId":0,
+    "raceId": 0
+  }];
+  userGroups=[0];
 
 
   constructor(
@@ -41,9 +48,28 @@ export class RaceComponent implements OnInit {
   
 
   ngOnInit(): void {
+    this.visibility.splice(0, 1);
+    this.userGroups.splice(0, 1);
+    this.races.splice(0, 1);
+
+    this.service.getGroups(this.sharedService.getUserData().User).subscribe(resp=>{
+      this.loadUserGroups(resp.body)
+    });
+
+    this.service.getRaceVisibility().subscribe(resp=>{
+      this.loadVisivility(resp.body);
+    })
     
+    this.service.getRaces().subscribe(resp=>{
+      console.log(resp.body);
+      for (let race of resp.body!) {
+        this.loadRaces(race);
+      }
+      
+    })
+
     this.form = this.formBuilder.group({
-      UserAdmin: ['SRC'/*this.sharedService.getToken()*/, [Validators.required]],
+      UserAdmin: [this.sharedService.getToken(), [Validators.required]],
       Name: ['', [Validators.required]],
       Cost: ['', [Validators.required]],
       StartDate: [Date, [Validators.required]],
@@ -54,30 +80,62 @@ export class RaceComponent implements OnInit {
       GroupsArray: this.formBuilder.array([]),
       Category: ['', [Validators.required]]
     });
-
-    
-    this.races.splice(0, 1);
-    this.service.getRaces().subscribe(resp=>{
-      console.log(resp.body);
-      for (let race of resp.body!) {
-        this.loadRaces(race);
-      }
-      
-    })
   }
 
 
-  loadRaces(race: any){
-    this.races.push({
-      "userAdmin": race.userAdmin,
-      "name": race.name,
-      "route":race.route,
-      "cost": race.cost,
-      "category": race.category,
-      "startDate": race.startDate,
-      "activity_Type": race.type
-    })
-    console.log(this.races);
+  loadRaces(race: any) {
+    let raceShown=[0];
+    for(let vis of this.visibility){
+      
+      if(race.privacy){
+        if(this.userGroups.includes(vis.groupId) && race.id==vis.raceId && !raceShown.includes(race.id)){
+          this.races.push({
+            "Id": race.id,
+            "userAdmin": race.userAdmin,
+            "name": race.name,
+            "route": race.route,
+            "privacy": race.privacy,
+            "cost": race.cost,
+            "category": race.category,
+            "startDate": race.startDate,
+            "activity_Type": race.activity_Type
+          })
+          raceShown.push(race.id)
+          break;
+        }
+      }else{
+        this.races.push({
+          "Id": race.id,
+          "userAdmin": race.userAdmin,
+          "name": race.name,
+          "route": race.route,
+          "privacy": race.privacy,
+          "cost": race.cost,
+          "category": race.category,
+          "startDate": race.startDate,
+          "activity_Type": race.activity_Type
+        })
+        raceShown.push(race.id)
+        break;
+      }
+      
+    }
+  }
+
+  loadVisivility(groups:any){
+    for(let i of groups){
+      this.visibility.push({
+        "groupId":i.groupId,
+        "raceId":i.raceId
+      });
+    }
+  }
+
+  loadUserGroups(grps: any){
+    for(let i of grps){
+      this.userGroups.push(i.id)
+    }
+    
   }
 
   
@@ -90,7 +148,7 @@ export class RaceComponent implements OnInit {
     this.form.get('Type')!.setValue(this.type);
 
     delete this.form.value.GroupsArray;
-    console.log(this.form.value);
+    
 
     this.service.addRace(this.form.value).subscribe(resp=>{
       console.log(resp);
@@ -138,7 +196,7 @@ export class RaceComponent implements OnInit {
   }
   private(){
     this.isPrivate=!this.isPrivate;
-    console.log(this.isPrivate);
+    
     
     if(this.isPrivate){
       this.addGroup();

@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ApiServer.DTOs.Responses
 {
-    public class VisibilityrDto
+    public class RaceVisibilityDto
     {
         [Required]
         public int GroupId { get; set; }
         [Required]
-        public int ChallengeId { get; set; }
+        public int RaceId { get; set; }
     }
 }

@@ -22,6 +22,7 @@ INSERT INTO FRIENDS("User", FriendUser) VALUES('sfv','goq');
 
 INSERT INTO CATEGORY("Name", Description) VALUES('Junior','Junior');
 INSERT INTO CATEGORY("Name", Description) VALUES('Sub-23','Sub-23');
+INSERT INTO CATEGORY("Name", Description) VALUES('Open','Open');
 INSERT INTO CATEGORY("Name", Description) VALUES('Elite','Elite');
 INSERT INTO CATEGORY("Name", Description) VALUES('Master A','Master A');
 INSERT INTO CATEGORY("Name", Description) VALUES('Master B','Master B');

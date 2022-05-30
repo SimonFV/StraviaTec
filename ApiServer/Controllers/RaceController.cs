@@ -50,5 +50,15 @@ namespace ApiServer.Controllers
             }
             return new JsonResult("Invalid model for an User.") { StatusCode = 400 };
         }
+
+        [HttpGet]
+        [Route("RaceVisibility")]
+        public IActionResult GetRaceVisibility()
+        {
+            var races =RaceDAL.GetRaceVisibility();
+            if (races is null)
+                return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
+            return Ok(races);
+        }
     }
 }
