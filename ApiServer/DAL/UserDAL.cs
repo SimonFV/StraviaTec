@@ -457,6 +457,38 @@ namespace ApiServer.DAL
             return "Done";
         }
 
+        public static int GetActivityId(ActivityDto act)
+        {
+            int id=new();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    
+                    string query = @"SELECT Id FROM ACTIVITY WHERE UserId='"+act.UserId+"' AND Duration= '"
+                    +act.Duration.ToString("HH:mm:ss")+"' AND "+ "\"Start\"" +"='"+act.Start.ToString("yyyy-MM-dd HH:mm:ss")+"';";
+                    
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader sdr = cmd.ExecuteReader();
+                        while (sdr.Read())
+                            {
+                                
+                                id=(int)sdr["Id"];
+                            }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return -1;
+            }
+            return id;
+        }
+
 
         public static List<ActivityResponseDto> GetuserActivities(string name)
         {

@@ -28,6 +28,24 @@ export class ApiService {
     return this.http.get<JSON[]>('http://localhost:5000/Challenge/ChallengeVisibility', { headers: header, observe: 'response' });
   }
 
+  getChallengeByUser(user:any){
+    let header = new HttpHeaders().set('Type-contet', 'aplication/json');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.get<JSON[]>('http://localhost:5000/Challenge/challengesByUser/'+user, { headers: header, observe: 'response' });
+  }
+
+  getActivityId(activity:any){
+    let header = new HttpHeaders().set('Type-contet', 'multipart/form-data');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.post<JSON[]>('http://localhost:5000/User/getActivityId',activity, { headers: header, observe: 'response' });
+  }
+
+  registerChallenge(challenge:any){
+    let header = new HttpHeaders().set('Type-contet', 'aplication/json');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.post('http://localhost:5000/Challenge/challenges', challenge, { headers: header, observe: 'response' });
+  }
+
   getRaces() {
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());

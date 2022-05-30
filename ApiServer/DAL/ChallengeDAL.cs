@@ -125,6 +125,7 @@ namespace ApiServer.DAL
                         cmd.Parameters.AddWithValue("@Name", challenge.Name);
                         cmd.Parameters.AddWithValue("@Class", challenge.Class);
                         cmd.Parameters.AddWithValue("@Privacy", challenge.Privacy);
+                        cmd.Parameters.AddWithValue("@Objective", challenge.Objective);
                         if (challenge.Privacy)
                         {
                             cmd.Parameters.AddWithValue("@Groups", challenge.Groups);
@@ -157,6 +158,45 @@ namespace ApiServer.DAL
                 return "Error";
             }
             return "Done";
+        }
+
+
+        public static List<ChallengeResponseDto> GetChallengesByUser(string user)
+        {
+            List<ChallengeResponseDto> challenges = new();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query = 
+                        @"SELECT Id,"+ "\"Name\"" +
+                        "FROM CHALLENGE WHERE CHALLENGE.Id IN(SELECT ChallengeId FROM CHALLENGE_PARTICIPANTS WHERE "
+                        + "\"User\"" +"='"+user+"');";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                ChallengeResponseDto challenge = new()
+                                {
+                                    Id = (int)sdr["Id"],
+                                    Name = (string)sdr["Name"]
+                                };
+                                challenges.Add(challenge);
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return null;
+            }
+            return challenges;
         }
 
 

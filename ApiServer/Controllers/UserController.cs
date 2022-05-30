@@ -138,6 +138,16 @@ namespace ApiServer.Controllers
         }
 
         [HttpPost]
+        [Route("getActivityId")]
+        public IActionResult GetActivityId(ActivityDto activity)
+        {
+            int Id = UserDAL.GetActivityId(activity);
+            if (Id is -1)
+                return new JsonResult("Something went wrong getting the activities.") { StatusCode = 500 };
+            return Ok(Id);
+        }
+
+        [HttpPost]
         [Route("addFriend/{user}/{friend}")]
         public IActionResult PostFriend(string user, string friend)
         {

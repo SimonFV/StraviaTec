@@ -75,5 +75,16 @@ namespace ApiServer.Controllers
             }
             return new JsonResult("Invalid model for an User.") { StatusCode = 400 };
         }
+
+        [HttpGet]
+        [Route("challengesByUser/{user}")]
+        public IActionResult GetChallengesByUser(string user)
+        {
+            var challenges = ChallengeDAL.GetChallengesByUser(user);
+            if (challenges is null)
+                return new JsonResult("Something went wrong") { StatusCode = 500 };
+
+            return Ok(challenges);
+        }
     }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from '../services/ApiService/api.service';
 import { SharedService } from '../services/SharedService/shared.service';
@@ -10,10 +11,11 @@ import { SharedService } from '../services/SharedService/shared.service';
 })
 export class ChallengeComponent implements OnInit {
 
-  constructor(
-    private service: ApiService,
-    public sharedService: SharedService,
-    private router: Router) { }
+  alert: boolean = false;
+  alertMessage: string = '';
+
+  typeAlert: string = 'success';
+  public form!: FormGroup;
   challenges = [{
     "Id":0,
     "userAdmin": "",
@@ -30,6 +32,18 @@ export class ChallengeComponent implements OnInit {
     "groupId":0,
     "challengeId": 0
   }];
+  isPrivate=false;
+  start;
+  end;
+  category='';
+  type='';
+  grps='';
+
+  constructor(
+    private service: ApiService,
+    public sharedService: SharedService,
+    private formBuilder: FormBuilder,
+    private router: Router) {this.start=new Date(); this.end=new Date(); }
 
   ngOnInit(): void {
     this.challenges.splice(0, 1);
@@ -56,6 +70,21 @@ export class ChallengeComponent implements OnInit {
         }
       }
     });
+
+    this.form = this.formBuilder.group({
+      User: [this.sharedService.getToken(), [Validators.required]],
+      Name: ['', [Validators.required]],
+      
+      StartDate: [Date, [Validators.required]],
+      EndDate: [Date, [Validators.required]],
+      Activity_Type: ['', [Validators.required]],
+      
+      Privacy: ['', [Validators.required]],
+      Group: ['', []],
+      GroupsArray: this.formBuilder.array([]),
+      Class: ['', [Validators.required]],
+      Objective: ['', [Validators.required]]
+    });
     
 
   }   
@@ -79,7 +108,21 @@ export class ChallengeComponent implements OnInit {
   loadChallenges(challenge: any) {
     let challengeShown=[0];
     for(let vis of this.visibility){
-      if(this.userGroups.includes(vis.groupId) && challenge.id==vis.challengeId && !challengeShown.includes(challenge.id)){
+      if(challenge.privacy){
+        if(this.userGroups.includes(vis.groupId) && challenge.id==vis.challengeId && !challengeShown.includes(challenge.id)){
+          this.challenges.push({
+            "Id": challenge.id,
+            "userAdmin": challenge.userAdmin,
+            "name": challenge.name,
+            "class": challenge.class,
+            "privacy": challenge.privacy,
+            "startDate": challenge.startDate,
+            "endDate": challenge.endDate,
+            "activity_Type": challenge.activity_Type
+          })
+          challengeShown.push(challenge.id)
+        }
+      }else{
         this.challenges.push({
           "Id": challenge.id,
           "userAdmin": challenge.userAdmin,
@@ -92,10 +135,8 @@ export class ChallengeComponent implements OnInit {
         })
         challengeShown.push(challenge.id)
       }
+      
     }
-    
-
-    
   }
 
   getInChallenge(i: any){
@@ -103,6 +144,73 @@ export class ChallengeComponent implements OnInit {
     this.service.getInChallenge(this.sharedService.getUserData().User, i.Id).subscribe(resp=>{
       console.log(resp);
     })
+  }
+
+  riseAlert(message: string, type: string) {
+    this.alertMessage = message;
+    this.typeAlert = type;
+    this.alert = true;
+  }
+
+  closeAlert() {
+    this.alert = false
+  }
+
+  private(){
+    this.isPrivate=!this.isPrivate;
+    
+    console.log(this.isPrivate);
+    
+    if(this.isPrivate){
+      this.addGroup();
+      
+    }else{
+      this.GroupsArray.clear();
+    }
+  }
+
+  ceateChallenge(){
+    this.setgroups();
+
+    this.form.get('Privacy')!.setValue(this.isPrivate);
+    this.form.get('StartDate')!.setValue(this.start);
+    this.form.get('EndDate')!.setValue(this.end);
+    this.form.get('Class')!.setValue(this.category);
+    this.form.get('Activity_Type')!.setValue(this.type);
+
+    delete this.form.value.GroupsArray;
+    console.log(this.form.value);
+
+    this.service.registerChallenge(this.form.value).subscribe(resp=>{
+      console.log(resp);
+      
+    })
+    
+
+  }
+
+  setgroups(){
+    
+    for(let i of this.form.get('GroupsArray')?.value){
+      
+      this.grps=this.grps+i.GroupsArray+',';
+    }
+    delete this.form.value.GroupsArray;
+    this.form.get('Groups')?.setValue(this.grps);
+  }
+
+  get GroupsArray(){
+    return this.form.get('GroupsArray') as FormArray; 
+  }
+
+  addGroup(){
+    const groupsFormGroup= this.formBuilder.group({
+      GroupsArray: ''
+    });
+    this.GroupsArray.push(groupsFormGroup);
+  }
+  deleteGroup(i: number){
+    this.GroupsArray.removeAt(i);
   }
 
 

@@ -20,5 +20,8 @@ namespace ApiServer.DTOs.Requests
         public DateTime EndDate { get; set; }
         [Required]
         public string Activity_Type { get; set; }
+
+        [Required]
+        public int Objective { get; set; }
     }
 }

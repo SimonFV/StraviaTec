@@ -19,7 +19,7 @@
                         <p class="card-text">Altitude: {{act.Altitude}} </p>
                         <p class="card-text">Start: {{act.Start}} </p>
 
-                        
+
                     </div>
                 </div>
             </div>
@@ -41,18 +41,20 @@
                     formControlName="Distance">
                 <label for="floatingInput">Distance</label>
             </div>
-    
-            <div >
+
+            <div>
                 <label for="floatingInput">Start Day</label>
-                <input required type="datetime-local" id="Start" class="form-control mb-2" [(ngModel)]="start" [ngModelOptions]="{standalone: true}">
+                <input required type="datetime-local" id="Start" class="form-control mb-2" [(ngModel)]="start"
+                    [ngModelOptions]="{standalone: true}">
             </div>
-    
-            <div >
+
+            <div>
                 <label for="floatingInput">Activity Time</label>
-                <input required type="datetime-local" [(ngModel)]="duration" [ngModelOptions]="{standalone: true}" id="Duration" class="form-control mb-1" >
+                <input required type="datetime-local" [(ngModel)]="duration" [ngModelOptions]="{standalone: true}"
+                    id="Duration" class="form-control mb-1">
             </div>
-            
-    
+
+
             <div>
                 <label for="inputGroupFile02" class="text-left ">Route</label>
                 <div class="input-group">
@@ -60,36 +62,57 @@
                         id="inputGroupFile02">
                 </div>
             </div>
-    
-            
+
+
             <div class="form-floating">
                 <!--<input required type="text" id="type" placeholder="type" class="form-control mb-1 "
                     formControlName="Type">-->
-                
-                <select class="form-select" [(ngModel)]="activityType" [ngModelOptions]="{standalone: true}" aria-label="Default select example">
-                    
-                    <option value="Running" selected >Running</option>
+
+                <select class="form-select" [(ngModel)]="activityType" [ngModelOptions]="{standalone: true}"
+                    aria-label="Default select example">
+
+                    <option value="Running" selected>Running</option>
                     <option value="Swimming">Swimming</option>
                     <option value="Cycling">Cycling</option>
                     <option value="Hiking">Hiking</option>
                     <option value="Kayaking">Kayaking</option>
                     <option value="Walking">Walking</option>
-                  </select>
-                  <label for="floatingSelect">Type</label>
+                </select>
+                <label for="floatingSelect">Type</label>
             </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"
+                    (click)="challenge()">
+                <label class="form-check-label" for="inlineCheckbox1">Challenge</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2" (click)="race()">
+                <label class="form-check-label" for="inlineCheckbox2">Race</label>
+            </div>
+
+            <div class="form-floating" *ngIf="fromChallenge">
+                <select class="form-select" aria-label="Default select example" [(ngModel)]="challName" [ngModelOptions]="{standalone: true}">
+                    <label for="floatingSelect">Challenge Name</label>
             
-    
+                    <option *ngFor="let chall of challenges; let i= index" >
+                        {{chall.name}}</option>
+                </select>
+                <label for="floatingSelect">Challenge Name</label>
+            </div>
+
+
             <div style="margin-top:20px" *ngIf="alert" class="alert alert-{{typeAlert}} alert-dismissible" role="alert">
                 {{alertMessage}}
                 <button (click)="closeAlert()" type="button" class="btn-close" data-bs-dismiss="alert"
                     aria-label="Close"></button>
             </div>
-    
+
             <div class="mt-3 mb-5 d-grid gap-2 justify-content-center">
                 <button id="signUp" class="btn btn-lg btn-primary btn-block">Post</button>
-                
+
             </div>
         </form>
     </div>
 </div>
-

@@ -94,7 +94,6 @@ export class RaceComponent implements OnInit {
 
     this.service.addRace(this.form.value).subscribe(resp=>{
       console.log(resp);
-      
     })
   }
   setgroups(){
