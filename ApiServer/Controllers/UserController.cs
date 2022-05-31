@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace ApiServer.Controllers
 {
+    /// <summary>
+    /// Controller class for user related http requests.
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -21,6 +24,10 @@ namespace ApiServer.Controllers
         {
         }
 
+        /// <summary>
+        /// Gets all the users in the database.
+        /// </summary>
+        /// <returns><c>IActionResult</c> with the users or an error message</returns>
         [HttpGet]
         [Route("users")]
         public IActionResult GetUsers()
@@ -31,6 +38,11 @@ namespace ApiServer.Controllers
             return Ok(users);
         }
 
+        /// <summary>
+        /// Gets the user with the specified <paramref name="userId"/>
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns> with the user or an error message</returns>
         [HttpGet]
         [Route("users/{userId}")]
         public IActionResult GetUser(string userId)
@@ -115,14 +127,7 @@ namespace ApiServer.Controllers
             {
                 return new JsonResult("Something went wrong deleting friend") { StatusCode = 500 };
             }
-            //List<UserResponseDto> friends = UserDAL.GetFriends(user);
-            /*if (friends is null)
-                return new JsonResult("Something went wrong retrieving the users.") { StatusCode = 500 };
-            return Ok(friends);*/
         }
-
-
-
 
         [HttpPost]
         [Route("addActivity")]

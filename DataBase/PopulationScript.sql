@@ -39,8 +39,7 @@ GO
 
 --Challenge registration
 
-EXEC RegisterChallenge 
-	@Id=0,
+EXEC RegisterChallenge
 	@User= 'sfv',
 	@Name='Reto',
 	@Class='Master',

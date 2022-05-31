@@ -482,7 +482,6 @@ AS
 GO
 
 CREATE PROCEDURE RegisterChallenge
-	@Id INT,
 	@User NVARCHAR(15),
 	@Name NVARCHAR(15),
 	@Class NVARCHAR(15),
