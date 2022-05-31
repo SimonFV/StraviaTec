@@ -41,8 +41,8 @@ namespace ApiServer.Controllers
         /// <summary>
         /// Gets the user with the specified <paramref name="userId"/>
         /// </summary>
-        /// <param name="userId"></param>
-        /// <returns> with the user or an error message</returns>
+        /// <param name="userId"><c>string</c>: User account</param>
+        /// <returns><c>IActionResult</c> with the user or an error message</returns>
         [HttpGet]
         [Route("users/{userId}")]
         public IActionResult GetUser(string userId)

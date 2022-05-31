@@ -1,6 +1,6 @@
 using ApiServer.Configuration.Token;
 
-namespace api.Entities.Dtos.Responses
+namespace ApiServer.DTOs.Responses
 {
     public class RegistrationResponse : AuthResult
     {

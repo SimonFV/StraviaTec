@@ -3,8 +3,6 @@ using System;
 using ApiServer.DAL;
 using ApiServer.DTOs.Requests;
 using ApiServer.DTOs.Responses;
-using ApiServer.DTOs;
-using System.Collections.Generic;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,7 +11,6 @@ using Microsoft.Extensions.Options;
 using ApiServer.Configuration.Token;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
-using api.Entities.Dtos.Responses;
 
 namespace ApiServer.Controllers
 {
