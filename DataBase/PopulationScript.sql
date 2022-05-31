@@ -20,13 +20,13 @@ INSERT INTO FRIENDS("User", FriendUser) VALUES('sfv','src');
 INSERT INTO FRIENDS("User", FriendUser) VALUES('sfv','goq');
 
 
-INSERT INTO CATEGORY("Name", Description) VALUES('Junior','Junior');
-INSERT INTO CATEGORY("Name", Description) VALUES('Sub-23','Sub-23');
-INSERT INTO CATEGORY("Name", Description) VALUES('Open','Open');
-INSERT INTO CATEGORY("Name", Description) VALUES('Elite','Elite');
-INSERT INTO CATEGORY("Name", Description) VALUES('Master A','Master A');
-INSERT INTO CATEGORY("Name", Description) VALUES('Master B','Master B');
-INSERT INTO CATEGORY("Name", Description) VALUES('Master C','Master C');
+INSERT INTO CATEGORY("Name", Description) VALUES('Junior','Under 15 years.');
+INSERT INTO CATEGORY("Name", Description) VALUES('Sub-23','From 15 to 23 years.');
+INSERT INTO CATEGORY("Name", Description) VALUES('Open','From 24 to 30 years.');
+INSERT INTO CATEGORY("Name", Description) VALUES('Elite','All ages.');
+INSERT INTO CATEGORY("Name", Description) VALUES('Master A','From 31 to 40 years.');
+INSERT INTO CATEGORY("Name", Description) VALUES('Master B','From 41 to 50 years.');
+INSERT INTO CATEGORY("Name", Description) VALUES('Master C','More than 50 years.');
 
 --Default Activity Types
 INSERT INTO ACTIVITY_TYPE("Name") VALUES('Running');

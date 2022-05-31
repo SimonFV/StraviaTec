@@ -68,6 +68,21 @@ namespace ApiServer.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("friendRoute")]
+        public IActionResult GetFriendRoute(FilePathDto route)
+        {
+            try
+            {
+                return File(System.IO.File.ReadAllBytes(route.Path), "text/plain");
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return new JsonResult("Something went wrong retrieving the route.") { StatusCode = 500 };
+            }
+        }
+
         [HttpGet]
         [Route("friendsAvailable/{user}")]
         public IActionResult GetFriendsAvailable(string user)
@@ -107,7 +122,7 @@ namespace ApiServer.Controllers
         }
 
 
-        
+
 
         [HttpPost]
         [Route("addActivity")]

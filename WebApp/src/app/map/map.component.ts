@@ -1,5 +1,5 @@
-import { Component, OnInit, AfterViewInit, Input, ElementRef, EventEmitter, Output } from '@angular/core';
-import Map from 'ol/Map';
+import { Component, OnInit, AfterViewInit, Input, EventEmitter, Output } from '@angular/core';
+import gMap from 'ol/Map';
 import View from 'ol/View';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import XYZ from 'ol/source/XYZ';
@@ -8,6 +8,7 @@ import GPX from 'ol/format/GPX';
 import VectorSource from 'ol/source/Vector';
 import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
 import { defaults as defaultControls } from 'ol/control';
+import { ApiService } from '../services/ApiService/api.service';
 
 export const DEFAULT_HEIGHT = '500px';
 export const DEFAULT_WIDTH = '500px';
@@ -16,6 +17,7 @@ export const DEFAULT_LAT = -34.603490361131385;
 export const DEFAULT_LON = -58.382037891217465;
 
 export const DEFAULT_ZOOM = 8;
+export const DEFAULT_ID = '0';
 
 @Component({
   selector: 'app-map',
@@ -28,20 +30,19 @@ export class MapComponent implements OnInit, AfterViewInit {
   @Input() zoom: number = DEFAULT_ZOOM;
   @Input() width: string | number = DEFAULT_WIDTH;
   @Input() height: string | number = DEFAULT_HEIGHT;
+  @Input() idMap: string = DEFAULT_ID;
 
   @Output() movestart = new EventEmitter<any>();
   @Output() moveend = new EventEmitter<any>();
 
-  map!: Map;
+  map!: gMap;
+  routeBlob: any;
+  routeUrl: any;
 
-  private mapEl!: HTMLElement;
-
-  constructor(private elementRef: ElementRef) { }
+  constructor(private service: ApiService) { }
 
   ngOnInit(): void {
-    
-    this.mapEl = this.elementRef.nativeElement.querySelector('#map');
-    this.setSize();
+
   }
 
   ngAfterViewInit(): void {
@@ -72,52 +73,66 @@ export class MapComponent implements OnInit, AfterViewInit {
       }),
     };
 
-    var vectorSource = new VectorSource({
-      url: 'assets/fells_loop.gpx',
-      format: new GPX(),
+    const path: any = { path: 'Files\\Routes\\sfv\\Activities\\sfvRoute1.gpx' };
+    this.service.getFriendRoute(path).subscribe({
+      next: (resp) => {
+
+        //let objectURL = URL.createObjectURL(this.routeBlob);
+        let reader = new FileReader();
+        reader.readAsDataURL(resp);
+
+        reader.onload = _event => {
+          this.routeUrl = reader.result;
+
+          var vectorSource = new VectorSource({
+            url: this.routeUrl,
+            format: new GPX(),
+          });
+
+          this.map = new gMap({
+            target: this.idMap,
+            layers: [
+              new TileLayer({
+                source: new XYZ({
+                  url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                })
+              }),
+              new VectorLayer({
+                source: vectorSource,
+
+                style: (feature) => {
+                  return style[feature.getGeometry()!.getType()];
+                },
+              })
+            ],
+            view: new View({
+              center: Proj.fromLonLat([this.lon, this.lat]),
+              zoom: this.zoom
+            }),
+            controls: defaultControls().extend([])
+          });
+        };
+
+
+
+      },
+      error: (error) => {
+        console.log(error);
+      }
     });
-
-    this.map = new Map({
-      target: 'map',
-      layers: [
-        new TileLayer({
-          source: new XYZ({
-            url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-          })
-        }),
-        new VectorLayer({
-          source: vectorSource,
-
-          style: (feature) => {
-            return style[feature.getGeometry()!.getType()];
-          },
-        })
-      ],
-      view: new View({
-        center: Proj.fromLonLat([this.lon, this.lat]),
-        zoom: this.zoom
-      }),
-      controls: defaultControls().extend([])
-    })
-
 
   }
 
-  private setSize() {
-    if (this.mapEl) {
-      const styles = this.mapEl.style;
-      styles.height = coerceCssPixelValue(this.height) || DEFAULT_HEIGHT;
-      styles.width = coerceCssPixelValue(this.width) || DEFAULT_WIDTH;
+  createRouteFromBlob(route: Blob) {
+    let reader = new FileReader();
+    reader.addEventListener("load", () => {
+      this.routeBlob.reader.result;
+    }, false);
+
+    if (route) {
+      reader.readAsDataURL(route);
     }
   }
 
 }
 
-const cssUnitsPattern = /([A-Za-z%]+)$/;
-
-function coerceCssPixelValue(value: any): string {
-  if (value == null) {
-    return '';
-  }
-  return cssUnitsPattern.test(value) ? value : `${value}px`;
-}

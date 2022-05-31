@@ -17,35 +17,35 @@ export class ApiService {
     return this.http.get<JSON[]>('http://localhost:5000/Challenge/challenges', { headers: header, observe: 'response' });
   }
 
-  getInChallenge(user: string, challengeId:number){
+  getInChallenge(user: string, challengeId: number) {
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
-    return this.http.post('http://localhost:5000/Challenge/getInChallenge/'+user+'/'+challengeId, { headers: header, responseType: 'blob' });
+    return this.http.post('http://localhost:5000/Challenge/getInChallenge/' + user + '/' + challengeId, { headers: header, responseType: 'blob' });
   }
 
-  getChallengeVisibility(){
+  getChallengeVisibility() {
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.get<JSON[]>('http://localhost:5000/Challenge/ChallengeVisibility', { headers: header, observe: 'response' });
   }
 
-  getChallengeByUser(user:any){
+  getChallengeByUser(user: any) {
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
-    return this.http.get<JSON[]>('http://localhost:5000/Challenge/challengesByUser/'+user, { headers: header, observe: 'response' });
+    return this.http.get<JSON[]>('http://localhost:5000/Challenge/challengesByUser/' + user, { headers: header, observe: 'response' });
   }
 
-  getActivityId(activity:any){
+  getActivityId(activity: any) {
     let header = new HttpHeaders().set('Type-contet', 'multipart/form-data');
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
-    return this.http.post<JSON[]>('http://localhost:5000/User/getActivityId',activity, { headers: header, observe: 'response' });
+    return this.http.post<JSON[]>('http://localhost:5000/User/getActivityId', activity, { headers: header, observe: 'response' });
   }
-  addChallengeActivity(challId: number, actId:number){
+  addChallengeActivity(challId: number, actId: number) {
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
-    return this.http.post<JSON[]>('http://localhost:5000/Challenge/AddChallengeActivity/'+challId+'/'+actId, { headers: header, observe: 'response' });
+    return this.http.post<JSON[]>('http://localhost:5000/Challenge/AddChallengeActivity/' + challId + '/' + actId, { headers: header, observe: 'response' });
   }
 
-  registerChallenge(challenge:any){
+  registerChallenge(challenge: any) {
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.post('http://localhost:5000/Challenge/challenges', challenge, { headers: header, observe: 'response' });
@@ -57,7 +57,7 @@ export class ApiService {
     return this.http.get<JSON[]>('http://localhost:5000/Race/races', { headers: header, observe: 'response' });
   }
 
-  getRaceVisibility(){
+  getRaceVisibility() {
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.get<JSON[]>('http://localhost:5000/Race/RaceVisibility', { headers: header, observe: 'response' });
@@ -121,7 +121,7 @@ export class ApiService {
     return this.http.post('http://localhost:5000/User/addActivity', activity, { headers: header, observe: 'response' });
   }
 
-  getUserActivities(user:string){
+  getUserActivities(user: string) {
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.get('http://localhost:5000/User/userActivities/' + user, { headers: header, observe: 'response' });
   }
@@ -131,7 +131,7 @@ export class ApiService {
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.post('http://localhost:5000/Race/races', race, { headers: header, observe: 'response' });
   }
-  
+
 
   deleteUser(user: string) {
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
@@ -139,29 +139,34 @@ export class ApiService {
     return this.http.delete('http://localhost:5000/User/delete/' + user, { headers: header, observe: 'response' });
   }
 
-  getGroups(user:string){
+  getGroups(user: string) {
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.get('http://localhost:5000/User/groups/' + user, { headers: header, observe: 'response' });
   }
 
-  getGroupsAvailable(user:string){
+  getGroupsAvailable(user: string) {
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.get('http://localhost:5000/User/groupsAvailable/' + user, { headers: header, observe: 'response' });
   }
 
-  joinGroup(id:number, user:string){
+  joinGroup(id: number, user: string) {
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
-    return this.http.post('http://localhost:5000/User/joinGroup/'+id+'/'+user, { headers: header, observe: 'response' });
+    return this.http.post('http://localhost:5000/User/joinGroup/' + id + '/' + user, { headers: header, observe: 'response' });
   }
 
-  quitGroup(id:number, user:string){
+  quitGroup(id: number, user: string) {
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
-    return this.http.delete('http://localhost:5000/User/quitGroup/'+id+'/'+user, { headers: header, observe: 'response' });
+    return this.http.delete('http://localhost:5000/User/quitGroup/' + id + '/' + user, { headers: header, observe: 'response' });
   }
 
-  createGroup(user:string, grpName:string){
+  createGroup(user: string, grpName: string) {
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
-    return this.http.post('http://localhost:5000/User/createGroup/'+user+'/'+grpName, { headers: header, observe: 'response' });
+    return this.http.post('http://localhost:5000/User/createGroup/' + user + '/' + grpName, { headers: header, observe: 'response' });
+  }
+
+  getFriendRoute(routePath: JSON): Observable<Blob> {
+    let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.post('http://localhost:5000/User/friendRoute', routePath, { headers: header, responseType: 'blob' });
   }
 
 }

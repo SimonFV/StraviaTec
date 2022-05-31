@@ -30,19 +30,18 @@
               <h5 class="card-title text-center">Made a {{activity.Type}} activity</h5>
               <p class="card-text">Starting at: {{activity.Start}}</p>
               <p class="card-text">Distance: {{activity.Distance}}</p>
-              <!--<img src={{activity.Route}} class="card-img-top" alt="...">-->
-              <p class="card-text">{{activity.Route}} </p>
 
+              <div style="margin:10px auto; width:100%;">
+                <app-map [lat]="42.443592" [lon]="-71.106301" [zoom]="14" [idMap]="activity.User" width="100%"
+                  height="300px">
+                </app-map>
+              </div>
 
             </div>
             <div class="card-footer bg-transparent ">
               <button class="btn btn-link" type="button" id="commentBtn" data-bs-toggle="modal"
                 data-bs-target="#exampleModal" (click)="getCommentsByActivity(i)">
                 Comments
-              </button>
-              <button class="btn btn-link" type="button" id="commentBtn" data-bs-toggle="modal"
-                data-bs-target="#mapModal" >
-                Route
               </button>
             </div>
 
@@ -54,32 +53,9 @@
     </div>
   </div>
 
-  <!--<div style="margin:20px auto; width:800px;">
-    <app-map [lat]="42.443592" [lon]="-71.106301" [zoom]="14" width="100%" height="500px">
-    </app-map>
-  </div>-->
 
 </div>
 
-<div class="modal fade" id="mapModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="mapModalLabel">Route</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        
-      </div>
-      <div class="modal-body" >
-        <div style=" margin:20px auto; width:400px;">
-          <app-map [lat]="42.443592" [lon]="-71.106301" [zoom]="14" width="100%" height="500px">
-          </app-map>
-         
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
