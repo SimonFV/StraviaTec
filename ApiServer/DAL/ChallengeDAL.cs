@@ -7,8 +7,15 @@ using ApiServer.DTOs.Responses;
 
 namespace ApiServer.DAL
 {
+    /// <summary>
+    /// DAL for Challenge related SQL requests. 
+    /// </summary>
     public static class ChallengeDAL
     {
+        /// <summary>
+        /// Get all the challenges from database
+        /// </summary>
+        /// <returns><c>List</c> with the Challenges or an error message</returns>
         public static List<ChallengeResponseDto> GetChallenges()
         {
             List<ChallengeResponseDto> challenges = new();
@@ -50,6 +57,13 @@ namespace ApiServer.DAL
             return challenges;
         }
 
+        /// <summary>
+        /// Register Challenge participation in the database
+        /// </summary>
+        /// <param name="user"><c>string</c>: User account</param>
+        /// <param name="challengeId"><c>int</c>: Challenge Id to participate on</param>
+        /// <returns><c>string</c> with the participation result</returns>
+
         public static string GetInChallenge(string user, int challengeId)
         {
             try
@@ -74,6 +88,10 @@ namespace ApiServer.DAL
             return "Done";
         }
 
+        /// <summary>
+        /// Get the visibility of all the challenges from the database
+        /// </summary>
+        /// <returns><c>List</c> Challenges and their visibility or an error message</returns>
         public static List<ChallengeVisibilityDto> GetChallengeVisibility()
         {
             List<ChallengeVisibilityDto> challenges = new();
@@ -109,7 +127,11 @@ namespace ApiServer.DAL
             return challenges;
         }
 
-        
+        /// <summary>
+        /// Register a new Challenge in the database
+        /// </summary>
+        /// <param name="challenge"><c>string</c>: New Challenge name</param>
+        /// <returns><c>string</c> With the registration result</returns>
         public static string RegisterChallengeDB(ChallengeRegisterDto challenge)
         {
             try
@@ -160,7 +182,11 @@ namespace ApiServer.DAL
             return "Done";
         }
 
-
+        /// <summary>
+        /// Gets all the challenges from the database to which the user is subscribed
+        /// </summary>
+        /// <param name="user"><c>string</c>: User account</param>
+        /// <returns><c>List</c>: Challenges to which the user is subscribed</returns>
         public static List<ChallengeResponseDto> GetChallengesByUser(string user)
         {
             List<ChallengeResponseDto> challenges = new();
@@ -199,7 +225,12 @@ namespace ApiServer.DAL
             return challenges;
         }
 
-
+        /// <summary>
+        /// Add an Activity to a Challenge in the database
+        /// </summary>
+        /// <param name="challengeId"><c>int</c>: Challenge Id</param>
+        /// <param name="activityId"><c>int</c>: Activity Id</param>
+        /// <returns><c>string</c> with the binding result</returns>
         public static string AddChallengeActivity(int challengeId, int activityId)
         {
             try
