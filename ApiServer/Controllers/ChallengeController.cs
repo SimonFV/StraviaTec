@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace ApiServer.Controllers
 {
+
+    /// <summary>
+    /// Controller class for Challenge related http requests. 
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -16,6 +20,10 @@ namespace ApiServer.Controllers
         {
         }
 
+    /// <summary>
+    /// Get all the challenges
+    /// </summary>
+    /// <returns><c>IActionResult</c> with the Challenges or an error message</returns>
         [HttpGet]
         [Route("challenges")]
         public IActionResult GetChallenges()
@@ -27,6 +35,13 @@ namespace ApiServer.Controllers
             return Ok(challenges);
         }
 
+
+        /// <summary>
+        /// Register Challenge participation
+        /// </summary>
+        /// <param name="user"><c>string</c>: User account</param>
+        /// <param name="challengeId"><c>int</c>: Challenge Id to participate on</param>
+        /// <returns><c>IActionResult</c> with the participation result</returns>
         [HttpPost]
         [Route("getInChallenge/{user}/{challengeId}")]
         public IActionResult GetInChallenge(string user, int challengeId)
@@ -41,7 +56,10 @@ namespace ApiServer.Controllers
             return new JsonResult("Invalid model for User/ChallengeId.") { StatusCode = 400 };
         }
 
-
+        /// <summary>
+        /// Get the visibility of all the challenges
+        /// </summary>
+        /// <returns><c>IActionResult</c> Challenges and their visibility or an error message</returns>
         [HttpGet]
         [Route("ChallengeVisibility")]
         public IActionResult GetChallengeVisibility()
@@ -52,6 +70,11 @@ namespace ApiServer.Controllers
             return Ok(challenges);
         }
 
+        /// <summary>
+        /// Register a new Challenge
+        /// </summary>
+        /// <param name="challenge"><c>string</c>: New Challenge name</param>
+        /// <returns><c>IActionResult</c> With the registration result</returns>
         [HttpPost]
         [Route("challenges")]
         public IActionResult RegisterChallenge(ChallengeRegisterDto challenge)
@@ -76,6 +99,12 @@ namespace ApiServer.Controllers
             return new JsonResult("Invalid model for an User.") { StatusCode = 400 };
         }
 
+
+        /// <summary>
+        /// Gets all the challenges to which the user is subscribed
+        /// </summary>
+        /// <param name="user"><c>string</c>: User account</param>
+        /// <returns><c>IActionResult</c>: Challenges to which the user is subscribed</returns>
         [HttpGet]
         [Route("challengesByUser/{user}")]
         public IActionResult GetChallengesByUser(string user)
@@ -87,6 +116,12 @@ namespace ApiServer.Controllers
             return Ok(challenges);
         }
 
+        /// <summary>
+        /// Add an Activity to a Challenge
+        /// </summary>
+        /// <param name="challengeId"><c>int</c>: Challenge Id</param>
+        /// <param name="activityId"><c>int</c>: Activity Id</param>
+        /// <returns><c>IActionResult</c> with the binding result</returns>
         [HttpPost]
         [Route("AddChallengeActivity/{challengeId}/{activityId}")]
         public IActionResult AddChallengeActivity(int challengeId, int activityId)
