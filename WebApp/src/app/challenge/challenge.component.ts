@@ -26,6 +26,26 @@ export class ChallengeComponent implements OnInit {
     "endDate": "",
     "activity_Type": ""
   }];
+  availableChallenges = [{
+    "Id":0,
+    "userAdmin": "",
+    "name": "",
+    "class": "",
+    "privacy": "",
+    "startDate": "",
+    "endDate": "",
+    "activity_Type": ""
+  }];
+  challengesToShow = [{
+    "Id":0,
+    "userAdmin": "",
+    "name": "",
+    "class": "",
+    "privacy": "",
+    "startDate": "",
+    "endDate": "",
+    "activity_Type": ""
+  }];
 
   userGroups=[0];
   visibility=[{
@@ -37,7 +57,8 @@ export class ChallengeComponent implements OnInit {
   end;
   category='';
   type='';
-  grps='';
+  grps = '';
+  challengeToFind='';
 
   constructor(
     private service: ApiService,
@@ -47,8 +68,10 @@ export class ChallengeComponent implements OnInit {
 
   ngOnInit(): void {
     this.challenges.splice(0, 1);
+    this.availableChallenges.splice(0, 1);
     this.userGroups.splice(0, 1);
     this.visibility.splice(0, 1);
+    this.challengesToShow.splice(0, 1);
     this.service.getGroups(this.sharedService.getUserData().User).subscribe(resp=>{
       this.loadUserGroups(resp.body)
     });
@@ -58,10 +81,16 @@ export class ChallengeComponent implements OnInit {
       this.loadVisivility(resp.body);
     })
 
+    this.service.getChallengeByUser(this.sharedService.getUserData().User).subscribe(resp => {
+      console.log(resp);
+      this.loadActiveChallenges(resp.body);
+      
+    })
+
     this.service.getChallenges().subscribe({
       next: (resp) => {
         for (let challenge of resp.body!) {
-          this.loadChallenges(challenge);
+          this.loadAvailableChallenges(challenge);
         }
       }, error: (error) => {
         console.log(error);
@@ -104,12 +133,28 @@ export class ChallengeComponent implements OnInit {
     }
   }
 
-  loadChallenges(challenge: any) {
+  loadActiveChallenges(activechallenges:any) {
+    for (let i of activechallenges) {
+      this.challenges.push({
+        "Id": i.id,
+        "userAdmin": i.userAdmin,
+        "name": i.name,
+        "class": i.class,
+        "privacy": i.privacy,
+        "startDate": i.startDate,
+        "endDate": i.endDate,
+        "activity_Type": i.activity_Type
+
+      })
+    }
+  }
+
+  loadAvailableChallenges(challenge: any) {
     let challengeShown=[0];
     for(let vis of this.visibility){
       if(challenge.privacy){
         if(this.userGroups.includes(vis.groupId) && challenge.id==vis.challengeId && !challengeShown.includes(challenge.id)){
-          this.challenges.push({
+          this.availableChallenges.push({
             "Id": challenge.id,
             "userAdmin": challenge.userAdmin,
             "name": challenge.name,
@@ -122,7 +167,7 @@ export class ChallengeComponent implements OnInit {
           challengeShown.push(challenge.id)
         }
       }else{
-        this.challenges.push({
+        this.availableChallenges.push({
           "Id": challenge.id,
           "userAdmin": challenge.userAdmin,
           "name": challenge.name,
@@ -138,11 +183,47 @@ export class ChallengeComponent implements OnInit {
     }
   }
 
+  searchChallenge() {
+    this.challengesToShow.splice(0, this.challengesToShow.length)
+    let count = 0;
+    for(let i of this.availableChallenges){
+      if (this.challengeToFind.toLocaleLowerCase() == i.name.substr(0, this.challengeToFind.length).toLocaleLowerCase() &&
+      this.challengeToFind.toLocaleLowerCase() !=this.challenges[count].name.substr(0, this.challengeToFind.length).toLocaleLowerCase()) {
+        this.challengesToShow.push({
+          "Id": i.Id,
+          "userAdmin": i.userAdmin,
+          "name": i.name,
+          "class": i.class,
+          "privacy": i.privacy,
+          "startDate": i.startDate,
+          "endDate": i.endDate,
+          "activity_Type": i.activity_Type
+        })
+      }
+    }
+  }
+
   getInChallenge(i: any){
     
     this.service.getInChallenge(this.sharedService.getUserData().User, i.Id).subscribe(resp=>{
       console.log(resp);
     })
+
+    this.challenges.push({
+      "Id": i.Id,
+      "userAdmin": i.userAdmin,
+      "name": i.name,
+      "class": i.class,
+      "privacy": i.privacy,
+      "startDate": i.startDate,
+      "endDate": i.endDate,
+      "activity_Type": i.activity_Type
+    })
+    for(let grp in this.challengesToShow){
+      if(this.challengesToShow[grp].Id==i.Id){
+        this.challengesToShow.splice(Number(grp),1);
+      }
+    }
   }
 
   riseAlert(message: string, type: string) {

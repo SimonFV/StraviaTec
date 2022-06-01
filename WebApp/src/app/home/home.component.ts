@@ -27,14 +27,14 @@ export class HomeComponent implements OnInit {
 
   activities = [{
     "id": 0,
-    "User": "sfv",
-    "FirstName": "sfv",
-    "LastName1": "sfv",
-    "LastName2": "sfv",
-    "Type": "Running",
-    "Start": "f",
-    "Route": "ff",
-    "Distance": 10
+    "User": "",
+    "FirstName": "",
+    "LastName1": "",
+    "LastName2": "",
+    "Type": "",
+    "Start": "",
+    "Route": "",
+    "Distance": 0
   }];
   comments = [{
     "id": 0,
