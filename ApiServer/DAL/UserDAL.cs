@@ -435,7 +435,7 @@ namespace ApiServer.DAL
                         cmd.Parameters.AddWithValue("@Distance", act.Distance);
                         cmd.Parameters.AddWithValue("@Duration", act.Duration.ToString("HH:mm:ss"));
                         cmd.Parameters.AddWithValue("@Route", act.Route);
-                        cmd.Parameters.AddWithValue("@Altitude", act.Altitude);
+                        cmd.Parameters.AddWithValue("@Altitude", 1.5);
                         cmd.Parameters.AddWithValue("@Start", act.Start.ToString("yyyy-MM-dd HH:mm:ss"));
                         cmd.Parameters.AddWithValue("@Type", act.Type);
 
@@ -459,24 +459,24 @@ namespace ApiServer.DAL
 
         public static int GetActivityId(ActivityDto act)
         {
-            int id=new();
+            int id = new();
             try
             {
                 using (SqlConnection con = new SqlConnection(GetConnection()))
                 {
-                    
-                    string query = @"SELECT Id FROM ACTIVITY WHERE UserId='"+act.UserId+"' AND Duration= '"
-                    +act.Duration.ToString("HH:mm:ss")+"' AND "+ "\"Start\"" +"='"+act.Start.ToString("yyyy-MM-dd HH:mm:ss")+"';";
-                    
+
+                    string query = @"SELECT Id FROM ACTIVITY WHERE UserId='" + act.UserId + "' AND Duration= '"
+                    + act.Duration.ToString("HH:mm:ss") + "' AND " + "\"Start\"" + "='" + act.Start.ToString("yyyy-MM-dd HH:mm:ss") + "';";
+
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         con.Open();
                         SqlDataReader sdr = cmd.ExecuteReader();
                         while (sdr.Read())
-                            {
-                                
-                                id=(int)sdr["Id"];
-                            }
+                        {
+
+                            id = (int)sdr["Id"];
+                        }
                         con.Close();
                     }
                 }
@@ -489,33 +489,48 @@ namespace ApiServer.DAL
             return id;
         }
 
+        public static void UpdateActivityRoute(ActivityDto act, int actId)
+        {
+            using (SqlConnection con = new SqlConnection(GetConnection()))
+            {
+                string query = @"UPDATE ACTIVITY SET Route = '" + act.Route + "' " +
+                                "WHERE Id = " + actId + ";";
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    con.Open();
+                    SqlDataReader sdr = cmd.ExecuteReader();
+                    con.Close();
+                }
+            }
+        }
+
 
         public static List<ActivityResponseDto> GetuserActivities(string name)
         {
-            List<ActivityResponseDto> Activities=new();
+            List<ActivityResponseDto> Activities = new();
             try
             {
                 using (SqlConnection con = new SqlConnection(GetConnection()))
                 {
-                    string query = @"SELECT * FROM ACTIVITY WHERE UserId ='"+ name+"';";
+                    string query = @"SELECT * FROM ACTIVITY WHERE UserId ='" + name + "';";
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         con.Open();
                         SqlDataReader sdr = cmd.ExecuteReader();
                         while (sdr.Read())
+                        {
+                            ActivityResponseDto activity = new()
                             {
-                                ActivityResponseDto activity = new()
-                                {
-                                    UserId = (string)sdr["UserId"],
-                                    Distance = (Decimal)sdr["Distance"],
-                                    Duration = (TimeSpan)sdr["Duration"],
-                                    Route = (string)sdr["Route"],
-                                    Altitude = (Decimal)sdr["Altitude"],
-                                    Start = (DateTime)sdr["Start"],
-                                    Type = (string)sdr["Type"]
-                                };
-                                Activities.Add(activity);
-                            }
+                                UserId = (string)sdr["UserId"],
+                                Distance = (Decimal)sdr["Distance"],
+                                Duration = (TimeSpan)sdr["Duration"],
+                                Route = (string)sdr["Route"],
+                                Altitude = (Decimal)sdr["Altitude"],
+                                Start = (DateTime)sdr["Start"],
+                                Type = (string)sdr["Type"]
+                            };
+                            Activities.Add(activity);
+                        }
                         con.Close();
                     }
                 }
@@ -606,8 +621,8 @@ namespace ApiServer.DAL
             {
                 using (SqlConnection con = new SqlConnection(GetConnection()))
                 {
-                    string query = @"DELETE FROM GROUP_USERS WHERE" + "\"User\"" + "='" +user+
-                                    "'AND GroupId=" + id +";";
+                    string query = @"DELETE FROM GROUP_USERS WHERE" + "\"User\"" + "='" + user +
+                                    "'AND GroupId=" + id + ";";
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         con.Open();
@@ -649,7 +664,7 @@ namespace ApiServer.DAL
             return "Done";
         }
 
-        
+
 
         public static string DeleteUser(string user)
         {

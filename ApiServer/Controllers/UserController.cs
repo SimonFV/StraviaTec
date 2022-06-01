@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using System.Globalization;
 
 namespace ApiServer.Controllers
 {
@@ -81,12 +82,18 @@ namespace ApiServer.Controllers
         }
 
         [HttpPost]
-        [Route("friendRoute")]
-        public IActionResult GetFriendRoute(FilePathDto route)
+        [Route("activityRoute")]
+        public IActionResult GetActivityRoute(FilePathDto route)
         {
             try
             {
-                return File(System.IO.File.ReadAllBytes(route.Path), "text/plain");
+                RouteResponseDto actRoute = new()
+                {
+                    Center = GpxCenter.getCenter(route.Path),
+                    File = File(System.IO.File.ReadAllBytes(route.Path), "text/plain")
+                };
+
+                return Ok(actRoute);
             }
             catch (Exception err)
             {
@@ -130,8 +137,8 @@ namespace ApiServer.Controllers
         }
 
         [HttpPost]
-        [Route("addActivity")]
-        public IActionResult PostActivity(ActivityDto activity)
+        [Route("addActivity2")]
+        public IActionResult PostActivity1(ActivityDto activity)
         {
             if (ModelState.IsValid)
             {
@@ -145,6 +152,65 @@ namespace ApiServer.Controllers
                 return new JsonResult("Activity added.") { StatusCode = 201 };
             }
             return new JsonResult("Invalid model for Activity.") { StatusCode = 400 };
+        }
+
+        [HttpPost]
+        [Route("addActivity")]
+        public IActionResult PostActivity(
+            [FromForm] string UserId,
+            [FromForm] string Distance,
+            [FromForm] DateTime Duration,
+            [FromForm] IFormFile Route,
+            //[FromForm] float Altitude,
+            [FromForm] DateTime Start,
+            [FromForm] string Type)
+        {
+            try
+            {
+                var format = new NumberFormatInfo();
+                format.NegativeSign = "-";
+                format.NumberDecimalSeparator = ".";
+                ActivityDto activity = new()
+                {
+                    UserId = UserId,
+                    Distance = Math.Round((decimal)Double.Parse(Distance, format), 3),
+                    Duration = Duration,
+                    Route = "default",
+                    //Altitude = Altitude,
+                    Start = Start,
+                    Type = Type
+                };
+
+                string result = UserDAL.AddActivity(activity);
+                if (result is "Error")
+                    return new JsonResult("Something went wrong while adding the activity.") { StatusCode = 500 };
+                else if (result is "Taken")
+                    return new JsonResult("There is another activity registered during that period.") { StatusCode = 409 };
+                else if (result is "CurrentDate")
+                    return new JsonResult("The period of the activity does not match with the current time") { StatusCode = 409 };
+
+                if (Route is not null)
+                {
+                    int actId = UserDAL.GetActivityId(activity);
+                    string fileName = "";
+                    string filePath = "";
+                    fileName = Path.GetFileName(Route.FileName);
+                    filePath = Path.Combine("Files\\Routes", "Activities", actId.ToString(), fileName);
+                    Directory.CreateDirectory("Files\\Routes\\Activities\\" + actId.ToString());
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        Route.CopyToAsync(fileStream);
+                    }
+                    activity.Route = filePath;
+                    UserDAL.UpdateActivityRoute(activity, actId);
+                }
+                return new JsonResult("Activity added.") { StatusCode = 201 };
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return new JsonResult("Something went wrong while updating.") { StatusCode = 500 };
+            }
         }
 
         [HttpGet]

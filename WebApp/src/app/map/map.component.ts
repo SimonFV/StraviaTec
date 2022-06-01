@@ -16,7 +16,7 @@ export const DEFAULT_WIDTH = '500px';
 export const DEFAULT_LAT = -34.603490361131385;
 export const DEFAULT_LON = -58.382037891217465;
 
-export const DEFAULT_ZOOM = 8;
+export const DEFAULT_ZOOM = 10;
 export const DEFAULT_ID = '0';
 
 @Component({
@@ -36,8 +36,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   @Output() moveend = new EventEmitter<any>();
 
   map!: gMap;
-  routeBlob: any;
-  routeUrl: any;
+  data: any;
 
   constructor(private service: ApiService) { }
 
@@ -61,7 +60,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       }),
       'LineString': new Style({
         stroke: new Stroke({
-          color: '#f00',
+          color: '#f0f',
           width: 3,
         }),
       }),
@@ -73,47 +72,38 @@ export class MapComponent implements OnInit, AfterViewInit {
       }),
     };
 
-    const path: any = { path: 'Files\\Routes\\sfv\\Activities\\sfvRoute1.gpx' };
-    this.service.getFriendRoute(path).subscribe({
-      next: (resp) => {
+    const path: any = { path: this.idMap };
+    this.service.getActivityRoute(path).subscribe({
+      next: async (resp) => {
 
-        //let objectURL = URL.createObjectURL(this.routeBlob);
-        let reader = new FileReader();
-        reader.readAsDataURL(resp);
+        this.data = <JSON>resp.body;
+        var vectorSource = new VectorSource({
+          url: 'data:text/plain;base64,' + this.data.file.fileContents,
+          format: new GPX(),
+        });
 
-        reader.onload = _event => {
-          this.routeUrl = reader.result;
-
-          var vectorSource = new VectorSource({
-            url: this.routeUrl,
-            format: new GPX(),
-          });
-
-          this.map = new gMap({
-            target: this.idMap,
-            layers: [
-              new TileLayer({
-                source: new XYZ({
-                  url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-                })
-              }),
-              new VectorLayer({
-                source: vectorSource,
-
-                style: (feature) => {
-                  return style[feature.getGeometry()!.getType()];
-                },
+        this.map = new gMap({
+          target: this.idMap,
+          layers: [
+            new TileLayer({
+              source: new XYZ({
+                url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
               })
-            ],
-            view: new View({
-              center: Proj.fromLonLat([this.lon, this.lat]),
-              zoom: this.zoom
             }),
-            controls: defaultControls().extend([])
-          });
-        };
+            new VectorLayer({
+              source: vectorSource,
 
-
+              style: (feature) => {
+                return style[feature.getGeometry()!.getType()];
+              },
+            })
+          ],
+          view: new View({
+            center: Proj.fromLonLat([this.data.center[0], this.data.center[1]]),
+            zoom: this.zoom
+          }),
+          controls: defaultControls().extend([])
+        });
 
       },
       error: (error) => {
@@ -121,17 +111,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       }
     });
 
-  }
-
-  createRouteFromBlob(route: Blob) {
-    let reader = new FileReader();
-    reader.addEventListener("load", () => {
-      this.routeBlob.reader.result;
-    }, false);
-
-    if (route) {
-      reader.readAsDataURL(route);
-    }
   }
 
 }

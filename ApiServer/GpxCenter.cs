@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace ApiServer
 {
-    public class GpxCenter
+    public static class GpxCenter
     {
         public static List<string> getCenter(string gpxFile)
         {
@@ -35,9 +35,9 @@ namespace ApiServer
                     listLon.Add(Double.Parse(values[1], format));
                 }
             }
-            lat = (listLat.Count > 0 ? listLat.Average() : 0.0).ToString();
-            lon = (listLon.Count > 0 ? listLon.Average() : 0.0).ToString();
-            return new List<string>() { lat, lon };
+            lat = (listLat.Count > 0 ? Math.Round((Decimal)(listLat.Average()), 6) : 0.0M).ToString().Replace(',', '.'); ;
+            lon = (listLon.Count > 0 ? Math.Round((Decimal)(listLon.Average()), 6) : 0.0M).ToString().Replace(',', '.'); ;
+            return new List<string>() { lon, lat };
         }
     }
 }

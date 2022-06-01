@@ -53,14 +53,14 @@ EXEC RegisterChallenge
 
 --Adding activities
 
-EXEC AddActivity @UserId = 'sfv', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Rout.gpx',
+EXEC AddActivity @UserId = 'sfv', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Files\Routes\Activities\1\sfvRoute.gpx',
 	@Altitude = 10.1, @Start = '2022-05-21 14:10:00', @Type = 'Running';
 GO
 
-EXEC AddActivity @UserId = 'src', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Rout.gpx',
+EXEC AddActivity @UserId = 'src', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Files\Routes\Activities\2\srcRoute.gpx',
 	@Altitude = 10.1, @Start = '2022-05-21 14:10:00', @Type = 'Running';
 GO
 
-EXEC AddActivity @UserId = 'goq', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Rout.gpx',
+EXEC AddActivity @UserId = 'goq', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Files\Routes\Activities\3\goqRoute.gpx',
 	@Altitude = 10.1, @Start = '2022-05-21 14:10:00', @Type = 'Running';
 GO

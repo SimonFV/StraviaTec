@@ -164,9 +164,9 @@ export class ApiService {
     return this.http.post('http://localhost:5000/User/createGroup/' + user + '/' + grpName, { headers: header, observe: 'response' });
   }
 
-  getFriendRoute(routePath: JSON): Observable<Blob> {
+  getActivityRoute(routePath: JSON) {
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
-    return this.http.post('http://localhost:5000/User/friendRoute', routePath, { headers: header, responseType: 'blob' });
+    return this.http.post('http://localhost:5000/User/activityRoute', routePath, { headers: header, observe: 'response' });
   }
 
 }

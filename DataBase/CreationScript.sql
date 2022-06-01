@@ -433,8 +433,8 @@ END;
 GO
 
 CREATE PROCEDURE AddActivity
-	@UserId	NVARCHAR(15), @Distance FLOAT, @Duration TIME, @Route NVARCHAR(255),
-	@Altitude FLOAT, @Start DATETIME, @Type	NVARCHAR(15)
+	@UserId	NVARCHAR(15), @Distance DECIMAL(9,3), @Duration TIME, @Route NVARCHAR(255),
+	@Altitude DECIMAL(9,3), @Start DATETIME, @Type	NVARCHAR(15)
 AS
 BEGIN
     SET NOCOUNT ON;

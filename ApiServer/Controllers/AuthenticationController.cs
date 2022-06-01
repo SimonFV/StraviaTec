@@ -38,7 +38,6 @@ namespace ApiServer.Controllers
         {
             try
             {
-                Directory.CreateDirectory("Files\\Profiles\\" + User);
                 var fileName = Path.GetFileName(Picture.FileName);
                 var filePath = Path.Combine("Files\\Profiles", User, fileName);
                 UserRegisterDto user = new()
@@ -58,6 +57,7 @@ namespace ApiServer.Controllers
                     return new JsonResult("Something went wrong in the registration.") { StatusCode = 500 };
                 else if (result is "Taken")
                     return new JsonResult("User already exists.") { StatusCode = 409 };
+                Directory.CreateDirectory("Files\\Profiles\\" + User);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
                     Picture.CopyToAsync(fileStream);

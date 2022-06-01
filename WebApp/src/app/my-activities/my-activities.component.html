@@ -2,7 +2,7 @@
 
 
 <button class="btn btn-primary mt-3 d-grid gap-2 d-md-flex justify-content-md-end" type="button"
-    data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+    data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop" style="margin:30px">
     Post Activity
 </button>
 
@@ -12,15 +12,16 @@
         <div class="card mb-3" style="max-width: 540px;">
             <div class="row g-0">
 
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">{{act.Type}} Activity</h5>
-                        <p class="card-text">Duration: {{act.Duration}} </p>
-                        <p class="card-text">Altitude: {{act.Altitude}} </p>
-                        <p class="card-text">Start: {{act.Start}} </p>
-
-
+                <div class="card-body">
+                    <h5 class="card-title">{{act.Type}} Activity</h5>
+                    <p class="card-text">Start: {{act.Start}} </p>
+                    <p class="card-text">Duration: {{act.Duration}} </p>
+                    <div style="margin:10px auto; width:100%;">
+                        <app-map [lat]="42.443592" [lon]="-71.106301" [zoom]="12" [idMap]="act.Route" width="100%"
+                            height="300px">
+                        </app-map>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -58,7 +59,7 @@
             <div>
                 <label for="inputGroupFile02" class="text-left ">Route</label>
                 <div class="input-group">
-                    <input required (change)="getFile($event)" type="file" accept="image/*" class="form-control mb-3"
+                    <input required (change)="getFile($event)" type="file" accept="text/gpx" class="form-control mb-3"
                         id="inputGroupFile02">
                 </div>
             </div>
@@ -93,10 +94,11 @@
             </div>
 
             <div class="form-floating" *ngIf="fromChallenge">
-                <select class="form-select" aria-label="Default select example" [(ngModel)]="challName" [ngModelOptions]="{standalone: true}">
+                <select class="form-select" aria-label="Default select example" [(ngModel)]="challName"
+                    [ngModelOptions]="{standalone: true}">
                     <label for="floatingSelect">Challenge Name</label>
-            
-                    <option *ngFor="let chall of challenges; let i= index" >
+
+                    <option *ngFor="let chall of challenges; let i= index">
                         {{chall.name}}</option>
                 </select>
                 <label for="floatingSelect">Challenge Name</label>
