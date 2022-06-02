@@ -256,6 +256,40 @@ namespace ApiServer.DAL
         }
 
 
+        public static Decimal GetChallengProgres(int challengeId, string user)
+        {
+            Decimal progress = new();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query =
+                        @"SELECT SUM(Distance) AS Progress FROM ACTIVITY WHERE Id IN(
+                            SELECT ActivityId FROM CHALLENGE_ACTIVITIES WHERE ChallengeId="+challengeId+") AND UserId='"+
+                            user+"';";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                progress = (Decimal)sdr["Progress"];
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return -1;
+            }
+            return progress;
+        }
+
+
 
         private static string GetConnection()
         {

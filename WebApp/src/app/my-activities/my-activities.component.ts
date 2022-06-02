@@ -139,6 +139,7 @@ export class MyActivitiesComponent implements OnInit {
   }
 
   getActId() {
+    this.form.get('Route')?.setValue('route.gpx');
     this.service.getActivityId(this.form.value).subscribe(resp => {
       console.log(resp);
       for (let i of this.challenges) {
@@ -153,7 +154,6 @@ export class MyActivitiesComponent implements OnInit {
     console.log(challId + " " + actId);
     this.service.addChallengeActivity(challId, actId).subscribe(resp => {
       console.log(resp);
-
     })
   }
 

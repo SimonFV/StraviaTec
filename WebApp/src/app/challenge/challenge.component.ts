@@ -24,7 +24,8 @@ export class ChallengeComponent implements OnInit {
     "privacy": "",
     "startDate": "",
     "endDate": "",
-    "activity_Type": ""
+    "activity_Type": "",
+    "progress":0
   }];
   availableChallenges = [{
     "Id":0,
@@ -46,7 +47,7 @@ export class ChallengeComponent implements OnInit {
     "endDate": "",
     "activity_Type": ""
   }];
-
+  progress = 0;
   userGroups=[0];
   visibility=[{
     "groupId":0,
@@ -143,7 +144,8 @@ export class ChallengeComponent implements OnInit {
         "privacy": i.privacy,
         "startDate": i.startDate,
         "endDate": i.endDate,
-        "activity_Type": i.activity_Type
+        "activity_Type": i.activity_Type,
+        "progress":this.progress
 
       })
     }
@@ -217,7 +219,8 @@ export class ChallengeComponent implements OnInit {
       "privacy": i.privacy,
       "startDate": i.startDate,
       "endDate": i.endDate,
-      "activity_Type": i.activity_Type
+      "activity_Type": i.activity_Type,
+      "progress":this.progress
     })
     for(let grp in this.challengesToShow){
       if(this.challengesToShow[grp].Id==i.Id){
@@ -291,6 +294,15 @@ export class ChallengeComponent implements OnInit {
   }
   deleteGroup(i: number){
     this.GroupsArray.removeAt(i);
+  }
+
+  getActId() {
+    this.form.get('Route')?.setValue('route.gpx');
+    this.service.getActivityId(this.form.value).subscribe(resp => {
+      console.log(resp);
+      for (let i of this.challenges) {
+      }
+    });
   }
 
 

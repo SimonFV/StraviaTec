@@ -34,6 +34,12 @@ export class ApiService {
     return this.http.get<JSON[]>('http://localhost:5000/Challenge/challengesByUser/' + user, { headers: header, observe: 'response' });
   }
 
+  getChallengeProgress(challengeId: any, user: any) {
+    let header = new HttpHeaders().set('Type-contet', 'aplication/json');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.get<JSON[]>('http://localhost:5000/Challenge/ChallengeProgress/'+challengeId+'/' + user, { headers: header, observe: 'response' });
+  }
+
   getActivityId(activity: any) {
     let header = new HttpHeaders().set('Type-contet', 'multipart/form-data');
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
