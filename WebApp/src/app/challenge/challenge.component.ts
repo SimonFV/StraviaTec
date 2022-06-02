@@ -13,6 +13,7 @@ export class ChallengeComponent implements OnInit {
 
   alert: boolean = false;
   alertMessage: string = '';
+  completed = false;
 
   typeAlert: string = 'success';
   public form!: FormGroup;
@@ -25,6 +26,7 @@ export class ChallengeComponent implements OnInit {
     "startDate": "",
     "endDate": "",
     "activity_Type": "",
+    "objective":0,
     "progress":0
   }];
   availableChallenges = [{
@@ -35,7 +37,8 @@ export class ChallengeComponent implements OnInit {
     "privacy": "",
     "startDate": "",
     "endDate": "",
-    "activity_Type": ""
+    "activity_Type": "",
+    "objective":0
   }];
   challengesToShow = [{
     "Id":0,
@@ -45,7 +48,8 @@ export class ChallengeComponent implements OnInit {
     "privacy": "",
     "startDate": "",
     "endDate": "",
-    "activity_Type": ""
+    "activity_Type": "",
+    "objective":0
   }];
   progress = 0;
   userGroups=[0];
@@ -83,8 +87,8 @@ export class ChallengeComponent implements OnInit {
     })
 
     this.service.getChallengeByUser(this.sharedService.getUserData().User).subscribe(resp => {
-      console.log(resp);
-      this.loadActiveChallenges(resp.body);
+      
+      this.loadChallengeProgress(resp.body);
       
     })
 
@@ -134,21 +138,35 @@ export class ChallengeComponent implements OnInit {
     }
   }
 
-  loadActiveChallenges(activechallenges:any) {
+  loadChallengeProgress(activechallenges: any) {
     for (let i of activechallenges) {
-      this.challenges.push({
-        "Id": i.id,
-        "userAdmin": i.userAdmin,
-        "name": i.name,
-        "class": i.class,
-        "privacy": i.privacy,
-        "startDate": i.startDate,
-        "endDate": i.endDate,
-        "activity_Type": i.activity_Type,
-        "progress":this.progress
-
+      this.service.getChallengeProgress(i.id, this.sharedService.getUserData().User).subscribe(resp => {
+        
+        this.loadActiveChallenges(i, Number(resp.body))
       })
     }
+  }
+
+  loadActiveChallenges(i: any, progress: any) {
+    
+    if (progress > i.objective) {
+      this.completed=true
+    }
+    
+    this.challenges.push({
+      "Id": i.id,
+      "userAdmin": i.userAdmin,
+      "name": i.name,
+      "class": i.class,
+      "privacy": i.privacy,
+      "startDate": i.startDate,
+      "endDate": i.endDate,
+      "activity_Type": i.activity_Type,
+      "objective":i.objective,
+      "progress": (progress/i.objective)*100
+    })
+    
+    console.log(this.challenges);
   }
 
   loadAvailableChallenges(challenge: any) {
@@ -164,7 +182,8 @@ export class ChallengeComponent implements OnInit {
             "privacy": challenge.privacy,
             "startDate": challenge.startDate,
             "endDate": challenge.endDate,
-            "activity_Type": challenge.activity_Type
+            "activity_Type": challenge.activity_Type,
+            "objective":challenge.objective
           })
           challengeShown.push(challenge.id)
         }
@@ -177,7 +196,8 @@ export class ChallengeComponent implements OnInit {
           "privacy": challenge.privacy,
           "startDate": challenge.startDate,
           "endDate": challenge.endDate,
-          "activity_Type": challenge.activity_Type
+          "activity_Type": challenge.activity_Type,
+          "objective":challenge.objective
         })
         challengeShown.push(challenge.id)
       }
@@ -199,7 +219,8 @@ export class ChallengeComponent implements OnInit {
           "privacy": i.privacy,
           "startDate": i.startDate,
           "endDate": i.endDate,
-          "activity_Type": i.activity_Type
+          "activity_Type": i.activity_Type,
+          "objective":i.objective
         })
       }
     }
@@ -220,7 +241,8 @@ export class ChallengeComponent implements OnInit {
       "startDate": i.startDate,
       "endDate": i.endDate,
       "activity_Type": i.activity_Type,
-      "progress":this.progress
+      "progress": this.progress,
+      "objective":i.objective
     })
     for(let grp in this.challengesToShow){
       if(this.challengesToShow[grp].Id==i.Id){

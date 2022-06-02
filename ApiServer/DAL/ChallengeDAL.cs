@@ -195,7 +195,7 @@ namespace ApiServer.DAL
                 using (SqlConnection con = new SqlConnection(GetConnection()))
                 {
                     string query = 
-                        @"SELECT Id,"+ "\"Name\"" +
+                        @"SELECT *" +
                         "FROM CHALLENGE WHERE CHALLENGE.Id IN(SELECT ChallengeId FROM CHALLENGE_PARTICIPANTS WHERE "
                         + "\"User\"" +"='"+user+"');";
                     using (SqlCommand cmd = new SqlCommand(query, con))
@@ -208,7 +208,16 @@ namespace ApiServer.DAL
                                 ChallengeResponseDto challenge = new()
                                 {
                                     Id = (int)sdr["Id"],
-                                    Name = (string)sdr["Name"]
+                                    UserAdmin=(string)sdr["UserAdmin"],
+                                    Name = (string)sdr["Name"],
+                                    Class=(string)sdr["Class"],
+                                    Privacy=(Boolean)sdr["Privacy"],
+                                    StartDate=(DateTime)sdr["StartDate"],
+                                    EndDate=(DateTime)sdr["EndDate"],
+                                    Activity_Type=(string)sdr["Activity_Type"],
+                                    Objective=(Decimal)sdr["Objective"]
+
+
                                 };
                                 challenges.Add(challenge);
                             }

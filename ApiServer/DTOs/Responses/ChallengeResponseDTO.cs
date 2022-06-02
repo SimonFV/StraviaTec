@@ -12,5 +12,6 @@ namespace ApiServer.DTOs.Responses
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Activity_Type { get; set; }
+        public Decimal Objective { get; set; }
     }
 }

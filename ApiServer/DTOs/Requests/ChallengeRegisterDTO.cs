@@ -22,6 +22,6 @@ namespace ApiServer.DTOs.Requests
         public string Activity_Type { get; set; }
 
         [Required]
-        public int Objective { get; set; }
+        public Decimal Objective { get; set; }
     }
 }
