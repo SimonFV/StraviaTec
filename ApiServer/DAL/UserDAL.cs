@@ -435,7 +435,6 @@ namespace ApiServer.DAL
                         cmd.Parameters.AddWithValue("@Distance", act.Distance);
                         cmd.Parameters.AddWithValue("@Duration", act.Duration.ToString("HH:mm:ss"));
                         cmd.Parameters.AddWithValue("@Route", act.Route);
-                        cmd.Parameters.AddWithValue("@Altitude", 1.5);
                         cmd.Parameters.AddWithValue("@Start", act.Start.ToString("yyyy-MM-dd HH:mm:ss"));
                         cmd.Parameters.AddWithValue("@Type", act.Type);
 
@@ -525,7 +524,6 @@ namespace ApiServer.DAL
                                 Distance = (Decimal)sdr["Distance"],
                                 Duration = (TimeSpan)sdr["Duration"],
                                 Route = (string)sdr["Route"],
-                                Altitude = (Decimal)sdr["Altitude"],
                                 Start = (DateTime)sdr["Start"],
                                 Type = (string)sdr["Type"]
                             };

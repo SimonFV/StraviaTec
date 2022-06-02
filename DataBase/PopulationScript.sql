@@ -74,17 +74,17 @@ GO
 --Adding activities
 
 EXEC AddActivity @UserId = 'sfv', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Files\Routes\Activities\1\sfvRoute.gpx',
-	@Altitude = 10.1, @Start = '2022-05-21 14:10:00', @Type = 'Running', @RoC = '', @RoCName = '';
+	@Start = '2022-05-21 14:10:00', @Type = 'Running', @RoC = '', @RoCName = '';
 GO
 
 EXEC AddActivity @UserId = 'src', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Files\Routes\Activities\2\srcRoute.gpx',
-	@Altitude = 10.1, @Start = '2022-05-21 14:10:00', @Type = 'Running', @RoC = '', @RoCName = '';
+	@Start = '2022-05-21 14:10:00', @Type = 'Running', @RoC = '', @RoCName = '';
 GO
 
 EXEC AddActivity @UserId = 'goq', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Files\Routes\Activities\3\goqRoute.gpx',
-	@Altitude = 10.1, @Start = '2022-05-21 14:10:00', @Type = 'Running', @RoC = '', @RoCName = '';
+	@Start = '2022-05-21 14:10:00', @Type = 'Running', @RoC = '', @RoCName = '';
 GO
 
-EXEC AddActivity @UserId = 'src', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Files\Routes\Activities\1\sfvRoute.gpx',
-	@Altitude = 10.1, @Start = '2022-05-21 19:10:00', @Type = 'Running', @RoC = 'Race', @RoCName = 'Carrera';
+EXEC AddActivity @UserId = 'src', @Distance = 40.51, @Duration = '02:00:00', @Route = 'Files\Routes\Activities\4\srcRoute.gpx',
+	@Start = '2022-05-21 19:10:00', @Type = 'Running', @RoC = 'Race', @RoCName = 'Carrera';
 GO

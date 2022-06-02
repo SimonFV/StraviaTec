@@ -60,13 +60,13 @@ export class MapComponent implements OnInit, AfterViewInit {
       }),
       'LineString': new Style({
         stroke: new Stroke({
-          color: '#f0f',
+          color: '#f30',
           width: 3,
         }),
       }),
       'MultiLineString': new Style({
         stroke: new Stroke({
-          color: '#0f0',
+          color: '#f0f',
           width: 3,
         }),
       }),

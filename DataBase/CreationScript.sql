@@ -46,7 +46,6 @@ CREATE TABLE ACTIVITY
 	Distance	DECIMAL(9,3)	NOT NULL,
 	Duration	TIME			NOT NULL,
 	"Route"		NVARCHAR(255),
-	Altitude	DECIMAL(9,3),
 	"Start"		DATETIME		NOT NULL,
 	"Type"		NVARCHAR(15)	NOT NULL,
 	PRIMARY KEY(Id)
@@ -443,7 +442,7 @@ GO
 
 CREATE PROCEDURE AddActivity
 	@UserId	NVARCHAR(15), @Distance DECIMAL(9,3), @Duration TIME, @Route NVARCHAR(255),
-	@Altitude DECIMAL(9,3), @Start DATETIME, @Type	NVARCHAR(15), @RoC NVARCHAR(15), @RoCName NVARCHAR(15)
+	@Start DATETIME, @Type	NVARCHAR(15), @RoC NVARCHAR(15), @RoCName NVARCHAR(15)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -465,9 +464,9 @@ BEGIN
 				BEGIN
 					INSERT INTO ACTIVITY
 							(UserId, Distance, Duration, "Route", 
-							Altitude, "Start", "Type")
+							"Start", "Type")
 					VALUES (@UserId, @Distance, @Duration, @Route, 
-							@Altitude, @Start, @Type);
+							@Start, @Type);
 					UPDATE RACE_PARTICIPANTS
 					SET ActivityId = (SELECT Id FROM ACTIVITY WHERE UserId = @UserId And "Start" = @Start)
 					SELECT 0 --Activity added
@@ -483,9 +482,9 @@ BEGIN
 				BEGIN
 					INSERT INTO ACTIVITY
 							(UserId, Distance, Duration, "Route", 
-							Altitude, "Start", "Type")
+							"Start", "Type")
 					VALUES (@UserId, @Distance, @Duration, @Route, 
-							@Altitude, @Start, @Type);
+							@Start, @Type);
 					SELECT 0 --Activity added
 				END
 			ELSE
@@ -496,9 +495,9 @@ BEGIN
 	ELSE
 			INSERT INTO ACTIVITY
 					(UserId, Distance, Duration, "Route", 
-					Altitude, "Start", "Type")
+					"Start", "Type")
 			VALUES (@UserId, @Distance, @Duration, @Route, 
-					@Altitude, @Start, @Type);
+					@Start, @Type);
 			SELECT 0 --Activity added
 END;
 GO
