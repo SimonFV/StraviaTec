@@ -161,7 +161,6 @@ namespace ApiServer.Controllers
             [FromForm] string Distance,
             [FromForm] DateTime Duration,
             [FromForm] IFormFile Route,
-            //[FromForm] float Altitude,
             [FromForm] DateTime Start,
             [FromForm] string Type)
         {
@@ -176,7 +175,6 @@ namespace ApiServer.Controllers
                     Distance = Math.Round((decimal)Double.Parse(Distance, format), 3),
                     Duration = Duration,
                     Route = "default",
-                    //Altitude = Altitude,
                     Start = Start,
                     Type = Type
                 };

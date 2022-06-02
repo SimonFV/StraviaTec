@@ -6,7 +6,7 @@
       Create Race
     </button>
   </div>
-  <div class="abs-center mt-3" *ngFor="let race of races; let i index">
+  <div class="abs-center mt-3" *ngFor="let race of races; let i = index">
     <div class="card w-50">
       <div class="card-header">
         Owner: {{race.userAdmin}}
@@ -20,11 +20,90 @@
         <p class="card-text">Route: {{race.route}} </p>
 
         <a href="///" class="btn btn-primary">Complete Challenge!!</a>
+
+        <div class="wrapper" id="printableArea{{i}}" >
+          <div class="tabless">
+            <div class="rows header">
+              <div class="cell">
+                Frist Name
+              </div>
+              <div class="cell">
+                Last Name
+              </div>
+              <div class="cell">
+                Age
+              </div>
+              <div class="cell">
+                Category
+              </div>
+            </div>
+            <div class="rows"  *ngFor="let item of participants; let o = index">
+              <div class="cell" data-title="FirstName">
+                {{item.FirstName}}
+              </div>
+              <div class="cell" data-title="LastName">
+                {{item.LastName}}
+              </div>
+              <div class="cell" data-title="Age">
+                {{item.Age}}
+              </div>
+              <div class="cell" data-title="CategoryName">
+                {{item.CategoryName}}
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <input type="button" style = "margin: 0px 2px;" class="btn btn-primary" (click)="printDiv(i, race.name)" value="Pacticipants" />
+
+        <div class="wrapper" id="Area{{i}}" >
+          <div class="tabless">
+            <div class="rows header">
+              <div class="cell">
+                Frist Name
+              </div>
+              <div class="cell">
+                Last Name
+              </div>
+              <div class="cell">
+                Age
+              </div>
+              <div class="cell">
+                Duration
+              </div>
+              <div class="cell">
+                Category
+              </div>
+            </div>
+            <div class="rows"  *ngFor="let record of records; let o = index">
+              <div class="cell" data-title="FirstName">
+                {{record.FirstName}}
+              </div>
+              <div class="cell" data-title="LastName">
+                {{record.LastName}}
+              </div>
+              <div class="cell" data-title="Age">
+                {{record.Age}}
+              </div>
+              <div class="cell" data-title="Duration">
+                {{record.Duration}}
+              </div>
+              <div class="cell" data-title="CategoryName">
+                {{record.CategoryName}}
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <input type="button" style = "margin: 0px 2px;" class="btn btn-primary" (click)="printRecord(-i, race.name)" value="Record" />
+        
       </div>
     </div>
   </div>
+  
+  
 
-</div>
+
 
 <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop"
   aria-labelledby="staticBackdropLabel">

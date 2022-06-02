@@ -28,8 +28,7 @@ export class MyActivitiesComponent implements OnInit {
     "Start": "",
     "Duration": "",
     "Type": "",
-    "Route": "",
-    "Altitude": 0
+    "Route": ""
   }];
 
   challenges = [{
@@ -87,7 +86,6 @@ export class MyActivitiesComponent implements OnInit {
         "Distance": i.distance,
         "Duration": i.duration.days + ':' + i.duration.hours + ':' + i.duration.minutes,
         "Route": i.route,
-        "Altitude": i.altitude,
         "Start": i.start,
         "Type": i.type,
       })

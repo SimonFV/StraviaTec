@@ -60,5 +60,25 @@ namespace ApiServer.Controllers
                 return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
             return Ok(races);
         }
+
+        [HttpGet]
+        [Route("Participants/{name}")]
+        public IActionResult GetRaceParticipants(string name)
+        {
+            var participants = RaceDAL.PARTICIPANTS_IN_RACE(name);
+            if (participants is null)
+                return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
+            return Ok(participants);
+        }
+
+        [HttpGet]
+        [Route("Record/{name}")]
+        public IActionResult GetRaceRecord(string name)
+        {
+            var records = RaceDAL.RECORD_IN_RACE(name);
+            if (records is null)
+                return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
+            return Ok(records);
+        }
     }
 }

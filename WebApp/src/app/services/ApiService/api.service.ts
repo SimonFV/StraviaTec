@@ -63,7 +63,7 @@ export class ApiService {
     return this.http.get<JSON[]>('http://localhost:5000/Race/races', { headers: header, observe: 'response' });
   }
 
-  getRaceVisibility() {
+  getRaceVisibility(){
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.get<JSON[]>('http://localhost:5000/Race/RaceVisibility', { headers: header, observe: 'response' });
@@ -138,41 +138,51 @@ export class ApiService {
     return this.http.post('http://localhost:5000/Race/races', race, { headers: header, observe: 'response' });
   }
 
-
   deleteUser(user: string) {
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.delete('http://localhost:5000/User/delete/' + user, { headers: header, observe: 'response' });
   }
 
-  getGroups(user: string) {
+  getGroups(user:string){
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.get('http://localhost:5000/User/groups/' + user, { headers: header, observe: 'response' });
   }
 
-  getGroupsAvailable(user: string) {
+  getGroupsAvailable(user:string){
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.get('http://localhost:5000/User/groupsAvailable/' + user, { headers: header, observe: 'response' });
   }
 
-  joinGroup(id: number, user: string) {
+  joinGroup(id:number, user:string){
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
-    return this.http.post('http://localhost:5000/User/joinGroup/' + id + '/' + user, { headers: header, observe: 'response' });
+    return this.http.post('http://localhost:5000/User/joinGroup/'+id+'/'+user, { headers: header, observe: 'response' });
   }
 
-  quitGroup(id: number, user: string) {
+  quitGroup(id:number, user:string){
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
-    return this.http.delete('http://localhost:5000/User/quitGroup/' + id + '/' + user, { headers: header, observe: 'response' });
+    return this.http.delete('http://localhost:5000/User/quitGroup/'+id+'/'+user, { headers: header, observe: 'response' });
   }
 
-  createGroup(user: string, grpName: string) {
+  createGroup(user:string, grpName:string){
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
-    return this.http.post('http://localhost:5000/User/createGroup/' + user + '/' + grpName, { headers: header, observe: 'response' });
+    return this.http.post('http://localhost:5000/User/createGroup/'+user+'/'+grpName, { headers: header, observe: 'response' });
   }
 
   getActivityRoute(routePath: JSON) {
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
-    return this.http.post('http://localhost:5000/User/activityRoute', routePath, { headers: header, observe: 'response' });
+    return this.http.post('http://localhost:5000/User/activityRoute', routePath, { headers: header, observe: 'response' });}
+
+  getParticipants(name:string) {
+    let header = new HttpHeaders().set('Type-contet', 'aplication/json');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.get<JSON[]>('http://localhost:5000/Race/Participants/'+name, { headers: header, observe: 'response' });
+  }
+
+  getRecord(name:string) {
+    let header = new HttpHeaders().set('Type-contet', 'aplication/json');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.get<JSON[]>('http://localhost:5000/Race/Record/'+name, { headers: header, observe: 'response' });
   }
 
 }

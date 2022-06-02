@@ -46,7 +46,6 @@ CREATE TABLE ACTIVITY
 	Distance	DECIMAL(9,3)	NOT NULL,
 	Duration	TIME			NOT NULL,
 	"Route"		NVARCHAR(255),
-	Altitude	DECIMAL(9,3),
 	"Start"		DATETIME		NOT NULL,
 	"Type"		NVARCHAR(15)	NOT NULL,
 	PRIMARY KEY(Id)
@@ -120,11 +119,11 @@ CREATE TABLE RACE (
 	Id				INT				NOT NULL	IDENTITY(1,1),
 	UserAdmin		NVARCHAR(15)	NOT NULL,
 	"Name"			NVARCHAR(15) 	NOT NULL,
-	"Route"			NVARCHAR(15) 	NOT NULL,
+	"Route"			NVARCHAR(225) 	NOT NULL,
 	"Cost"			DECIMAL(9,3) 	NOT NULL,
 	Privacy			BIT 			NOT NULL,
 	StartDate		DATETIME		NOT NULL,
-	Category		NVARCHAR(15) 	NOT NULL,
+	Category		NVARCHAR(1000) 	NOT NULL,
 	"Type"			NVARCHAR(15) 	NOT NULL,
 	PRIMARY KEY(Id)
 );
@@ -157,9 +156,16 @@ CREATE Table RACE_PARTICIPANTS
     Payment 		NVARCHAR(255),
     "Status" 		NVARCHAR(15)	NOT NULL,
     ActivityId 		INT,
+	CategoryName	NVARCHAR(15) 	NOT NULL,
     PRIMARY KEY(RaceId, "User")
 );
 
+CREATE Table RACE_CATEGORY
+(
+    Raceid			INT 			NOT NULL,
+    CategoryName	NVARCHAR(15) 	NOT NULL,
+    PRIMARY KEY(RaceId, CategoryName)
+);
 GO
 
 
@@ -249,10 +255,6 @@ ADD CONSTRAINT FK_USER_RACE_ADMIN FOREIGN KEY(UserAdmin)
 REFERENCES "USER"("User");
 
 ALTER TABLE RACE
-ADD CONSTRAINT FK_CATEGORY_NAME FOREIGN KEY(Category)
-REFERENCES CATEGORY("Name");
-
-ALTER TABLE RACE
 ADD CONSTRAINT FK_TYPE_NAME FOREIGN KEY("Type")
 REFERENCES ACTIVITY_TYPE("Name");
 
@@ -280,7 +282,13 @@ ALTER TABLE BANK_ACCOUNTS
 ADD CONSTRAINT FK_RACE_BANK_ID FOREIGN KEY(RaceId)
 REFERENCES RACE(Id);
 
+ALTER TABLE RACE_CATEGORY
+ADD CONSTRAINT FK_RACE_CATEGORY_ID FOREIGN KEY(RaceId)
+REFERENCES RACE(Id);
 
+ALTER TABLE RACE_CATEGORY
+ADD CONSTRAINT FK_RACE_CATEGORY_NAME FOREIGN KEY(CategoryName)
+REFERENCES CATEGORY("Name");
 GO
 
 
@@ -434,7 +442,7 @@ GO
 
 CREATE PROCEDURE AddActivity
 	@UserId	NVARCHAR(15), @Distance DECIMAL(9,3), @Duration TIME, @Route NVARCHAR(255),
-	@Altitude DECIMAL(9,3), @Start DATETIME, @Type	NVARCHAR(15)
+	@Start DATETIME, @Type	NVARCHAR(15), @RoC NVARCHAR(15), @RoCName NVARCHAR(15)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -450,14 +458,47 @@ BEGIN
         SELECT -2  --The time and duration of the activity doesn't match with the current time
     END
     ELSE
-    BEGIN
-        INSERT INTO ACTIVITY
-                (UserId, Distance, Duration, "Route", 
-				Altitude, "Start", "Type")
-        VALUES (@UserId, @Distance, @Duration, @Route, 
-				@Altitude, @Start, @Type)
-        SELECT 0 --Activity added
-    END
+	IF (@RoC =  'Race')
+		BEGIN
+			IF EXISTS(Select Id FROM RACE, RACE_PARTICIPANTS WHERE RACE."Name" = @RoCName AND RACE_PARTICIPANTS."User" = @UserId AND RACE_PARTICIPANTS.RaceId = RACE.Id)
+				BEGIN
+					INSERT INTO ACTIVITY
+							(UserId, Distance, Duration, "Route", 
+							"Start", "Type")
+					VALUES (@UserId, @Distance, @Duration, @Route, 
+							@Start, @Type);
+					UPDATE RACE_PARTICIPANTS
+					SET ActivityId = (SELECT Id FROM ACTIVITY WHERE UserId = @UserId And "Start" = @Start)
+					SELECT 0 --Activity added
+				END
+			ELSE
+				BEGIN
+					SELECT -3  -- Race not exists or User isn't registed
+				END
+		END
+	ELSE IF (@RoC = 'Challenge')
+		BEGIN
+			IF EXISTS(Select Id FROM CHALLENGE, CHALLENGE_PARTICIPANTS WHERE CHALLENGE."Name" = @RoCName AND CHALLENGE_PARTICIPANTS."User" = @UserId AND CHALLENGE_PARTICIPANTS.ChallengeId = CHALLENGE.Id)
+				BEGIN
+					INSERT INTO ACTIVITY
+							(UserId, Distance, Duration, "Route", 
+							"Start", "Type")
+					VALUES (@UserId, @Distance, @Duration, @Route, 
+							@Start, @Type);
+					SELECT 0 --Activity added
+				END
+			ELSE
+				BEGIN
+					SELECT -4  -- Challenge not exists or User isn't registed
+				END
+		END
+	ELSE
+			INSERT INTO ACTIVITY
+					(UserId, Distance, Duration, "Route", 
+					"Start", "Type")
+			VALUES (@UserId, @Distance, @Duration, @Route, 
+					@Start, @Type);
+			SELECT 0 --Activity added
 END;
 GO
 
@@ -555,16 +596,35 @@ AS
 		END;
 GO
 
+CREATE PROCEDURE RaceCategories
+	@Categories varchar(1000),
+	@RaceName NVARCHAR(15)
+AS
+	DECLARE @Position INT
+	DECLARE @Category varchar (1000)
+	SET @Categories=@Categories+','
+	WHILE PATINDEX('%,%', @Categories)<>0
+		BEGIN
+			SELECT @Position=PATINDEX('%,%', @Categories)
+			SELECT @Category = left(@Categories, @Position - 1)
+
+			INSERT INTO RACE_CATEGORY(CategoryName,RaceId)
+			VALUES (
+				(SELECT "Name" FROM CATEGORY WHERE "Name" = @Category),
+				(SELECT Id FROM RACE WHERE "Name" = @RaceName))
+			SELECT @Categories=STUFF(@Categories, 1, @Position, '')
+		END;
+GO
+
 CREATE PROCEDURE RegisterRace
-	@Id INT,
 	@Admin NVARCHAR(15),
 	@Name NVARCHAR(15),
-	@Route NVARCHAR(15),
+	@Route NVARCHAR(225),
 	@Cost DECIMAL(9,3),
 	@Privacy BIT,
 	@Groups VARCHAR(1000),
 	@StartDate DATE,
-	@Category NVARCHAR(15),
+	@Category NVARCHAR(1000),
 	@Type NVARCHAR(15)
 AS
 BEGIN 
@@ -602,6 +662,11 @@ BEGIN
 		SELECT 0 -- Race registered
 	END
 
+	BEGIN
+		EXEC RaceCategories @Categories=@Category,
+							@Racename=@Name;
+	END
+
 	IF (@Privacy=1)
 		BEGIN
 			EXEC RaceGroups @Groups=@Groups,
@@ -610,7 +675,72 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE Register_in_Race
+	@User NVARCHAR(15),
+	@RaceName NVARCHAR(25),
+	@Category NVARCHAR(15)
+AS
+BEGIN 
+	SET NOCOUNT ON;
+	IF EXISTS(SELECT "USER".FirstName FROM "USER", RACE_PARTICIPANTS WHERE RACE_PARTICIPANTS."User" = @User)
+		BEGIN
+			SELECT -1  -- Is already register
+		END
+	
+	ELSE
+	BEGIN
+		INSERT INTO RACE_PARTICIPANTS
+				("User",
+				"RaceId",
+				"Status",
+				CategoryName
+				)
+		VALUES(@User,
+				(SELECT Id FROM RACE WHERE "Name" = @RaceName),
+				'Unpaid',
+				@Category
+				)
+		SELECT 0 -- Race registered
+	END
 
+END;
+GO
+
+CREATE PROCEDURE PARTICIPANTS_IN_RACE
+	@RaceName NVARCHAR(25)
+AS
+BEGIN
+    SET NOCOUNT ON;
+     
+    IF NOT EXISTS(SELECT Id FROM RACE WHERE "Name" = @RaceName)
+    BEGIN
+        SELECT -1  -- Race not found
+    END
+    
+	ELSE
+	BEGIN
+		Select FirstName, LastName, Age, CategoryName FROM PARTICIPANTS_PER_RACE, RACE WHERE RACE."Name" = @RaceName AND RACE.Id = PARTICIPANTS_PER_RACE.RaceId ORDER BY CategoryName;
+	END
+END;
+GO
+
+CREATE PROCEDURE RECORD_IN_RACE
+	@RaceName NVARCHAR(25)
+AS
+BEGIN
+    SET NOCOUNT ON;
+     
+    IF NOT EXISTS(SELECT Id FROM RACE WHERE "Name" = @RaceName)
+    BEGIN
+        SELECT -1  -- Race not found
+    END
+    
+	ELSE
+	BEGIN
+		Select FirstName, LastName, Age, Duration, CategoryName FROM RECORD_PER_RACE, RACE WHERE RACE."Name" = @RaceName AND RACE.Id = RECORD_PER_RACE.RaceId ORDER BY CategoryName;
+	END
+END;
+GO
 
 ----------------------------------------------
 --					VIEWS					--
@@ -623,6 +753,17 @@ FROM "USER", ACTIVITY
 WHERE "User" = UserId AND "Start" = (SELECT MAX("Start") FROM ACTIVITY WHERE UserId = "User");
 GO
 
+CREATE VIEW PARTICIPANTS_PER_RACE AS
+SELECT "USER".FirstName, CONCAT("USER".LastName1, ' ', "USER".LastName2) AS LastName, (0 + Convert(Char(8),GETDATE(),112) - Convert(Char(8),"USER".BirthDate,112)) / 10000 AS Age, RACE_PARTICIPANTS.RaceId, RACE_PARTICIPANTS.CategoryName
+FROM "USER", RACE_PARTICIPANTS
+WHERE "USER"."User" = RACE_PARTICIPANTS."User";
+GO
+
+CREATE VIEW RECORD_PER_RACE AS
+SELECT "USER".FirstName, CONCAT("USER".LastName1, ' ', "USER".LastName2) AS LastName, (0 + Convert(Char(8),GETDATE(),112) - Convert(Char(8),"USER".BirthDate,112)) / 10000 AS Age, RACE_PARTICIPANTS.RaceId, ACTIVITY.Duration, RACE_PARTICIPANTS.CategoryName
+FROM "USER", RACE_PARTICIPANTS, ACTIVITY
+WHERE "USER"."User" = RACE_PARTICIPANTS."User" AND ACTIVITY.Id = RACE_PARTICIPANTS.ActivityId;
+GO
 
 ----------------------------------------------
 --					TRIGGERS				--

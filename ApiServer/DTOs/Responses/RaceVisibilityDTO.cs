@@ -1,4 +1,3 @@
-
 namespace ApiServer.DTOs.Responses
 {
     public class RaceVisibilityDto
