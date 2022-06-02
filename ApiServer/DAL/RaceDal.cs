@@ -60,7 +60,6 @@ namespace ApiServer.DAL
                     using (SqlCommand cmd = new SqlCommand(procedure, con))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@Id", 0);
                         cmd.Parameters.AddWithValue("@Admin", race.UserAdmin);
                         cmd.Parameters.AddWithValue("@Name", race.Name);
                         cmd.Parameters.AddWithValue("@Route", race.Route);
@@ -134,6 +133,86 @@ namespace ApiServer.DAL
                 return null;
             }
             return races;
+        }
+
+        public static List<RaceParticipantsDTO> PARTICIPANTS_IN_RACE(string name)
+        {
+            List<RaceParticipantsDTO> participants = new();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string procedure = @"PARTICIPANTS_IN_RACE";;
+                    using (SqlCommand cmd = new SqlCommand(procedure, con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@RaceName", name);
+                        con.Open();
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                RaceParticipantsDTO participant = new()
+                                {
+                                    FirstName = (string)sdr["FirstName"],
+                                    LastName = (string)sdr["LastName"],
+                                    Age = (int)sdr["Age"],
+                                    Category = (string)sdr["CategoryName"],
+                                };
+                                participants.Add(participant);
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return null;
+            }
+            return participants;
+        }
+
+        public static List<RaceRecordDTO> RECORD_IN_RACE(string name)
+        {
+            List<RaceRecordDTO> records = new();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string procedure = @"RECORD_IN_RACE";;
+                    using (SqlCommand cmd = new SqlCommand(procedure, con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@RaceName", name);
+                        con.Open();
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                Console.Write(sdr["Duration"]);
+                                RaceRecordDTO record = new()
+                                {
+                                    FirstName = (string)sdr["FirstName"],
+                                    LastName = (string)sdr["LastName"],
+                                    Age = (int)sdr["Age"],
+                                    Duration = (sdr["Duration"]).ToString(),
+                                    Category = (string)sdr["CategoryName"],
+                                };
+                                records.Add(record);
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return null;
+            }
+            return records;
         }
 
 
