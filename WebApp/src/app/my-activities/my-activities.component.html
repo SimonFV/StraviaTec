@@ -83,18 +83,18 @@
             </div>
 
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"
-                    (click)="challenge()">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="Challenge"
+                    (click)="challenge($event)" >
                 <label class="form-check-label" for="inlineCheckbox1">Challenge</label>
             </div>
 
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2" (click)="race()">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="Race" (click)="race($event)">
                 <label class="form-check-label" for="inlineCheckbox2">Race</label>
             </div>
 
             <div class="form-floating" *ngIf="fromChallenge">
-                <select class="form-select" aria-label="Default select example" [(ngModel)]="challName"
+                <select class="form-select" aria-label="Default select example" [(ngModel)]="RoCName"
                     [ngModelOptions]="{standalone: true}">
                     <label for="floatingSelect">Challenge Name</label>
 
@@ -102,6 +102,17 @@
                         {{chall.name}}</option>
                 </select>
                 <label for="floatingSelect">Challenge Name</label>
+            </div>
+
+            <div class="form-floating" *ngIf="fromRace">
+                <select class="form-select" aria-label="Default select example" [(ngModel)]="RoCName"
+                    [ngModelOptions]="{standalone: true}">
+                    <label for="floatingSelect">Race Name</label>
+
+                    <option *ngFor="let race of races; let i= index">
+                        {{race.name}}</option>
+                </select>
+                <label for="floatingSelect">Race Name</label>
             </div>
 
 

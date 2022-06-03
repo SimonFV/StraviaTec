@@ -27,6 +27,18 @@ namespace ApiServer.Controllers
             return Ok(races);
         }
 
+
+        [HttpGet]
+        [Route("racesByUser/{user}")]
+        public IActionResult GetRacesByUser(string user)
+        {
+            var races = RaceDAL.GetRacesByUser(user);
+            if (races is null)
+                return new JsonResult("Something went wrong") { StatusCode = 500 };
+
+            return Ok(races);
+        }
+
         [HttpPost]
         [Route("races")]
         public IActionResult RegisterRace(RaceRegisterDto race)

@@ -20,5 +20,9 @@ namespace ApiServer.DTOs.Requests
         public DateTime Start { get; set; }
         [Required]
         public string Type { get; set; }
+        
+        public string RoC { get; set; }
+        
+        public string RoCName { get; set; }
     }
 }

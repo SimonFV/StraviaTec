@@ -216,6 +216,51 @@ namespace ApiServer.DAL
         }
 
 
+        public static List<RaceResponseDto> GetRacesByUser(string user)
+        {
+            List<RaceResponseDto> races = new();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string query = 
+                        @"SELECT *" +
+                        "FROM RACE WHERE RACE.Id IN(SELECT RaceId FROM RACE_PARTICIPANTS WHERE "
+                        + "\"User\"" +"='"+user+"');";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                RaceResponseDto race = new()
+                                {
+                                    Id = (int)sdr["Id"],
+                                    UserAdmin=(string)sdr["UserAdmin"],
+                                    Name = (string)sdr["Name"],
+                                    Category=(string)sdr["Category"],
+                                    Cost=(decimal)sdr["Cost"],
+                                    Privacy=(Boolean)sdr["Privacy"],
+                                    StartDate=(DateTime)sdr["StartDate"],
+                                    Type=(string)sdr["Type"]
+                                };
+                                races.Add(race);
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return null;
+            }
+            return races;
+        }
+
+
 
         private static string GetConnection()
         {

@@ -437,6 +437,8 @@ namespace ApiServer.DAL
                         cmd.Parameters.AddWithValue("@Route", act.Route);
                         cmd.Parameters.AddWithValue("@Start", act.Start.ToString("yyyy-MM-dd HH:mm:ss"));
                         cmd.Parameters.AddWithValue("@Type", act.Type);
+                        cmd.Parameters.AddWithValue("@RoC", act.RoC);
+                        cmd.Parameters.AddWithValue("@RoCName", act.RoCName);
 
                         con.Open();
                         int sdr = (int)cmd.ExecuteScalar();

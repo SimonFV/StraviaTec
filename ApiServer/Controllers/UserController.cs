@@ -162,7 +162,9 @@ namespace ApiServer.Controllers
             [FromForm] DateTime Duration,
             [FromForm] IFormFile Route,
             [FromForm] DateTime Start,
-            [FromForm] string Type)
+            [FromForm] string Type,
+            [FromForm] string Roc,
+            [FromForm] string RocName)
         {
             try
             {
@@ -176,7 +178,9 @@ namespace ApiServer.Controllers
                     Duration = Duration,
                     Route = "default",
                     Start = Start,
-                    Type = Type
+                    Type = Type,
+                    RoC=Roc,
+                    RoCName=RocName
                 };
 
                 string result = UserDAL.AddActivity(activity);

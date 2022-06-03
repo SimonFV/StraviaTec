@@ -13,13 +13,14 @@ export class MyActivitiesComponent implements OnInit {
   alert: boolean = false;
   alertMessage: string = '';
   activityType = '';
-  challName = '';
+  RoCName = 'RoCName';
   typeAlert: string = 'success';
   data: any = [];
   start;
   duration;
   fromChallenge = false;
   fromRace = false;
+  RoC = 'RoC';
 
 
   activity = [{
@@ -37,13 +38,8 @@ export class MyActivitiesComponent implements OnInit {
   }];
 
   races = [{
-    "userAdmin": "",
-    "name": "",
-    "route": "",
-    "cost": 0,
-    "category": "",
-    "startDate": "",
-    "activity_Type": ""
+    "Id":0,
+    "name": ""
   }]
 
 
@@ -60,6 +56,7 @@ export class MyActivitiesComponent implements OnInit {
   ngOnInit(): void {
     this.activity.splice(0, 1);
     this.challenges.splice(0, 1);
+    this.races.splice(0, 1);
     this.form = this.formBuilder.group({
       UserId: [this.sharedService.getUserData().User, [Validators.required]],
       Distance: ['', [Validators.required]],
@@ -76,6 +73,11 @@ export class MyActivitiesComponent implements OnInit {
     this.service.getChallengeByUser(this.sharedService.getUserData().User).subscribe(resp => {
       this.loadChallenges(resp.body);
     })
+
+    this.service.getRacesByUser(this.sharedService.getUserData().User).subscribe(resp => {
+      this.loadRaces(resp.body);
+    })
+
 
   }
 
@@ -102,14 +104,34 @@ export class MyActivitiesComponent implements OnInit {
     }
   }
 
-  challenge() {
-    this.fromChallenge = !this.fromChallenge;
-    console.log(this.challenges);
-
+  loadRaces(race: any) {
+    for (let i of race) {
+      this.races.push({
+        "Id": i.id,
+        "name": i.name
+      })
+    }
   }
 
-  race() {
+  challenge(event:any) {
+    this.fromChallenge = !this.fromChallenge;
+    this.fromRace = false;
+    if (event.target.checked) {
+      this.RoC=event.target.value
+    } else {
+      this.RoC='RoC'
+    }
+  }
+
+  race(event:any) {
     this.fromRace = !this.fromRace;
+    this.fromChallenge = false;
+    if (event.target.checked) {
+      this.RoC=event.target.value
+    } else {
+      this.RoC='RoC'
+    }
+
   }
 
   getActivity() {
@@ -117,7 +139,7 @@ export class MyActivitiesComponent implements OnInit {
     this.form.get('Type')!.setValue(this.activityType);
     this.form.get('Start')!.setValue(this.start);
     this.form.get('Duration')!.setValue(this.duration);
-    console.log(this.form.value);
+    
 
     let formData: FormData = new FormData();
 
@@ -127,33 +149,17 @@ export class MyActivitiesComponent implements OnInit {
     formData.append('Duration', this.form.get('Duration')!.value);
     formData.append('Type', this.form.get('Type')!.value);
     formData.append('Route', this.form.get('Route')!.value);
-
+    formData.append('Roc',  this.RoC);
+    formData.append('RoCName', this.RoCName);
+    
+    
+    
+    
     this.service.addActivity(formData).subscribe(resp => {
       console.log(resp);
-      if (resp.ok && this.fromChallenge) {
-        this.getActId();
-      }
     })
   }
 
-  getActId() {
-    this.form.get('Route')?.setValue('route.gpx');
-    this.service.getActivityId(this.form.value).subscribe(resp => {
-      console.log(resp);
-      for (let i of this.challenges) {
-        if (i.name == this.challName) {
-          this.addChallengeActivity(i.Id, Number(resp.body))
-        }
-      }
-    });
-  }
-
-  addChallengeActivity(challId: number, actId: number) {
-    console.log(challId + " " + actId);
-    this.service.addChallengeActivity(challId, actId).subscribe(resp => {
-      console.log(resp);
-    })
-  }
 
   getFile(event: any) {
     if (event.target.files.length > 0) {
