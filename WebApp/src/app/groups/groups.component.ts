@@ -37,12 +37,12 @@ export class GroupsComponent implements OnInit {
     this.availableGroups.splice(0,this.availableGroups.length);
     this.groupToSHow.splice(0,this.groupToSHow.length);
     this.service.getGroupsAvailable(this.sharedService.getUserData().User).subscribe(resp=>{
-      console.log(resp);
+      
       this.loadGroupsAvailable(resp.body)
     });
 
     this.service.getGroups(this.sharedService.getUserData().User).subscribe(resp=>{
-      console.log(resp);
+      
       this.loadGroups(resp.body)
       
     })

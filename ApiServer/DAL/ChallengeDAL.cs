@@ -194,10 +194,10 @@ namespace ApiServer.DAL
             {
                 using (SqlConnection con = new SqlConnection(GetConnection()))
                 {
-                    string query = 
+                    string query =
                         @"SELECT *" +
                         "FROM CHALLENGE WHERE CHALLENGE.Id IN(SELECT ChallengeId FROM CHALLENGE_PARTICIPANTS WHERE "
-                        + "\"User\"" +"='"+user+"');";
+                        + "\"User\"" + "='" + user + "') OR CHALLENGE.UserAdmin='" + user + "';";
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         con.Open();
@@ -283,7 +283,12 @@ namespace ApiServer.DAL
                         {
                             while (sdr.Read())
                             {
-                                progress = (Decimal)sdr["Progress"];
+                                if(sdr["Progress"].GetType().ToString()!="System.Decimal"){
+                                    progress = 0;
+                                }else{
+                                    progress = (Decimal)sdr["Progress"];
+                                }
+                                
                             }
                         }
                         con.Close();

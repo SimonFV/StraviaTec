@@ -13,7 +13,6 @@ export class ChallengeComponent implements OnInit {
 
   alert: boolean = false;
   alertMessage: string = '';
-  completed = false;
 
   typeAlert: string = 'success';
   public form!: FormGroup;
@@ -27,7 +26,8 @@ export class ChallengeComponent implements OnInit {
     "endDate": "",
     "activity_Type": "",
     "objective":0,
-    "progress":0
+    "progress": 0,
+    "status":""
   }];
   availableChallenges = [{
     "Id":0,
@@ -77,23 +77,28 @@ export class ChallengeComponent implements OnInit {
     this.userGroups.splice(0, 1);
     this.visibility.splice(0, 1);
     this.challengesToShow.splice(0, 1);
-    this.service.getGroups(this.sharedService.getUserData().User).subscribe(resp=>{
+
+
+    this.service.getGroups(this.sharedService.getUserData().User).subscribe(resp => {
+      
+      
       this.loadUserGroups(resp.body)
     });
 
-    this.service.getChallengeVisibility().subscribe(resp=>{
+    this.service.getChallengeVisibility().subscribe(resp => {
+     
       
       this.loadVisivility(resp.body);
     })
 
     this.service.getChallengeByUser(this.sharedService.getUserData().User).subscribe(resp => {
-      
       this.loadChallengeProgress(resp.body);
       
     })
 
     this.service.getChallenges().subscribe({
       next: (resp) => {
+        
         for (let challenge of resp.body!) {
           this.loadAvailableChallenges(challenge);
         }
@@ -150,21 +155,36 @@ export class ChallengeComponent implements OnInit {
   loadActiveChallenges(i: any, progress: any) {
     
     if (progress > i.objective) {
-      this.completed=true
+      this.challenges.push({
+        "Id": i.id,
+        "userAdmin": i.userAdmin,
+        "name": i.name,
+        "class": i.class,
+        "privacy": i.privacy,
+        "startDate": i.startDate,
+        "endDate": i.endDate,
+        "activity_Type": i.activity_Type,
+        "objective":i.objective,
+        "progress": (progress / i.objective) * 100,
+        "status":"Challege Completed"
+      })
+    } else {
+      this.challenges.push({
+        "Id": i.id,
+        "userAdmin": i.userAdmin,
+        "name": i.name,
+        "class": i.class,
+        "privacy": i.privacy,
+        "startDate": i.startDate,
+        "endDate": i.endDate,
+        "activity_Type": i.activity_Type,
+        "objective":i.objective,
+        "progress": (progress / i.objective) * 100,
+        "status":"Unfinished, your progress: "+String(progress)
+      })
     }
     
-    this.challenges.push({
-      "Id": i.id,
-      "userAdmin": i.userAdmin,
-      "name": i.name,
-      "class": i.class,
-      "privacy": i.privacy,
-      "startDate": i.startDate,
-      "endDate": i.endDate,
-      "activity_Type": i.activity_Type,
-      "objective":i.objective,
-      "progress": (progress/i.objective)*100
-    })
+    
     
     console.log(this.challenges);
   }
@@ -242,7 +262,8 @@ export class ChallengeComponent implements OnInit {
       "endDate": i.endDate,
       "activity_Type": i.activity_Type,
       "progress": this.progress,
-      "objective":i.objective
+      "objective": i.objective,
+      "status":"Unfinished"
     })
     for(let grp in this.challengesToShow){
       if(this.challengesToShow[grp].Id==i.Id){

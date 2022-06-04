@@ -436,7 +436,7 @@ BEGIN
 	WHERE Id IN(
 		SELECT GROUP_USERS.GroupId FROM GROUP_USERS 
 		WHERE GROUP_USERS."User" = @User)
-		AND AdminUser != @User;
+		OR AdminUser = @User;
 END;
 GO
 

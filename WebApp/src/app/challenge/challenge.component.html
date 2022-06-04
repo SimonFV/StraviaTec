@@ -23,9 +23,7 @@
               <p class="card-text">Start date: {{challenge.startDate}} </p>
               <p class="card-text">End Date: {{challenge.endDate}}</p>
               <p class="card-text">Objective: {{challenge.objective}} Km</p>
-
-              <p class="card-text" *ngIf="!completed">Your progress: {{challenge.progress}} Km</p>
-              <p class="card-text" *ngIf="completed">Challenge Completed!!</p>
+              <p class="card-text">Status: {{challenge.status}} </p>
               
               
               
