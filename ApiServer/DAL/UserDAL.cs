@@ -458,6 +458,47 @@ namespace ApiServer.DAL
             return "Done";
         }
 
+
+        public static string UpdateActivity(int actId, ActivityDto act)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string procedure = @"UpdateActivity";
+                    using (SqlCommand cmd = new SqlCommand(procedure, con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@UserId", act.UserId);
+                        cmd.Parameters.AddWithValue("@ActId", actId);
+                        cmd.Parameters.AddWithValue("@Distance", act.Distance);
+                        cmd.Parameters.AddWithValue("@Duration", act.Duration.ToString("HH:mm:ss"));
+                        cmd.Parameters.AddWithValue("@Route", act.Route);
+                        cmd.Parameters.AddWithValue("@Start", act.Start.ToString("yyyy-MM-dd HH:mm:ss"));
+                        cmd.Parameters.AddWithValue("@Type", act.Type);
+                        cmd.Parameters.AddWithValue("@RoC", act.RoC);
+                        cmd.Parameters.AddWithValue("@RoCName", act.RoCName);
+
+                        con.Open();
+                        int sdr = (int)cmd.ExecuteScalar();
+                        con.Close();
+                        if (sdr == -1)
+                            return "Activity Not Found";
+                        else if (sdr == -2)
+                            return "Already in Database";
+                        else if (sdr == -3)
+                            return "Date doesn't match";
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return "Error";
+            }
+            return "Done";
+        }
+
         public static int GetActivityId(ActivityDto act)
         {
             int id = new();
@@ -522,6 +563,7 @@ namespace ApiServer.DAL
                         {
                             ActivityResponseDto activity = new()
                             {
+                                ActivityId= (int)sdr["Id"],
                                 UserId = (string)sdr["UserId"],
                                 Distance = (Decimal)sdr["Distance"],
                                 Duration = (TimeSpan)sdr["Duration"],

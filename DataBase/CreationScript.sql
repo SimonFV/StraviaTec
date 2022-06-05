@@ -502,6 +502,121 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE UpdateActivity
+	@ActId INT, @UserId	NVARCHAR(15), @Distance DECIMAL(9,3), @Duration TIME, @Route NVARCHAR(255),
+	@Start DATETIME, @Type	NVARCHAR(15), @RoC NVARCHAR(15), @RoCName NVARCHAR(15)
+AS
+BEGIN
+    SET NOCOUNT ON;
+     
+    IF NOT EXISTS(SELECT Id FROM ACTIVITY WHERE Id = @ActId)
+    BEGIN
+        SELECT -1  --Activity not found
+    END
+    ELSE IF EXISTS(SELECT UserId FROM ACTIVITY WHERE UserId = @UserId AND 
+												"Start" < @Start + CAST(@Duration AS datetime) AND
+												"Start" + CAST(Duration AS datetime) > @Start)
+    BEGIN
+        SELECT -2  --An Activity at that time already in the database
+    END
+	ELSE IF GETDATE() < @Start + CAST(@Duration AS datetime)
+	BEGIN
+        SELECT -3  --The time and duration of the activity doesn't match with the current time
+    END
+    ELSE
+	IF( @RoC='Race')
+		BEGIN
+			IF EXISTS(Select Id FROM RACE, RACE_PARTICIPANTS WHERE RACE."Name" = @RoCName AND RACE_PARTICIPANTS."User" = @UserId AND RACE_PARTICIPANTS.RaceId = RACE.Id)
+				BEGIN
+					UPDATE ACTIVITY
+					SET		Distance = @Distance, 
+							Duration = @Duration, 
+							"Route" = @Route, 
+							"Start" = @Start,
+							"Type" = @Type
+					WHERE	Id = @ActId;
+				END;
+				IF NOT EXISTS (SELECT ActivityId FROM RACE_PARTICIPANTS WHERE ActivityId=@ActId)
+					BEGIN
+						INSERT INTO RACE_PARTICIPANTS("User", RaceId,ActivityId, CategoryName,"Status") 
+						VALUES( @UserId, (SELECT Id FROM RACE WHERE RACE."Name"=@RoCName), @ActId, 'Elite', 'In Progress')
+					
+						IF EXISTS (SELECT ActivityId FROM CHALLENGE_ACTIVITIES WHERE ActivityId=@ActId)
+							BEGIN
+								DELETE FROM CHALLENGE_ACTIVITIES WHERE ActivityId=@ActId	
+							END;
+						SELECT 0
+					END;
+				ELSE
+					BEGIN
+						UPDATE RACE_PARTICIPANTS
+						SET "User"= @UserId,
+							RaceId= (SELECT Id FROM RACE WHERE RACE."Name"=@RoCName),
+							ActivityId=@ActId,
+							CategoryName= 'Elite',
+							"Status"='In Progress'
+						WHERE ActivityId=@ActId;
+
+						SELECT 0
+					END;
+		END;
+	ELSE IF( @RoC='Challenge')
+		BEGIN
+					UPDATE ACTIVITY
+					SET		Distance = @Distance, 
+							Duration = @Duration, 
+							"Route" = @Route, 
+							"Start" = @Start,
+							"Type" = @Type
+					WHERE	Id = @ActId;
+				
+				IF NOT EXISTS (SELECT ActivityId FROM CHALLENGE_ACTIVITIES WHERE ActivityId=@ActId)
+					BEGIN
+						INSERT INTO CHALLENGE_ACTIVITIES(ChallengeId,ActivityId) 
+						VALUES( (SELECT Id FROM CHALLENGE WHERE CHALLENGE."Name"=@RoCName), @ActId)
+					
+						IF EXISTS (SELECT ActivityId FROM RACE_PARTICIPANTS WHERE ActivityId=@ActId)
+							BEGIN
+								DELETE FROM RACE_PARTICIPANTS WHERE ActivityId=@ActId	
+							END;
+						SELECT 0
+					END;
+				ELSE
+					BEGIN
+						UPDATE CHALLENGE_ACTIVITIES
+						SET ChallengeId=(SELECT Id FROM CHALLENGE WHERE CHALLENGE."Name"=@RoCName),
+							ActivityId=@ActId
+						WHERE ActivityId=@ActId;
+
+						SELECT 0
+					END;
+		END;
+
+	ELSE
+		BEGIN
+					UPDATE ACTIVITY
+					SET		Distance = @Distance, 
+							Duration = @Duration, 
+							"Route" = @Route, 
+							"Start" = @Start,
+							"Type" = @Type
+					WHERE	Id = @ActId;
+
+					IF EXISTS (SELECT ActivityId FROM RACE_PARTICIPANTS WHERE ActivityId=@ActId)
+							BEGIN
+								DELETE FROM RACE_PARTICIPANTS WHERE ActivityId=@ActId	
+							END;
+					IF EXISTS (SELECT ActivityId FROM CHALLENGE_ACTIVITIES WHERE ActivityId=@ActId)
+							BEGIN
+								DELETE FROM CHALLENGE_ACTIVITIES WHERE ActivityId=@ActId	
+							END;
+				SELECT 0
+		END;
+			
+END;
+GO
+
+
 CREATE PROCEDURE ChallengeGroups
 	@Groups varchar(1000),
 	@ChallengeName NVARCHAR(15)

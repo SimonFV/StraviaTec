@@ -23,6 +23,13 @@
                     </div>
 
                 </div>
+
+                <div class="card-footer">
+                    <button class="btn btn-link" type="button" id="commentBtn" data-bs-toggle="modal"
+                data-bs-target="#exampleModal" (click)="editActivity(i)">
+                Edit
+              </button>
+                </div>
             </div>
         </div>
     </div>
@@ -123,9 +130,119 @@
             </div>
 
             <div class="mt-3 mb-5 d-grid gap-2 justify-content-center">
-                <button id="signUp" class="btn btn-lg btn-primary btn-block">Post</button>
+                <button id="post" class="btn btn-lg btn-primary btn-block">Post</button>
 
             </div>
         </form>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Activity</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="edit" (submit)="updateActivity()" style="max-width: 300px;margin: auto;">
+
+                    <div class="form-floating">
+                        <input required type="text" id="distance" placeholder="distance" class="form-control mb-1"
+                            formControlName="Distance">
+                        <label for="floatingInput">Distance</label>
+                    </div>
+        
+                    <div>
+                        <label for="floatingInput">Start Day</label>
+                        <input required type="datetime-local" id="Start" class="form-control mb-2" [(ngModel)]="startUpdate"
+                            [ngModelOptions]="{standalone: true}">
+                    </div>
+        
+                    <div>
+                        <label for="floatingInput">Activity Time</label>
+                        <input required type="datetime-local" [(ngModel)]="durationUpdate" [ngModelOptions]="{standalone: true}"
+                            id="Duration" class="form-control mb-1">
+                    </div>
+        
+        
+                    <div>
+                        <label for="inputGroupFile02" class="text-left ">Route</label>
+                        <div class="input-group">
+                            <input required (change)="getFile($event)" type="file" accept="text/gpx" class="form-control mb-3"
+                                id="inputGroupFile02">
+                        </div>
+                    </div>
+        
+        
+                    <div class="form-floating">
+                        <!--<input required type="text" id="type" placeholder="type" class="form-control mb-1 "
+                            formControlName="Type">-->
+        
+                        <select class="form-select" [(ngModel)]="activityTypeUpdate" [ngModelOptions]="{standalone: true}"
+                            aria-label="Default select example">
+        
+                            <option value="Running" selected>Running</option>
+                            <option value="Swimming">Swimming</option>
+                            <option value="Cycling">Cycling</option>
+                            <option value="Hiking">Hiking</option>
+                            <option value="Kayaking">Kayaking</option>
+                            <option value="Walking">Walking</option>
+                        </select>
+                        <label for="floatingSelect">Type</label>
+                    </div>
+        
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="Challenge"
+                            (click)="challengeUpdate($event)" >
+                        <label class="form-check-label" for="inlineCheckbox1">Challenge</label>
+                    </div>
+        
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="Race" 
+                        (click)="raceUpdate($event)">
+                        <label class="form-check-label" for="inlineCheckbox2">Race</label>
+                    </div>
+        
+                    <div class="form-floating" *ngIf="fromChallengeUpdate">
+                        <select class="form-select" aria-label="Default select example" [(ngModel)]="RoCNameUpdate"
+                            [ngModelOptions]="{standalone: true}">
+                            <label for="floatingSelect">Challenge Name</label>
+        
+                            <option *ngFor="let chall of challenges; let i= index">
+                                {{chall.name}}</option>
+                        </select>
+                        <label for="floatingSelect">Challenge Name</label>
+                    </div>
+        
+                    <div class="form-floating" *ngIf="fromRaceUpdate">
+                        <select class="form-select" aria-label="Default select example" [(ngModel)]="RoCNameUpdate"
+                            [ngModelOptions]="{standalone: true}">
+                            <label for="floatingSelect">Race Name</label>
+        
+                            <option *ngFor="let race of races; let i= index">
+                                {{race.name}}</option>
+                        </select>
+                        <label for="floatingSelect">Race Name</label>
+                    </div>
+        
+        
+                    <div style="margin-top:20px" *ngIf="alert" class="alert alert-{{typeAlert}} alert-dismissible" role="alert">
+                        {{alertMessage}}
+                        <button (click)="closeAlert()" type="button" class="btn-close" data-bs-dismiss="alert"
+                            aria-label="Close"></button>
+                    </div>
+        
+                    <div class="mt-3 mb-5 d-grid gap-2 justify-content-center">
+                        <button id="post" class="btn btn-lg btn-primary btn-block">Update</button>
+        
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
     </div>
 </div>

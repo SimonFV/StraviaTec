@@ -5,6 +5,7 @@ namespace ApiServer.DTOs.Responses
 {
     public class ActivityResponseDto
     {
+        public int ActivityId { get; set; }
         public string UserId { get; set; }
         public Decimal Distance { get; set; }
         public TimeSpan Duration { get; set; }

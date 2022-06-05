@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { AnyForUntypedForms } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { SharedService } from '../SharedService/shared.service';
 
@@ -126,6 +127,13 @@ export class ApiService {
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.post('http://localhost:5000/User/addActivity', activity, { headers: header, observe: 'response' });
   }
+
+  updateActivity(actId:any,activity:FormData) {
+    let header = new HttpHeaders().set('Type-contet', 'multipart/form-data');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.put('http://localhost:5000/User/UpdateActivity/'+actId, activity, { headers: header, observe: 'response' });
+  }
+
 
   getUserActivities(user: string) {
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());

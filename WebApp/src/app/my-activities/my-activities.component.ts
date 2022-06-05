@@ -10,20 +10,31 @@ import { SharedService } from '../services/SharedService/shared.service';
 })
 export class MyActivitiesComponent implements OnInit {
   public form!: FormGroup;
+  public edit!: FormGroup;
   alert: boolean = false;
   alertMessage: string = '';
-  activityType = '';
-  RoCName = 'RoCName';
+  
+  
   typeAlert: string = 'success';
   data: any = [];
+  activityType = '';
   start;
   duration;
+  activityTypeUpdate = '';
+  startUpdate;
+  durationUpdate;
   fromChallenge = false;
   fromRace = false;
+  RoCName = 'RoCName';
   RoC = 'RoC';
 
+  RoCNameUpdate = 'Update';
+  RoCUpdate = 'Update';
+
+  idToUpdate = -1;
 
   activity = [{
+    "actId":0,
     "UserId": "",
     "Distance": 0,
     "Start": "",
@@ -41,6 +52,8 @@ export class MyActivitiesComponent implements OnInit {
     "Id":0,
     "name": ""
   }]
+  fromChallengeUpdate= false;
+  fromRaceUpdate= false;
 
 
 
@@ -51,6 +64,8 @@ export class MyActivitiesComponent implements OnInit {
   ) {
     this.start = new Date();
     this.duration = new Date();
+    this.startUpdate = new Date();
+    this.durationUpdate = new Date();
   }
 
   ngOnInit(): void {
@@ -58,6 +73,15 @@ export class MyActivitiesComponent implements OnInit {
     this.challenges.splice(0, 1);
     this.races.splice(0, 1);
     this.form = this.formBuilder.group({
+      UserId: [this.sharedService.getUserData().User, [Validators.required]],
+      Distance: ['', [Validators.required]],
+      Start: [Date, [Validators.required]],
+      Duration: [Date, [Validators.required]],
+      Type: ['', [Validators.required]],
+      Route: ['', [Validators.required]]
+    });
+
+    this.edit = this.formBuilder.group({
       UserId: [this.sharedService.getUserData().User, [Validators.required]],
       Distance: ['', [Validators.required]],
       Start: [Date, [Validators.required]],
@@ -83,7 +107,9 @@ export class MyActivitiesComponent implements OnInit {
 
   loadActivities(activities: any) {
     for (let i of activities) {
+      this.sharedService.addAct(i);
       this.activity.push({
+        "actId":i.activityId,
         "UserId": i.userId,
         "Distance": i.distance,
         "Duration": i.duration.days + ':' + i.duration.hours + ':' + i.duration.minutes,
@@ -177,5 +203,68 @@ export class MyActivitiesComponent implements OnInit {
   closeAlert() {
     this.alert = false
   }
+
+  challengeUpdate(event:any) {
+    this.fromChallengeUpdate = !this.fromChallengeUpdate;
+    this.fromRaceUpdate = false;
+    if (event.target.checked) {
+      this.RoCUpdate=event.target.value
+    } else {
+      this.RoCUpdate='RoC'
+    }
+  }
+
+  raceUpdate(event:any) {
+    this.fromRaceUpdate = !this.fromRaceUpdate;
+    this.fromChallengeUpdate = false;
+    if (event.target.checked) {
+      this.RoCUpdate=event.target.value
+    } else {
+      this.RoCUpdate='RoC'
+    }
+
+  }
+
+  editActivity(i: any) {
+    this.idToUpdate = i.actId;
+    let actToEdit :any = this.sharedService.getUserAct(i.actId)
+
+    this.edit.get('Distance')?.setValue(actToEdit.Distance);
+    this.edit.get('Start')?.setValue(actToEdit.Start);
+    this.edit.get('Duration')?.setValue(actToEdit.Duration);
+    this.edit.get('Type')?.setValue(actToEdit.Type);
+    this.edit.get('Route')?.setValue(actToEdit.Route);
+  }
+
+  updateActivity() {
+    console.log(this.idToUpdate);
+    
+    this.edit.get('Type')!.setValue(this.activityTypeUpdate);
+    this.edit.get('Start')!.setValue(this.startUpdate);
+    this.edit.get('Duration')!.setValue(this.durationUpdate);
+    
+
+    let formData: FormData = new FormData();
+
+    formData.append('UserId', this.edit.get('UserId')!.value);
+    formData.append('Distance', this.edit.get('Distance')!.value);
+    formData.append('Start', this.edit.get('Start')!.value);
+    formData.append('Duration', this.edit.get('Duration')!.value);
+    formData.append('Type', this.edit.get('Type')!.value);
+    formData.append('Route', this.edit.get('Route')!.value);
+    formData.append('Roc',  this.RoCUpdate);
+    formData.append('RoCName', this.RoCNameUpdate);
+
+    console.log(this.edit.value);
+    console.log(this.RoCUpdate);
+    console.log(this.RoCNameUpdate);
+    
+    this.service.updateActivity(this.idToUpdate, formData).subscribe(resp => {
+      console.log(resp);
+      
+    })
+    
+  }
+  
 
 }

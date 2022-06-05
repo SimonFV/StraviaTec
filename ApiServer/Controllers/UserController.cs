@@ -215,6 +215,52 @@ namespace ApiServer.Controllers
             }
         }
 
+
+        [HttpPut]
+        [Route("UpdateActivity/{actId}")]
+        public IActionResult UpdateActivity(int actId, 
+            [FromForm] string UserId,
+            [FromForm] decimal Distance,
+            [FromForm] DateTime Start,
+            [FromForm] DateTime Duaration,
+            [FromForm] string Route,
+            [FromForm] string Type,
+            [FromForm] string RoC,
+            [FromForm] string RoCName
+            )
+        {
+            try
+            {
+
+                ActivityDto act = new()
+                {
+                    UserId = UserId,
+                    Distance = Distance,
+                    Duration = Duaration,
+                    Route = Route,
+                    Start = Start,
+                    Type = Type,
+                    RoC = RoC,
+                    RoCName = RoCName
+                };
+
+                string result = UserDAL.UpdateActivity(actId, act);
+                if (result is "Error")
+                    return new JsonResult("Something went wrong in the registration.") { StatusCode = 500 };
+                else if (result is "NotFound")
+                    return new JsonResult("User not found.") { StatusCode = 403 };
+                else if (result is "WrongPass")
+                    return new JsonResult("Incorrect password.") { StatusCode = 403 };
+                
+                return Ok();
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return new JsonResult("Something went wrong while updating.") { StatusCode = 500 };
+            }
+        }
+
         [HttpGet]
         [Route("userActivities/{user}")]
         public IActionResult GetuserActivities(string user)
