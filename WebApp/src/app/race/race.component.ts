@@ -17,7 +17,10 @@ export class RaceComponent implements OnInit {
   alertMessage: string = '';
 
   typeAlert: string = 'success';
-  name = '';
+  optionselect = '';
+  voucher = '';
+  id = 0;
+  userid = '';
   start;
   category = '';
   type = '';
@@ -57,17 +60,24 @@ export class RaceComponent implements OnInit {
     "CategoryName": ""
   }]
 
+  categories = [{
+    "name": ""
+  }];
+
+  pay = [{
+    "id": 0,
+    "name": "",
+    "cost": 0
+  }];
+
 
   constructor(
     private service: ApiService,
     private formBuilder: FormBuilder,
-    private sharedService: SharedService) { this.start = new Date(); }
-
-
-
+    public sharedService: SharedService) { this.start = new Date(); }
 
   ngOnInit(): void {
-
+      
     this.visibility.splice(0, 1);
     this.userGroups.splice(0, 1);
     this.races.splice(0, 1);
@@ -101,24 +111,46 @@ export class RaceComponent implements OnInit {
       Category: ['', [Validators.required]]
     });
 
-    console.log(this.name);
+    console.log(this.id);
     this.participants.splice(0, 1);
-    this.service.getParticipants(this.name).subscribe(resp => {
-      console.log(resp.body);
-      for (let participant of resp.body!) {
-        this.loadParticipants(participant);
-      }
-    })
+    if (this.id != 0) {
+      this.service.getParticipants(this.id).subscribe(resp => {
+        console.log(resp.body);
+        for (let participant of resp.body!) {
+          this.loadParticipants(participant);
+        }
+      })
+    }
+    
 
     this.records.splice(0, 1);
-    this.service.getRecord(this.name).subscribe(resp => {
+    if (this.id != 0) {
+      this.service.getRecord(this.id).subscribe(resp => {
+        console.log(resp.body);
+        for (let record of resp.body!) {
+          this.loadRecords(record);
+        }
+      })
+    }
+
+    this.categories.splice(0, 1);
+    if (this.id != 0) {
+      this.service.getcategoriesforrace(this.id).subscribe(resp => {
+        console.log(resp.body);
+        for (let category of resp.body!) {
+          this.loadcategoriesforrace(category);
+        }
+      })
+    }
+
+    this.pay.splice(0, 1);
+    this.service.gettopay(this.sharedService.getUserData().User).subscribe(resp => {
       console.log(resp.body);
-      for (let record of resp.body!) {
-        this.loadRecords(record);
+      for (let paid of resp.body!) {
+        this.loadPay(paid);
       }
     })
-
-
+    
   }
 
 
@@ -128,7 +160,7 @@ export class RaceComponent implements OnInit {
   }
 
   async printDiv(divName: any, name: any) {
-    this.name = name;
+    this.id = name;
     this.ngOnInit();
     await this.delay(1000);
     var printContents = document.getElementById('printableArea' + divName.toString())!.innerHTML;
@@ -143,7 +175,7 @@ export class RaceComponent implements OnInit {
   }
 
   async printRecord(divName: any, name: any) {
-    this.name = name;
+    this.id = name;
     this.ngOnInit();
     await this.delay(1000);
     var printContents = document.getElementById('Area' + divName.toString())!.innerHTML;
@@ -162,7 +194,7 @@ export class RaceComponent implements OnInit {
     for (let vis of this.visibility) {
 
       if (race.privacy) {
-        if (this.userGroups.includes(vis.groupId) && race.id == vis.raceId && !raceShown.includes(race.id)) {
+        //if (this.userGroups.includes(vis.groupId) && race.id == vis.raceId && !raceShown.includes(race.id)) {
           this.races.push({
             "Id": race.id,
             "userAdmin": race.userAdmin,
@@ -176,7 +208,7 @@ export class RaceComponent implements OnInit {
           })
           raceShown.push(race.id)
           break;
-        }
+        //}
       } else {
         this.races.push({
           "Id": race.id,
@@ -200,6 +232,13 @@ export class RaceComponent implements OnInit {
       this.userGroups.push(i.id)
     }
 
+  }
+
+  loadcategoriesforrace(category: any) {
+    this.categories.push({
+      "name": category.name
+    })
+    console.log(this.categories);
   }
 
   loadParticipants(participant: any) {
@@ -231,6 +270,15 @@ export class RaceComponent implements OnInit {
         "raceId": i.raceId
       });
     }
+  }
+
+  loadPay(paid: any) {
+    this.pay.push({
+      "id": paid.id,
+      "name": paid.name,
+      "cost": paid.cost
+    })
+    console.log(this.pay);
   }
 
 
@@ -299,4 +347,48 @@ export class RaceComponent implements OnInit {
       this.GroupsArray.clear();
     }
   }
+  
+  async openForm(name: any) {
+    console.log(this.sharedService.getUserData().User);
+    this.id = name;
+    this.ngOnInit();
+    await this.delay(1000);
+
+    document.getElementById("registerpopup")!.style.display = "block";
+  }
+  closeForm() {
+    document.getElementById("registerpopup")!.style.display = "none";
+    window.location.reload();
+  }
+  submitForm(){
+    if(this.optionselect != '') {
+      console.log(this.optionselect);
+      this.service.getRaceRegister(this.sharedService.getUserData().User, this.id, this.optionselect).subscribe(resp => {
+        console.log(resp.body);
+      })
+      document.getElementById("registerpopup")!.style.display = "none";
+      window.location.reload();
+    } else {
+      console.log("Select category");
+    }
+    
+  }
+
+  payopenForm() {
+    document.getElementById("paypopup")!.style.display = "block";
+  }
+  paycloseForm() {
+    document.getElementById("paypopup")!.style.display = "none";
+    window.location.reload();
+  }
+  paysubmitForm(raceid:any){
+    console.log(this.voucher);
+      this.service.getRacePay(raceid,this.sharedService.getUserData().User, this.voucher).subscribe(resp => {
+        console.log(resp.body);
+      })
+      document.getElementById("paypopup")!.style.display = "none";
+      //window.location.reload();
+  }
+  
+
 }

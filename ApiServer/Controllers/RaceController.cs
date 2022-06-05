@@ -74,23 +74,63 @@ namespace ApiServer.Controllers
         }
 
         [HttpGet]
-        [Route("Participants/{name}")]
-        public IActionResult GetRaceParticipants(string name)
+        [Route("Participants/{Id}")]
+        public IActionResult GetRaceParticipants(int Id)
         {
-            var participants = RaceDAL.PARTICIPANTS_IN_RACE(name);
+            var participants = RaceDAL.PARTICIPANTS_IN_RACE(Id);
             if (participants is null)
                 return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
             return Ok(participants);
         }
 
         [HttpGet]
-        [Route("Record/{name}")]
-        public IActionResult GetRaceRecord(string name)
+        [Route("Record/{Id}")]
+        public IActionResult GetRaceRecord(int Id)
         {
-            var records = RaceDAL.RECORD_IN_RACE(name);
+            var records = RaceDAL.RECORD_IN_RACE(Id);
             if (records is null)
                 return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
             return Ok(records);
+        }
+
+        [HttpGet]
+        [Route("CategoryRace/{Id}")]
+        public IActionResult GetCategoryRace(int Id)
+        {
+            var categories = RaceDAL.GetCategoryRace(Id);
+            if (categories is null)
+                return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
+            return Ok(categories);
+        }
+
+        [HttpGet]
+        [Route("RaceRegister/{User}/{id}/{optionselect}")]
+        public IActionResult RaceRegister(string User,int id, string optionselect)
+        {
+            var categories = RaceDAL.RaceRegister(User, id, optionselect);
+            if (categories is null)
+                return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
+            return Ok(categories);
+        }
+
+        [HttpGet]
+        [Route("ToPay/{User}")]
+        public IActionResult RaceToPay(string User)
+        {
+            var categories = RaceDAL.RaceToPay(User);
+            if (categories is null)
+                return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
+            return Ok(categories);
+        }
+
+        [HttpGet]
+        [Route("Pay/{id}/{user}/{payment}")]
+        public IActionResult RacePay(int id,string user, string payment)
+        {
+            var categories = RaceDAL.RacePay(id,user,payment);
+            if (categories is null)
+                return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
+            return Ok(categories);
         }
     }
 }

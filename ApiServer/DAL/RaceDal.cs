@@ -135,7 +135,7 @@ namespace ApiServer.DAL
             return races;
         }
 
-        public static List<RaceParticipantsDTO> PARTICIPANTS_IN_RACE(string name)
+        public static List<RaceParticipantsDTO> PARTICIPANTS_IN_RACE(int Id)
         {
             List<RaceParticipantsDTO> participants = new();
             try
@@ -146,7 +146,7 @@ namespace ApiServer.DAL
                     using (SqlCommand cmd = new SqlCommand(procedure, con))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@RaceName", name);
+                        cmd.Parameters.AddWithValue("@RaceId", Id);
                         con.Open();
                         using (SqlDataReader sdr = cmd.ExecuteReader())
                         {
@@ -174,7 +174,7 @@ namespace ApiServer.DAL
             return participants;
         }
 
-        public static List<RaceRecordDTO> RECORD_IN_RACE(string name)
+        public static List<RaceRecordDTO> RECORD_IN_RACE(int Id)
         {
             List<RaceRecordDTO> records = new();
             try
@@ -185,7 +185,7 @@ namespace ApiServer.DAL
                     using (SqlCommand cmd = new SqlCommand(procedure, con))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@RaceName", name);
+                        cmd.Parameters.AddWithValue("@RaceId", Id);
                         con.Open();
                         using (SqlDataReader sdr = cmd.ExecuteReader())
                         {
@@ -260,7 +260,151 @@ namespace ApiServer.DAL
             return races;
         }
 
+        public static List<RaceCategoryInDTO> GetCategoryRace(int id)
+        {
+            List<RaceCategoryInDTO> categories = new();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    Console.Write(id);
+                    string query = 
+                        @"SELECT CategoryName FROM RACE_CATEGORY WHERE Raceid ="+id+";";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                        Console.Write("hola");
+                            while (sdr.Read())
+                            {
+                                RaceCategoryInDTO category = new()
+                                {
+                                    Name = (string)sdr["CategoryName"]
+                                };
+                                categories.Add(category);
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return null;
+            }
+            return categories;
+        }
 
+        public static string RaceRegister(string User,int id, string optionselect)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string procedure = @"Register_in_Race";;
+                    using (SqlCommand cmd = new SqlCommand(procedure, con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@User", User);
+                        cmd.Parameters.AddWithValue("@RaceId", id);
+                        cmd.Parameters.AddWithValue("@Category", optionselect);
+                        con.Open();
+                        int sdr = (int)cmd.ExecuteScalar();
+                        con.Close();
+                        if (sdr == -1)
+                        {
+                            return "Already Exists";
+                        }
+                        if (sdr == -2)
+                        {
+                            return "Activity Type not found";
+                        }
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return "Error";
+            }
+            return "Done";
+        }
+
+        public static List<RacetoPayDTO> RaceToPay(string User)
+        {
+            List<RacetoPayDTO> Paids = new();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string procedure = @"RACE_TO_PAY";
+                    using (SqlCommand cmd = new SqlCommand(procedure, con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@User", User);
+                        con.Open();
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                Console.Write(Convert.ToSingle(sdr["Cost"]));
+                                RacetoPayDTO paid = new()
+                                {
+                                    Id = (int)sdr["Id"],
+                                    Name = (string)sdr["Name"],
+                                    Cost = (float)Convert.ToSingle(sdr["Cost"])
+                                };
+                                Paids.Add(paid);
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return null;
+            }
+            return Paids;
+        }
+
+        public static string RacePay(int id,string User, string payment)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(GetConnection()))
+                {
+                    string procedure = @"PAY_RACE";;
+                    using (SqlCommand cmd = new SqlCommand(procedure, con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@RaceId", id);
+                        cmd.Parameters.AddWithValue("@User", User);
+                        cmd.Parameters.AddWithValue("@Payment", payment);
+                        con.Open();
+                        int sdr = (int)cmd.ExecuteScalar();
+                        con.Close();
+                        if (sdr == -1)
+                        {
+                            return "Already Exists";
+                        }
+                        if (sdr == -2)
+                        {
+                            return "Activity Type not found";
+                        }
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+                return "Error";
+            }
+            return "Done";
+        }
 
         private static string GetConnection()
         {

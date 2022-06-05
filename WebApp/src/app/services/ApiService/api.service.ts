@@ -134,7 +134,6 @@ export class ApiService {
     return this.http.put('http://localhost:5000/User/UpdateActivity/'+actId, activity, { headers: header, observe: 'response' });
   }
 
-
   getUserActivities(user: string) {
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.get('http://localhost:5000/User/userActivities/' + user, { headers: header, observe: 'response' });
@@ -181,16 +180,40 @@ export class ApiService {
     let header = new HttpHeaders().set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.post('http://localhost:5000/User/activityRoute', routePath, { headers: header, observe: 'response' });}
 
-  getParticipants(name:string) {
+  getParticipants(name:any) {
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.get<JSON[]>('http://localhost:5000/Race/Participants/'+name, { headers: header, observe: 'response' });
   }
 
-  getRecord(name:string) {
+  getRecord(name:any) {
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
     header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
     return this.http.get<JSON[]>('http://localhost:5000/Race/Record/'+name, { headers: header, observe: 'response' });
+  }
+
+  getcategoriesforrace(name:any) {
+    let header = new HttpHeaders().set('Type-contet', 'aplication/json');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.get<JSON[]>('http://localhost:5000/Race/CategoryRace/'+name, { headers: header, observe: 'response' });
+  }
+
+  getRaceRegister(User:any,id:any,optionselect:any) {
+    let header = new HttpHeaders().set('Type-contet', 'aplication/json');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.get<JSON[]>('http://localhost:5000/Race/RaceRegister/'+User+'/'+id+'/'+optionselect, { headers: header, observe: 'response' });
+  }
+
+  gettopay(User:any) {
+    let header = new HttpHeaders().set('Type-contet', 'aplication/json');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.get<JSON[]>('http://localhost:5000/Race/ToPay/'+User, { headers: header, observe: 'response' });
+  }
+
+  getRacePay(id:any,user:any,Payment:any) {
+    let header = new HttpHeaders().set('Type-contet', 'aplication/json');
+    header = header.set('Authorization', 'Bearer ' + this.sharedService.getToken());
+    return this.http.get<JSON[]>('http://localhost:5000/Race/Pay/'+id+'/'+user+'/'+Payment, { headers: header, observe: 'response' });
   }
 
   getRacesByUser(user: any) {

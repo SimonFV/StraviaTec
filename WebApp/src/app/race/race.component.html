@@ -5,6 +5,25 @@
       aria-controls="staticBackdrop">
       Create Race
     </button>
+    <div class="paypopup" id="paypopup">
+      <form class="formContainer" id="paypopupform">
+        <h2>Please enter the voucher code</h2>
+        <div *ngFor="let paid of pay; let p = index">
+          {{'Race Name: '+paid.name }}
+          <br/>
+          {{'Cost: ' + paid.cost}}
+          <br/>
+          <input [(ngModel)]="voucher" name="voucher" type="text" id="voucher" style="padding: 6px 2px;"/>
+          <button type="button" style = "margin: 0px 2px; background-color: green;" class="btn btn-primary" (click)="paysubmitForm(paid.id)" >Pay</button>
+        </div>
+        <br/>
+        <br/>
+        <button type="button" style = "margin: 0px 2px;" class="btn btn-primary" (click)="paycloseForm()">Close</button>
+      </form>
+    </div>
+    <button class="btn btn-primary mt-3" type="button" style = "margin: 0px 2px;" (click)="payopenForm()">
+      Races to pay
+    </button>
   </div>
   <div class="abs-center mt-3" *ngFor="let race of races; let i = index">
     <div class="card w-50">
@@ -19,7 +38,23 @@
         <p class="card-text">Cost: {{race.cost}}$ </p>
         <p class="card-text">Route: {{race.route}} </p>
 
-        <a href="///" class="btn btn-primary">Enroll Race!!</a>
+        <input type="button" (click)="openForm(race.Id)" style = "margin: 0px 2px;" class="btn btn-primary"  value="Enroll Race!!" />
+
+        
+          <div class="registerpopup" id="registerpopup">
+            <form class="formContainer" id="registerpopupform">
+              <h2>Please select category</h2>
+              <select [(ngModel)]="optionselect" id="usr-slct" name="optionselect">
+                <option [ngValue]="null" disabled>Select Category</option>
+                <option *ngFor="let category of categories" [ngValue]="category.name">{{category.name}}</option>
+              </select>
+              <br/>
+              <br/>
+              <button type="button" style = "margin: 0px 2px;" class="btn btn-primary" (click)="submitForm()" >Register!!</button>
+              <button type="button" style = "margin: 0px 2px;" class="btn btn-primary" (click)="closeForm()">Close</button>
+            </form>
+          </div>
+        
 
         <div class="wrapper" id="printableArea{{i}}" >
           <div class="tabless">
@@ -54,7 +89,7 @@
           </div>
         </div>
       
-        <input type="button" style = "margin: 0px 2px;" class="btn btn-primary" (click)="printDiv(i, race.name)" value="Pacticipants" />
+        <input type="button" style = "margin: 0px 2px;" class="btn btn-primary" (click)="printDiv(i, race.Id)" value="Pacticipants" />
 
         <div class="wrapper" id="Area{{i}}" >
           <div class="tabless">
@@ -95,7 +130,7 @@
           </div>
         </div>
       
-        <input type="button" style = "margin: 0px 2px;" class="btn btn-primary" (click)="printRecord(-i, race.name)" value="Record" />
+        <input type="button" style = "margin: 0px 2px;" class="btn btn-primary" (click)="printRecord(-i, race.Id)" value="Record" />
         
       </div>
     </div>

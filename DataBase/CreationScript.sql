@@ -508,7 +508,7 @@ CREATE PROCEDURE UpdateActivity
 AS
 BEGIN
     SET NOCOUNT ON;
-     
+
     IF NOT EXISTS(SELECT Id FROM ACTIVITY WHERE Id = @ActId)
     BEGIN
         SELECT -1  --Activity not found
@@ -540,7 +540,7 @@ BEGIN
 					BEGIN
 						INSERT INTO RACE_PARTICIPANTS("User", RaceId,ActivityId, CategoryName,"Status") 
 						VALUES( @UserId, (SELECT Id FROM RACE WHERE RACE."Name"=@RoCName), @ActId, 'Elite', 'In Progress')
-					
+
 						IF EXISTS (SELECT ActivityId FROM CHALLENGE_ACTIVITIES WHERE ActivityId=@ActId)
 							BEGIN
 								DELETE FROM CHALLENGE_ACTIVITIES WHERE ActivityId=@ActId	
@@ -569,12 +569,12 @@ BEGIN
 							"Start" = @Start,
 							"Type" = @Type
 					WHERE	Id = @ActId;
-				
+
 				IF NOT EXISTS (SELECT ActivityId FROM CHALLENGE_ACTIVITIES WHERE ActivityId=@ActId)
 					BEGIN
 						INSERT INTO CHALLENGE_ACTIVITIES(ChallengeId,ActivityId) 
 						VALUES( (SELECT Id FROM CHALLENGE WHERE CHALLENGE."Name"=@RoCName), @ActId)
-					
+
 						IF EXISTS (SELECT ActivityId FROM RACE_PARTICIPANTS WHERE ActivityId=@ActId)
 							BEGIN
 								DELETE FROM RACE_PARTICIPANTS WHERE ActivityId=@ActId	
@@ -612,10 +612,9 @@ BEGIN
 							END;
 				SELECT 0
 		END;
-			
+
 END;
 GO
-
 
 CREATE PROCEDURE ChallengeGroups
 	@Groups varchar(1000),
@@ -792,7 +791,7 @@ GO
 
 CREATE PROCEDURE Register_in_Race
 	@User NVARCHAR(15),
-	@RaceName NVARCHAR(25),
+	@RaceId Int,
 	@Category NVARCHAR(15)
 AS
 BEGIN 
@@ -811,7 +810,7 @@ BEGIN
 				CategoryName
 				)
 		VALUES(@User,
-				(SELECT Id FROM RACE WHERE "Name" = @RaceName),
+				@RaceId,
 				'Unpaid',
 				@Category
 				)
@@ -822,37 +821,71 @@ END;
 GO
 
 CREATE PROCEDURE PARTICIPANTS_IN_RACE
-	@RaceName NVARCHAR(25)
+	@RaceId NVARCHAR(25)
 AS
 BEGIN
     SET NOCOUNT ON;
      
-    IF NOT EXISTS(SELECT Id FROM RACE WHERE "Name" = @RaceName)
+    IF NOT EXISTS(SELECT Id FROM RACE WHERE Id = @RaceId)
     BEGIN
         SELECT -1  -- Race not found
     END
     
 	ELSE
 	BEGIN
-		Select FirstName, LastName, Age, CategoryName FROM PARTICIPANTS_PER_RACE, RACE WHERE RACE."Name" = @RaceName AND RACE.Id = PARTICIPANTS_PER_RACE.RaceId ORDER BY CategoryName;
+		Select FirstName, LastName, Age, CategoryName FROM PARTICIPANTS_PER_RACE, RACE WHERE RACE.Id = @RaceId AND RACE.Id = PARTICIPANTS_PER_RACE.RaceId ORDER BY CategoryName;
 	END
 END;
 GO
 
 CREATE PROCEDURE RECORD_IN_RACE
-	@RaceName NVARCHAR(25)
+	@RaceId NVARCHAR(25)
 AS
 BEGIN
     SET NOCOUNT ON;
      
-    IF NOT EXISTS(SELECT Id FROM RACE WHERE "Name" = @RaceName)
+    IF NOT EXISTS(SELECT Id FROM RACE WHERE Id = @RaceId)
     BEGIN
         SELECT -1  -- Race not found
     END
     
 	ELSE
 	BEGIN
-		Select FirstName, LastName, Age, Duration, CategoryName FROM RECORD_PER_RACE, RACE WHERE RACE."Name" = @RaceName AND RACE.Id = RECORD_PER_RACE.RaceId ORDER BY CategoryName;
+		Select FirstName, LastName, Age, Duration, CategoryName FROM RECORD_PER_RACE, RACE WHERE RACE.Id = @RaceId AND RACE.Id = RECORD_PER_RACE.RaceId ORDER BY CategoryName;
+	END
+END;
+GO
+
+CREATE PROCEDURE RACE_TO_PAY
+	@User NVARCHAR(25)
+AS
+BEGIN
+    SET NOCOUNT ON;
+     
+    IF NOT EXISTS(SELECT RaceId FROM RACE_PARTICIPANTS WHERE "User" = @User AND "Status" = 'Unpaid')
+    BEGIN
+        SELECT -1  -- All the Race has being paid
+    END
+    
+	ELSE
+	BEGIN
+		Select RACE.Id, RACE."Name", RACE.Cost FROM RACE_PARTICIPANTS, RACE WHERE RACE_PARTICIPANTS."User" = @User AND RACE_PARTICIPANTS."Status" = 'Unpaid' AND RACE.Id = RACE_PARTICIPANTS.RaceId;
+	END
+END;
+GO
+
+CREATE PROCEDURE PAY_RACE
+	@RaceId INT, 
+	@User NVARCHAR(25),
+	@Payment NVARCHAR(225)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+	BEGIN
+		UPDATE RACE_PARTICIPANTS
+		SET "Status" = 'Paid', Payment = @Payment
+		WHERE RaceId = @RaceId AND "User" = @User;
 	END
 END;
 GO

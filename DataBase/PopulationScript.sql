@@ -67,7 +67,7 @@ EXEC RegisterRace
 GO
 EXEC Register_in_Race
 	@User = 'src',
-	@RaceName = 'Carrera',
+	@RaceID = '1',
 	@Category = 'Junior'
 
 GO
