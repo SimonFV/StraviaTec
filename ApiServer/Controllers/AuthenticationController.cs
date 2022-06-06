@@ -15,7 +15,6 @@ using System.Security.Claims;
 namespace ApiServer.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
     public class AuthenticationController : ControllerBase
     {
         private readonly JwtConfig _jwtConfig;

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 namespace ApiServer.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class RaceController : ControllerBase
     {

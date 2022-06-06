@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/99f78cf5-6bca-4feb-b7a7-ae8c7b79b672/microsoft.web/sites/subscriptions/99f78cf5-6bca-4feb-b7a7-ae8c7b79b672/resourceGroups/StraviaTEC-Grp6_group/providers/Microsoft.Web/sites/StraviaTEC-WEB",
+    "appService.deploySubpath": "WebApp\\dist\\web-app"
+}
