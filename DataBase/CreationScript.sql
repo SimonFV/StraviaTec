@@ -996,6 +996,9 @@ BEGIN
 	DELETE FROM RACE_VISIBILITY
     WHERE RaceId IN(SELECT deleted.Id FROM deleted)
 
+	DELETE FROM RACE_CATEGORY
+    WHERE Raceid IN(SELECT deleted.Id FROM deleted)
+
 	DELETE FROM RACE
     WHERE Id = (SELECT deleted.Id FROM deleted)
 END;
