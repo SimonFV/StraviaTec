@@ -179,8 +179,8 @@ namespace ApiServer.Controllers
                     Route = "default",
                     Start = Start,
                     Type = Type,
-                    RoC=Roc,
-                    RoCName=RocName
+                    RoC = Roc,
+                    RoCName = RocName
                 };
 
                 string result = UserDAL.AddActivity(activity);
@@ -201,7 +201,8 @@ namespace ApiServer.Controllers
                     Directory.CreateDirectory("Files\\Routes\\Activities\\" + actId.ToString());
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
-                        Route.CopyToAsync(fileStream);
+                        fileStream.Position = 0;
+                        Route.CopyTo(fileStream);
                     }
                     activity.Route = filePath;
                     UserDAL.UpdateActivityRoute(activity, actId);
@@ -218,7 +219,7 @@ namespace ApiServer.Controllers
 
         [HttpPut]
         [Route("UpdateActivity/{actId}")]
-        public IActionResult UpdateActivity(int actId, 
+        public IActionResult UpdateActivity(int actId,
             [FromForm] string UserId,
             [FromForm] decimal Distance,
             [FromForm] DateTime Start,
@@ -251,7 +252,7 @@ namespace ApiServer.Controllers
                     return new JsonResult("User not found.") { StatusCode = 403 };
                 else if (result is "WrongPass")
                     return new JsonResult("Incorrect password.") { StatusCode = 403 };
-                
+
                 return Ok();
             }
             catch (Exception err)
@@ -422,7 +423,8 @@ namespace ApiServer.Controllers
                         {
                             System.IO.File.Delete(CurrentPicture);
                         }
-                        Picture.CopyToAsync(fileStream);
+                        fileStream.Position = 0;
+                        Picture.CopyTo(fileStream);
                     }
                 }
                 return Ok();
