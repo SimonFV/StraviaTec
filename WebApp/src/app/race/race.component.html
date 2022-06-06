@@ -199,9 +199,10 @@
             [ngModelOptions]="{standalone: true}">
         </div>
 
+        <label>Category</label>
         <div class="form-floating mb-2">
           <select class="form-select" [(ngModel)]="category" [ngModelOptions]="{standalone: true}"
-            aria-label="Default select example">
+            aria-label="Default select example" multiple>
             <option value="Junior" selected>Junior</option>
             <option value="Sub-23">Sub-23</option>
             <option value="Open">Open</option>
@@ -210,7 +211,6 @@
             <option value="Master B">Master B</option>
             <option value="Master C">Master C</option>
           </select>
-          <label for="floatingSelect">Category</label>
         </div>
 
         <div class="form-floating">

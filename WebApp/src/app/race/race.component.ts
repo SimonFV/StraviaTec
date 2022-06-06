@@ -284,18 +284,28 @@ export class RaceComponent implements OnInit {
 
   getRace() {
     this.setgroups();
+    this.setcategories();
 
-
+    this.form.get('UserAdmin')!.setValue(this.sharedService.getUserData().User);
     this.form.get('StartDate')!.setValue(this.start);
     this.form.get('Category')!.setValue(this.category);
     this.form.get('Type')!.setValue(this.type);
+    if (this.grps='') {
+      this.form.get('Privacy')!.setValue(false);
+    } else {
+      this.form.get('Privacy')!.setValue(true);
+    }
+    
 
     delete this.form.value.GroupsArray;
+    console.log(this.form.value)
 
     this.service.addRace(this.form.value).subscribe(resp => {
       console.log(resp);
 
     })
+    window.location.reload();
+    
   }
   setgroups() {
 
@@ -305,6 +315,15 @@ export class RaceComponent implements OnInit {
     }
     delete this.form.value.GroupsArray;
     this.form.get('Groups')?.setValue(this.grps);
+  }
+
+  setcategories() {
+    let auxcategories = this.category;
+    this.category = '';
+    for (let i of auxcategories) {
+
+      this.category = this.category + i + ',';
+    }
   }
 
   getFile(event: any) {
@@ -387,8 +406,7 @@ export class RaceComponent implements OnInit {
         console.log(resp.body);
       })
       document.getElementById("paypopup")!.style.display = "none";
-      //window.location.reload();
+      window.location.reload();
   }
-  
 
 }
