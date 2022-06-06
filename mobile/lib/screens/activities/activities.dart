@@ -92,18 +92,18 @@ class _ActivitiesState extends State<Activities> {
               Padding(
                   padding: const EdgeInsets.only(right: 20.0),
                   child: GestureDetector(
-                    onTap: () async {
-                      await syncActivities();
-                    },
+                    onTap: widget.token == ""
+                        ? null
+                        : () async {
+                            await syncActivities();
+                          },
                     child: const Icon(
                       Icons.sync,
                       size: 26.0,
                     ),
                   )),
             ],
-            title: Text(widget.activeUser.user == ""
-                ? "Offline"
-                : widget.activeUser.user)),
+            title: Text(widget.activeUser.user)),
         body: AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle.light,
             child: Stack(children: <Widget>[

@@ -95,7 +95,6 @@ class _LoginState extends State<Login> {
     await DatabaseManager.instance.deleteFilesOfSyncedActivities();
     await DatabaseManager.instance.unSyncActivities();
 
-    //List<Map<String, dynamic>> newActivities = jsonBody;
     jsonBody.forEach((activity) async {
       if ((await DatabaseManager.instance.activityExists(
           activity["userId"], activity["start"].replaceAll("T", " ")))) {
