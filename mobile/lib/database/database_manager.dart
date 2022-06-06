@@ -110,6 +110,23 @@ class DatabaseManager {
     return await db.delete('ACTIVITY', where: "status = 'notsynced'");
   }
 
+  Future<void> deleteFilesOfSyncedActivities() async {
+    Database db = await instance.database;
+    var activities =
+        await db.query('ACTIVITY', columns: ["id"], where: "status = 'synced'");
+    List<int> activityList = activities.isEmpty
+        ? []
+        : activities.map((c) => c["id"]).toList().cast<int>();
+
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = documentsDirectory.path;
+    for (var i in activityList) {
+      if (await File(path + "/" + i.toString() + ".gpx").exists()) {
+        File(path + "/" + i.toString() + ".gpx").delete();
+      }
+    }
+  }
+
   Future<int> syncOldActivities() async {
     Database db = await instance.database;
     return await db.update('ACTIVITY', {"status": "synced"},
