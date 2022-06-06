@@ -92,7 +92,7 @@ class _LoginState extends State<Login> {
       });
       return;
     }
-
+    await DatabaseManager.instance.deleteFilesOfSyncedActivities();
     await DatabaseManager.instance.unSyncActivities();
 
     //List<Map<String, dynamic>> newActivities = jsonBody;

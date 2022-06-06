@@ -76,6 +76,7 @@ class _ActivitiesState extends State<Activities> {
     }
 
     await DatabaseManager.instance.syncOldActivities();
+    await DatabaseManager.instance.deleteFilesOfSyncedActivities();
 
     setState(() {
       synchronizing = false;
