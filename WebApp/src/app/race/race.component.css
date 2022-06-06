@@ -8,6 +8,10 @@
     width: 450px;
 }
 
+.form-select {
+  padding-top: 0.625rem;
+}
+
 .btn-primary {
     --bs-btn-font-weight: 600;
     --bs-btn-color: var(--bs-white);

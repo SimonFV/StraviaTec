@@ -40,9 +40,10 @@ namespace ApiServer.Controllers
         }
 
         [HttpPost]
-        [Route("races")]
+        [Route("reraces")]
         public IActionResult RegisterRace(RaceRegisterDto race)
         {
+            Console.Write(race);
             if (ModelState.IsValid)
             {
                 var result = RaceDAL.RegisterRaceDB(race);
