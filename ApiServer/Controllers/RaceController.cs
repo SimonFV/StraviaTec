@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace ApiServer.Controllers
 {
+    /// <summary>
+    /// Controller for races
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -15,7 +18,10 @@ namespace ApiServer.Controllers
         public RaceController()
         {
         }
-
+        /// <summary>
+        /// Returns all Races
+        /// </summary>
+        /// <returns>Races</returns>
         [HttpGet]
         [Route("races")]
         public IActionResult GetRaces()
@@ -27,7 +33,11 @@ namespace ApiServer.Controllers
             return Ok(races);
         }
 
-
+        /// <summary>
+        /// Races by user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>Races</returns>
         [HttpGet]
         [Route("racesByUser/{user}")]
         public IActionResult GetRacesByUser(string user)
@@ -39,6 +49,11 @@ namespace ApiServer.Controllers
             return Ok(races);
         }
 
+        /// <summary>
+        /// Register in a race
+        /// </summary>
+        /// <param name="race"></param>
+        /// <returns>Result</returns>
         [HttpPost]
         [Route("reraces")]
         public IActionResult RegisterRace(RaceRegisterDto race)
@@ -64,16 +79,25 @@ namespace ApiServer.Controllers
             return new JsonResult("Invalid model for an User.") { StatusCode = 400 };
         }
 
+        /// <summary>
+        /// Requests the list of races available.
+        /// </summary>
+        /// <returns>Races</returns>
         [HttpGet]
         [Route("RaceVisibility")]
         public IActionResult GetRaceVisibility()
         {
-            var races =RaceDAL.GetRaceVisibility();
+            var races = RaceDAL.GetRaceVisibility();
             if (races is null)
                 return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
             return Ok(races);
         }
 
+        /// <summary>
+        /// Requests the list of participants
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns>Participants</returns>
         [HttpGet]
         [Route("Participants/{Id}")]
         public IActionResult GetRaceParticipants(int Id)
@@ -84,6 +108,11 @@ namespace ApiServer.Controllers
             return Ok(participants);
         }
 
+        /// <summary>
+        /// Requests the list of records.
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns>Records</returns>
         [HttpGet]
         [Route("Record/{Id}")]
         public IActionResult GetRaceRecord(int Id)
@@ -94,6 +123,12 @@ namespace ApiServer.Controllers
             return Ok(records);
         }
 
+
+        /// <summary>
+        /// Requests the categories of a race.
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns>Categories.</returns>
         [HttpGet]
         [Route("CategoryRace/{Id}")]
         public IActionResult GetCategoryRace(int Id)
@@ -104,9 +139,16 @@ namespace ApiServer.Controllers
             return Ok(categories);
         }
 
+        /// <summary>
+        /// Request for registering an user to a race.
+        /// </summary>
+        /// <param name="User"></param>
+        /// <param name="id"></param>
+        /// <param name="optionselect"></param>
+        /// <returns>Result</returns>
         [HttpGet]
         [Route("RaceRegister/{User}/{id}/{optionselect}")]
-        public IActionResult RaceRegister(string User,int id, string optionselect)
+        public IActionResult RaceRegister(string User, int id, string optionselect)
         {
             var categories = RaceDAL.RaceRegister(User, id, optionselect);
             if (categories is null)
@@ -114,6 +156,11 @@ namespace ApiServer.Controllers
             return Ok(categories);
         }
 
+        /// <summary>
+        /// Request for races to pay.
+        /// </summary>
+        /// <param name="User"></param>
+        /// <returns>Categories</returns>
         [HttpGet]
         [Route("ToPay/{User}")]
         public IActionResult RaceToPay(string User)
@@ -124,11 +171,18 @@ namespace ApiServer.Controllers
             return Ok(categories);
         }
 
+        /// <summary>
+        /// Request for paying the suscription to a race.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
+        /// <param name="payment"></param>
+        /// <returns>Result categories</returns>
         [HttpGet]
         [Route("Pay/{id}/{user}/{payment}")]
-        public IActionResult RacePay(int id,string user, string payment)
+        public IActionResult RacePay(int id, string user, string payment)
         {
-            var categories = RaceDAL.RacePay(id,user,payment);
+            var categories = RaceDAL.RacePay(id, user, payment);
             if (categories is null)
                 return new JsonResult("Something went wrong retrieving the groups.") { StatusCode = 500 };
             return Ok(categories);

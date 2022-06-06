@@ -56,6 +56,11 @@ namespace ApiServer.Controllers
             return Ok(user);
         }
 
+        /// <summary>
+        /// Gets the user friends with some data for showing it in the front page.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>List of friends</returns>
         [HttpGet]
         [Route("friendsFrontPage/{user}")]
         public IActionResult GetFriendsFrontPage(string user)
@@ -66,6 +71,11 @@ namespace ApiServer.Controllers
             return Ok(friends);
         }
 
+        /// <summary>
+        /// Requests the image with the path of the file.
+        /// </summary>
+        /// <param name="route"></param>
+        /// <returns>Image file of the user</returns>
         [HttpPost]
         [Route("userImage")]
         public IActionResult GetUserImage(FilePathDto route)
@@ -81,6 +91,11 @@ namespace ApiServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Requests the gpx file of the activity.
+        /// </summary>
+        /// <param name="route"></param>
+        /// <returns>gpx route file</returns>
         [HttpPost]
         [Route("activityRoute")]
         public IActionResult GetActivityRoute(FilePathDto route)
@@ -102,6 +117,11 @@ namespace ApiServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Asks which users are not friends yet.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>List of users</returns>
         [HttpGet]
         [Route("friendsAvailable/{user}")]
         public IActionResult GetFriendsAvailable(string user)
@@ -112,6 +132,11 @@ namespace ApiServer.Controllers
             return Ok(friends);
         }
 
+        /// <summary>
+        /// Requests the friends of some user.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>List of users</returns>
         [HttpGet]
         [Route("friends/{user}")]
         public IActionResult GetFriends(string user)
@@ -122,6 +147,12 @@ namespace ApiServer.Controllers
             return Ok(friends);
         }
 
+        /// <summary>
+        /// Request for deletion of a friend
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="friend"></param>
+        /// <returns>Result</returns>
         [HttpDelete]
         [Route("friends/Delete/{user}/{friend}")]
         public IActionResult DeleteFriend(string user, string friend)
@@ -154,6 +185,18 @@ namespace ApiServer.Controllers
             return new JsonResult("Invalid model for Activity.") { StatusCode = 400 };
         }
 
+        /// <summary>
+        /// Post for a new activity
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <param name="Distance"></param>
+        /// <param name="Duration"></param>
+        /// <param name="Route"></param>
+        /// <param name="Start"></param>
+        /// <param name="Type"></param>
+        /// <param name="Roc"></param>
+        /// <param name="RocName"></param>
+        /// <returns>Result</returns>
         [HttpPost]
         [Route("addActivity")]
         public IActionResult PostActivity(
@@ -216,7 +259,19 @@ namespace ApiServer.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Request for update an activity
+        /// </summary>
+        /// <param name="actId"></param>
+        /// <param name="UserId"></param>
+        /// <param name="Distance"></param>
+        /// <param name="Start"></param>
+        /// <param name="Duaration"></param>
+        /// <param name="Route"></param>
+        /// <param name="Type"></param>
+        /// <param name="RoC"></param>
+        /// <param name="RoCName"></param>
+        /// <returns>Result</returns>
         [HttpPut]
         [Route("UpdateActivity/{actId}")]
         public IActionResult UpdateActivity(int actId,
@@ -262,6 +317,11 @@ namespace ApiServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Requests the activities of some user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>List of activities</returns>
         [HttpGet]
         [Route("userActivities/{user}")]
         public IActionResult GetuserActivities(string user)
@@ -272,6 +332,11 @@ namespace ApiServer.Controllers
             return Ok(activities);
         }
 
+        /// <summary>
+        /// Asks for the id of of an activity with specific attributes
+        /// </summary>
+        /// <param name="activity"></param>
+        /// <returns>Id of the activity</returns>
         [HttpPost]
         [Route("getActivityId")]
         public IActionResult GetActivityId(ActivityDto activity)
@@ -282,6 +347,12 @@ namespace ApiServer.Controllers
             return Ok(Id);
         }
 
+        /// <summary>
+        /// Request for adding a friend
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="friend"></param>
+        /// <returns>Result</returns>
         [HttpPost]
         [Route("addFriend/{user}/{friend}")]
         public IActionResult PostFriend(string user, string friend)
@@ -296,6 +367,11 @@ namespace ApiServer.Controllers
             return new JsonResult("Invalid model for User/Friend.") { StatusCode = 400 };
         }
 
+        /// <summary>
+        /// Requests the groups that are available for the user to join
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>List of groups</returns>
         [HttpGet]
         [Route("groupsAvailable/{user}")]
         public IActionResult GetGroupsAvailable(string user)
@@ -306,6 +382,11 @@ namespace ApiServer.Controllers
             return Ok(groups);
         }
 
+        /// <summary>
+        /// Returns the list of groups on wich the user is part of
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>List of groups</returns>
         [HttpGet]
         [Route("groups/{user}")]
         public IActionResult GetGroups(string user)
@@ -316,6 +397,12 @@ namespace ApiServer.Controllers
             return Ok(groups);
         }
 
+        /// <summary>
+        /// Post for creating a group
+        /// </summary>
+        /// <param name="admin"></param>
+        /// <param name="name"></param>
+        /// <returns>Result</returns>
         [HttpPost]
         [Route("createGroup/{admin}/{name}")]
         public IActionResult CreateGroup(string admin, string name)
@@ -330,6 +417,12 @@ namespace ApiServer.Controllers
             return new JsonResult("Invalid model for Admin/Name.") { StatusCode = 400 };
         }
 
+        /// <summary>
+        /// Requests to join a group
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
+        /// <returns>Result</returns>
         [HttpPost]
         [Route("joinGroup/{id}/{user}")]
         public IActionResult JoinGroup(int id, string user)
@@ -343,6 +436,13 @@ namespace ApiServer.Controllers
             }
             return new JsonResult("Invalid model for Id/User.") { StatusCode = 400 };
         }
+
+        /// <summary>
+        /// Request for leaving a group.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
+        /// <returns>Result</returns>
         [HttpDelete]
         [Route("quitGroup/{id}/{user}")]
         public IActionResult QuitGroup(int id, string user)
@@ -357,7 +457,11 @@ namespace ApiServer.Controllers
             return new JsonResult("Invalid model for Id/User.") { StatusCode = 400 };
         }
 
-
+        /// <summary>
+        /// Requests for updating a group.
+        /// </summary>
+        /// <param name="group"></param>
+        /// <returns>Result</returns>
         [HttpPut]
         [Route("updateGroup")]
         public IActionResult UpdateGroup(GroupDTO group)
@@ -372,7 +476,20 @@ namespace ApiServer.Controllers
             return new JsonResult("Invalid model for Group.") { StatusCode = 400 };
         }
 
-
+        /// <summary>
+        /// Request for updating an user.
+        /// </summary>
+        /// <param name="User"></param>
+        /// <param name="FirstName"></param>
+        /// <param name="LastName1"></param>
+        /// <param name="LastName2"></param>
+        /// <param name="BirthDate"></param>
+        /// <param name="NewPassword"></param>
+        /// <param name="CurrentPassword"></param>
+        /// <param name="Picture"></param>
+        /// <param name="CurrentPicture"></param>
+        /// <param name="Nationality"></param>
+        /// <returns>Result</returns>
         [HttpPut]
         [Route("edit")]
         public IActionResult UpdateUser(
@@ -436,6 +553,11 @@ namespace ApiServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Requests the deletion of an user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>Result</returns>
         [HttpDelete]
         [Route("delete/{user}")]
         public IActionResult DeleteUser(string user)
@@ -443,6 +565,16 @@ namespace ApiServer.Controllers
             string result = UserDAL.DeleteUser(user);
             if (result is "Error")
                 return new JsonResult("Something went wrong while deleting the user.") { StatusCode = 500 };
+
+            string filePath = Path.Combine("Files\\Profiles", user);
+            try
+            {
+                Directory.Delete(filePath, true);
+            }
+            catch (Exception err)
+            {
+                Console.Write(err);
+            }
             return new JsonResult("User deleted.") { StatusCode = 201 };
         }
 

@@ -14,6 +14,9 @@ using System.Security.Claims;
 
 namespace ApiServer.Controllers
 {
+    /// <summary>
+    /// Controller for access.
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class AuthenticationController : ControllerBase
