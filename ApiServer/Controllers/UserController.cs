@@ -17,7 +17,7 @@ namespace ApiServer.Controllers
     /// Controller class for user related http requests.
     /// </summary>
     [ApiController]
-    [Route("[controller]")]
+    
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserController : ControllerBase
     {

@@ -87,7 +87,7 @@ export class ApiService {
 
   loginUser(user: JSON) {
     let header = new HttpHeaders().set('Type-contet', 'aplication/json');
-    return this.http.post('http://localhost:5000/Authentication/login', user, { headers: header, observe: 'response' });
+    return this.http.post('https://straviatec-api.azurewebsites.net/login', user, { headers: header, observe: 'response' });
   }
 
   GetFriendsFrontPage(user: string) {

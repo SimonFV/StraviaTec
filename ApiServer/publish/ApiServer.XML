@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ApiServer</name>
+    </assembly>
+    <members>
+        <member name="T:ApiServer.Controllers.ChallengeController">
+            <summary>
+            Controller class for Challenge related http requests. 
+            </summary>
+        </member>
+        <member name="M:ApiServer.Controllers.ChallengeController.GetChallenges">
+            <summary>
+            Get all the challenges
+            </summary>
+            <returns><c>IActionResult</c> with the Challenges or an error message</returns>
+        </member>
+        <member name="M:ApiServer.Controllers.ChallengeController.GetInChallenge(System.String,System.Int32)">
+            <summary>
+            Register Challenge participation
+            </summary>
+            <param name="user"><c>string</c>: User account</param>
+            <param name="challengeId"><c>int</c>: Challenge Id to participate on</param>
+            <returns><c>IActionResult</c> with the participation result</returns>
+        </member>
+        <member name="M:ApiServer.Controllers.ChallengeController.GetChallengeVisibility">
+            <summary>
+            Get the visibility of all the challenges
+            </summary>
+            <returns><c>IActionResult</c> Challenges and their visibility or an error message</returns>
+        </member>
+        <member name="M:ApiServer.Controllers.ChallengeController.RegisterChallenge(ApiServer.DTOs.Requests.ChallengeRegisterDto)">
+            <summary>
+            Register a new Challenge
+            </summary>
+            <param name="challenge"><c>string</c>: New Challenge name</param>
+            <returns><c>IActionResult</c> With the registration result</returns>
+        </member>
+        <member name="M:ApiServer.Controllers.ChallengeController.GetChallengesByUser(System.String)">
+            <summary>
+            Gets all the challenges to which the user is subscribed
+            </summary>
+            <param name="user"><c>string</c>: User account</param>
+            <returns><c>IActionResult</c>: Challenges to which the user is subscribed</returns>
+        </member>
+        <member name="M:ApiServer.Controllers.ChallengeController.AddChallengeActivity(System.Int32,System.Int32)">
+            <summary>
+            Add an Activity to a Challenge
+            </summary>
+            <param name="challengeId"><c>int</c>: Challenge Id</param>
+            <param name="activityId"><c>int</c>: Activity Id</param>
+            <returns><c>IActionResult</c> with the binding result</returns>
+        </member>
+        <member name="T:ApiServer.Controllers.UserController">
+            <summary>
+            Controller class for user related http requests.
+            </summary>
+        </member>
+        <member name="M:ApiServer.Controllers.UserController.GetUsers">
+            <summary>
+            Gets all the users in the database.
+            </summary>
+            <returns><c>IActionResult</c> with the users or an error message</returns>
+        </member>
+        <member name="M:ApiServer.Controllers.UserController.GetUser(System.String)">
+            <summary>
+            Gets the user with the specified <paramref name="userId"/>
+            </summary>
+            <param name="userId"><c>string</c>: User account</param>
+            <returns><c>IActionResult</c> with the user or an error message</returns>
+        </member>
+        <member name="T:ApiServer.DAL.ChallengeDAL">
+            <summary>
+            DAL for Challenge related SQL requests. 
+            </summary>
+        </member>
+        <member name="M:ApiServer.DAL.ChallengeDAL.GetChallenges">
+            <summary>
+            Get all the challenges from database
+            </summary>
+            <returns><c>List</c> with the Challenges or an error message</returns>
+        </member>
+        <member name="M:ApiServer.DAL.ChallengeDAL.GetInChallenge(System.String,System.Int32)">
+            <summary>
+            Register Challenge participation in the database
+            </summary>
+            <param name="user"><c>string</c>: User account</param>
+            <param name="challengeId"><c>int</c>: Challenge Id to participate on</param>
+            <returns><c>string</c> with the participation result</returns>
+        </member>
+        <member name="M:ApiServer.DAL.ChallengeDAL.GetChallengeVisibility">
+            <summary>
+            Get the visibility of all the challenges from the database
+            </summary>
+            <returns><c>List</c> Challenges and their visibility or an error message</returns>
+        </member>
+        <member name="M:ApiServer.DAL.ChallengeDAL.RegisterChallengeDB(ApiServer.DTOs.Requests.ChallengeRegisterDto)">
+            <summary>
+            Register a new Challenge in the database
+            </summary>
+            <param name="challenge"><c>string</c>: New Challenge name</param>
+            <returns><c>string</c> With the registration result</returns>
+        </member>
+        <member name="M:ApiServer.DAL.ChallengeDAL.GetChallengesByUser(System.String)">
+            <summary>
+            Gets all the challenges from the database to which the user is subscribed
+            </summary>
+            <param name="user"><c>string</c>: User account</param>
+            <returns><c>List</c>: Challenges to which the user is subscribed</returns>
+        </member>
+        <member name="M:ApiServer.DAL.ChallengeDAL.AddChallengeActivity(System.Int32,System.Int32)">
+            <summary>
+            Add an Activity to a Challenge in the database
+            </summary>
+            <param name="challengeId"><c>int</c>: Challenge Id</param>
+            <param name="activityId"><c>int</c>: Activity Id</param>
+            <returns><c>string</c> with the binding result</returns>
+        </member>
+    </members>
+</doc>

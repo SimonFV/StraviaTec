@@ -12,7 +12,6 @@ namespace ApiServer.Controllers
     /// Controller class for Challenge related http requests. 
     /// </summary>
     [ApiController]
-    [Route("[controller]")]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ChallengeController : ControllerBase
     {
