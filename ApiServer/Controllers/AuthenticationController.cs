@@ -59,7 +59,8 @@ namespace ApiServer.Controllers
                 Directory.CreateDirectory("Files\\Profiles\\" + User);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    Picture.CopyToAsync(fileStream);
+                    fileStream.Position = 0;
+                    Picture.CopyTo(fileStream);
                 }
                 return Ok(new RegistrationResponse()
                 {
